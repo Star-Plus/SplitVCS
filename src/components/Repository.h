@@ -24,7 +24,7 @@ namespace Split {
         void init() const;
         void add(const std::string& filepath);
         void commit(const std::string& message, const std::string& author);
-        void checkout(const std::string& commitHash);
+        void checkout(const std::string& commitHash) const;
 
     };
 }

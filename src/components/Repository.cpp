@@ -31,6 +31,17 @@ namespace Split {
         history.addCommit(commitHash);
     }
 
+    void Repository::checkout(const std::string &commitHash) const {
+        ObjectStore objectStore(rootPath, "/commits");
+        auto commitStream = objectStore.loadObject(commitHash);
+        if (!commitStream.is_open()) {
+            throw std::runtime_error("Commit not found: " + commitHash);
+        }
 
+        Commit commit = Commit::deserialize(commitStream);
+        commitStream.close();
+
+        commit.checkout(index);
+    }
 
 }

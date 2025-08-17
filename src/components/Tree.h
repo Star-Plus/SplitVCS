@@ -18,7 +18,18 @@ namespace Split {
     public:
         explicit Tree(std::map<std::string, std::string> entries = {}) : entries(std::move(entries)) {}
         str serialize() const;
-        str getEntry(const str& file) { return this->entries[file]; }
+
+        std::map<str, str> getEntries() const {
+            return entries;
+        }
+
+        str getEntry(const str& file) {
+            if (entries.find(file) != entries.end()) {
+                return entries[file];
+            }
+            return "";
+        }
+
         static Tree deserialize(std::istream& in);
     };
 

@@ -25,6 +25,7 @@ namespace Split {
 
         Commit(const str &rootPath, const str& message, const str& author, const str& parentHash = "");
         void commit (const Index& index);
+        void checkout(Index& index);
         str serialize() const;
         static Commit deserialize(std::istream& in);
 
