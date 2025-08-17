@@ -24,5 +24,9 @@ int main() {
     repo.add("file.txt");
     repo.commit("Updated file.txt", "Author Name");
 
+    auto history = repo.getCommitHistory();
+
+    repo.checkout(history[0]);
+
     return 0;
 }

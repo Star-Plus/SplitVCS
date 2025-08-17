@@ -27,11 +27,12 @@ namespace Split {
     void Repository::commit(const std::string &message, const std::string &author) {
         Commit commit(rootPath, message, author, history.getLatest());
         commit.commit(index);
-        const str commitHash = ObjectStore(rootPath, "/commits").storeBytesObject(commit.serialize());
+        const auto commitSerialized = commit.serialize();
+        const str commitHash = ObjectStore(rootPath, "/commits").storeBytesObject(commitSerialized);
         history.addCommit(commitHash);
     }
 
-    void Repository::checkout(const std::string &commitHash) const {
+    void Repository::checkout(const std::string &commitHash) {
         ObjectStore objectStore(rootPath, "/commits");
         auto commitStream = objectStore.loadObject(commitHash);
         if (!commitStream.is_open()) {
@@ -42,6 +43,10 @@ namespace Split {
         commitStream.close();
 
         commit.checkout(index);
+    }
+
+    std::vector<str> Repository::getCommitHistory() const {
+        return history.getCommitHistory();
     }
 
 }

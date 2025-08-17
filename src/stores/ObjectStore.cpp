@@ -66,7 +66,7 @@ namespace Split {
             throw std::runtime_error("Failed to create object file: " + objectPath);
         }
 
-        outFile.write(bytes.data(), bytes.size());
+        outFile << bytes;
         outFile.close();
 
         return hash;

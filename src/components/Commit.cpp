@@ -26,7 +26,7 @@ namespace Split {
         timestamp = Time::getCurrentTime();
     }
 
-    void Commit::checkout(Index &index) {
+    void Commit::checkout(Index &index) const {
         const ObjectStore treeStore(rootPath, "/trees");
         auto treeStream = treeStore.loadObject(treeHash);
         if (!treeStream.is_open()) {
@@ -86,8 +86,8 @@ namespace Split {
         return rootPath + '\n'
             + treeHash + '\n'
             + parentHash + '\n'
-            + message + '\0'
-            + author + '\0'
+            + message + '\n'
+            + author + '\n'
             + timestamp;
     }
 
@@ -96,11 +96,15 @@ namespace Split {
         std::getline(in, rootPath);
         std::getline(in, treeHash);
         std::getline(in, parentHash);
-        std::getline(in, message, '\0');
-        std::getline(in, author, '\0');
+        std::getline(in, message);
+        std::getline(in, author);
         std::getline(in, timestamp);
 
-        return {rootPath, message, author, parentHash};
+        Commit commit(rootPath, message, author, parentHash);
+        commit.treeHash = treeHash;
+        commit.timestamp = timestamp;
+
+        return commit;
     }
 
 }

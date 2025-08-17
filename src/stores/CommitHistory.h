@@ -10,7 +10,7 @@
 #include <fstream>
 
 #include "ObjectStore.h"
-#include "../components/Commit.h"
+#include "components/Commit.h"
 #include "utils/Hashing.h"
 
 namespace Split {
@@ -44,6 +44,10 @@ namespace Split {
             if (!save()) {
                 throw std::runtime_error("Failed to save commit history.");
             }
+        }
+
+        std::vector<str> getCommitHistory() const {
+            return commitHashes;
         }
 
         str getLatest() {

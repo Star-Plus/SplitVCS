@@ -78,8 +78,6 @@ namespace Split {
 
             if (baseIt != packs.end()) {
                 pack->baseRef = *baseIt;
-            } else {
-                throw std::runtime_error("Base hash not found for pack: " + pack->hash);
             }
         }
     }
