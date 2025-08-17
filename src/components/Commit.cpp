@@ -18,7 +18,7 @@ namespace Split {
 
     void Commit::commit(const Index &index) {
         const Tree tree(index.getStagedFiles());
-        const ObjectStore store(rootPath, "trees");
+        const ObjectStore store(rootPath, "/trees");
         treeHash = store.storeBytesObject(tree.serialize());
         timestamp = Time::getCurrentTime();
     }

@@ -7,10 +7,13 @@
 
 #include <string>
 
+#include "core/Alias.h"
+
 namespace Split {
 
     class ObjectStore {
 
+        str rootPath;
         std::string basePath = "/.split/objects";
         std::string path;
 

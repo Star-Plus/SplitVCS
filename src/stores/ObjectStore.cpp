@@ -13,7 +13,7 @@
 
 namespace Split {
 
-    ObjectStore::ObjectStore(const std::string& rootPath, const std::string & path) {
+    ObjectStore::ObjectStore(const std::string& rootPath, const std::string & path) : rootPath(rootPath) {
         this->path = rootPath + basePath + path;
         std::filesystem::create_directories(this->path);
     }

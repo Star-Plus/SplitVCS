@@ -5,29 +5,66 @@
 #ifndef COMMITHISTORY_H
 #define COMMITHISTORY_H
 
-#include <stack>
+#include <vector>
 #include <stdexcept>
+#include <fstream>
 
+#include "ObjectStore.h"
 #include "../components/Commit.h"
+#include "utils/Hashing.h"
 
 namespace Split {
 
     class CommitHistory {
 
-        std::stack<Commit> commits;
+        str rootPath;
+        str storePath = ".split/history";
+        std::vector<str> commitHashes;
 
     public:
 
-        void addCommit(Commit& commit) {
-            throw std::logic_error("Not implemented");
+        CommitHistory(const str& rootPath)
+            : rootPath(rootPath) {
+
+            std::ifstream file(rootPath + "/" + storePath);
+            if (!file.is_open()) {
+                file.close();
+                return;
+            }
+            std::string line;
+            while (std::getline(file, line)) {
+                if (!line.empty()) {
+                    commitHashes.push_back(line);
+                }
+            }
         }
 
-        Commit& getCommit(const std::string& hash) {
-            throw std::logic_error("Not implemented");
+        void addCommit(const str& commit) {
+            commitHashes.push_back(commit);
+            if (!save()) {
+                throw std::runtime_error("Failed to save commit history.");
+            }
         }
 
-        Commit& getLatest() {
-            throw std::logic_error("Not implemented");
+        str getLatest() {
+            if (commitHashes.empty()) {
+                return "";
+            }
+            return commitHashes.back();
+        }
+
+        bool save() const {
+            std::ofstream file(rootPath + "/" + storePath, std::ios::binary);
+            if (!file.is_open()) {
+                return false;
+            }
+
+            for (const auto& commit : commitHashes) {
+                file << commit << '\n';
+            }
+
+            file.close();
+            return true;
         }
 
     };

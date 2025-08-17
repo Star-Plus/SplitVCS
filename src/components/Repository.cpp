@@ -10,8 +10,7 @@
 namespace Split {
 
     Repository::Repository(std::string name, const std::string &rootPath)
-    : name(std::move(name)), rootPath(rootPath), index(rootPath) {
-        history = CommitHistory();
+    : name(std::move(name)), rootPath(rootPath), index(rootPath), history(rootPath) {
     }
 
     void Repository::init() const {
@@ -22,10 +21,14 @@ namespace Split {
     }
 
     void Repository::add(const std::string &filepath) {
-        index.stageFile(filepath);
+        index.stageFile(rootPath + "/" + filepath);
     }
 
     void Repository::commit(const std::string &message, const std::string &author) {
+        Commit commit(rootPath, message, author, history.getLatest());
+        commit.commit(index);
+        const str commitHash = ObjectStore(rootPath, "/commits").storeBytesObject(commit.serialize());
+        history.addCommit(commitHash);
     }
 
 

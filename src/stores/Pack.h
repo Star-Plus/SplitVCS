@@ -5,24 +5,30 @@
 #ifndef PACK_H
 #define PACK_H
 
-#include <map>
-#include <queue>
+#include <vector>
 #include <string>
+#include <memory>
 
 #include "core/Alias.h"
 
 namespace Split {
 
+    struct PackUnit {
+        str hash;
+        str baseHash;
+        str deltaHash;
+        std::shared_ptr<PackUnit> baseRef = nullptr;
+    };
+
     class Pack {
 
         std::string rootPath;
         std::string path;
-        std::map<str, std::pair<str, std::queue<str>>> packs;
+        std::vector<std::shared_ptr<PackUnit>> packs;
 
     public:
 
         Pack(const str& rootPath);
-        std::queue<str> getPack(const str &baseHash) const;
         void savePack(const str &hash) const;
         str getDecodedContent(const str&);
         str encodeDelta(const str& baseBytes, const str& targetBytes, const str& baseHash, const str& targetHash);

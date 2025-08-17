@@ -59,9 +59,9 @@ namespace Split {
 
         ObjectStore objectStore(rootPath, "/blobs");
 
-        const std::string blobHash = objectStore.storeFileObject(rootPath + filepath);
+        const std::string blobHash = objectStore.storeFileObject(filepath);
 
-        std::fstream originalFs(rootPath + filepath, std::ios::in | std::ios::binary);
+        std::fstream originalFs(filepath, std::ios::in | std::ios::binary);
         if (!originalFs.is_open()) {
             throw std::runtime_error("Failed to open file: " + filepath);
         }
@@ -73,7 +73,7 @@ namespace Split {
             entry.baseVersionHash = entries[filepath].baseVersionHash;
 
             Pack pack(rootPath);
-            auto decodedContent = pack.getDecodedContent(blobHash);
+            auto decodedContent = pack.getDecodedContent(entries[filepath].blobHash);
 
             if (decodedContent.empty()) {
                 throw std::runtime_error("Failed to decode content for " + filepath);
@@ -90,7 +90,7 @@ namespace Split {
                 decodedContent = baseBlobStringStream.str();
             }
 
-            pack.encodeDelta(decodedContent, targetContent, entry.baseVersionHash, blobHash);
+            pack.encodeDelta(decodedContent, targetContent, entries[filepath].blobHash, blobHash);
         }
         else {
             entry.baseVersionHash = blobHash;
@@ -99,7 +99,7 @@ namespace Split {
         originalFs.seekg(0, std::ios::end);
         entry.size = originalFs.tellg();
         originalFs.seekg(0, std::ios::beg);
-        entry.mtime = std::filesystem::last_write_time(rootPath+filepath).time_since_epoch().count();
+        entry.mtime = std::filesystem::last_write_time(filepath).time_since_epoch().count();
         originalFs.close();
 
         entry.blobHash = blobHash;
