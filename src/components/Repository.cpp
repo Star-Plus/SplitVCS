@@ -9,14 +9,17 @@
 
 namespace Split {
 
-    Repository::Repository(std::string name, const std::string &rootPath)
-    : name(std::move(name)), rootPath(rootPath), index(rootPath), history(rootPath) {
+    Repository::Repository(const str &rootPath)
+    : rootPath(rootPath), index(rootPath), history(rootPath) {
     }
 
     void Repository::init() const {
-
-        // Initialize the repository by creating necessary directories and files
         const std::string repoPath = rootPath + "/.split";
+
+        if (std::filesystem::exists(repoPath)) {
+            throw std::runtime_error("Repository already initialized at " + repoPath);
+        }
+
         std::filesystem::create_directories(repoPath);
     }
 

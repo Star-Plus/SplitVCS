@@ -11,12 +11,25 @@ set(OPENVCDIFF_LIB "${CMAKE_SOURCE_DIR}/external/open-vcdiff/lib")
 # --- Wrap OpenVCDIFF into a single target ---
 add_library(vcdiff INTERFACE)
 target_include_directories(vcdiff INTERFACE ${OPENVCDIFF_INCLUDE})
-target_link_libraries(vcdiff INTERFACE
-        ${OPENVCDIFF_LIB}/vcdcom.lib
-        ${OPENVCDIFF_LIB}/vcddec.lib
-        ${OPENVCDIFF_LIB}/vcdenc.lib
-        ${OPENVCDIFF_LIB}/vcdiff.lib
-)
+
+if (WIN32)
+    target_link_libraries(vcdiff INTERFACE
+            ${OPENVCDIFF_LIB}/vcdcom.lib
+            ${OPENVCDIFF_LIB}/vcddec.lib
+            ${OPENVCDIFF_LIB}/vcdenc.lib
+            ${OPENVCDIFF_LIB}/vcdiff.lib
+    )
+elseif(UNIX)
+    target_link_libraries(vcdiff INTERFACE
+            ${OPENVCDIFF_LIB}/libvcdcom.a
+            ${OPENVCDIFF_LIB}/libvcddec.a
+            ${OPENVCDIFF_LIB}/libvcdenc.a
+            ${OPENVCDIFF_LIB}/libvcdiff.a
+    )
+else()
+    message(FATAL_ERROR "Unsupported platform. Please add support for your platform.")
+endif()
+
 
 # --- Main library for your project ---
 add_library(scm_lib
@@ -34,6 +47,8 @@ add_library(scm_lib
         src/stores/Pack.cpp
         src/stores/Pack.h
         src/core/Alias.h
+        src/SplitInterface.cpp
+        src/SplitInterface.h
 )
 target_include_directories(scm_lib PUBLIC src ${OPENVCDIFF_INCLUDE})
 target_link_libraries(scm_lib PRIVATE vcdiff)
@@ -67,3 +82,6 @@ target_link_libraries(runTests PRIVATE scm_lib gtest_main)
 # --- Discover tests automatically ---
 include(GoogleTest)
 gtest_discover_tests(runTests)
+
+# Bindings
+add_subdirectory(python)

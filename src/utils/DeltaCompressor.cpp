@@ -1,8 +1,8 @@
 #include "DeltaCompressor.h"
 
 #include <stdexcept>
-#include "google/vcdecoder.h"
-#include "google/vcencoder.h"
+#include <google/vcencoder.h>
+#include <google/vcdecoder.h>
 
 
 namespace Split {

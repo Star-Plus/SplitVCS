@@ -175,7 +175,25 @@ build CMakeFiles\scm_lib.dir\src\stores\Pack.cpp.obj: CXX_COMPILER__scm_lib_scan
   TARGET_PDB = scm_lib.pdb
   dyndep = CMakeFiles/scm_lib.dir/CXX.dd
 
-build CMakeFiles\scm_lib.dir\CXX.dd | C$:\Users\Ahmed$ Mustafa\Desktop\SplitSCM\cmake-build-default\CMakeFiles\scm_lib.dir\CXXModules.json CMakeFiles\scm_lib.dir\src\stores\ObjectStore.cpp.obj.modmap CMakeFiles\scm_lib.dir\src\stores\Index.cpp.obj.modmap CMakeFiles\scm_lib.dir\src\components\Repository.cpp.obj.modmap CMakeFiles\scm_lib.dir\src\utils\DeltaCompressor.cpp.obj.modmap CMakeFiles\scm_lib.dir\src\components\Commit.cpp.obj.modmap CMakeFiles\scm_lib.dir\src\components\Tree.cpp.obj.modmap CMakeFiles\scm_lib.dir\src\stores\Pack.cpp.obj.modmap: CXX_DYNDEP__scm_lib_Debug CMakeFiles\scm_lib.dir\src\stores\ObjectStore.cpp.obj.ddi CMakeFiles\scm_lib.dir\src\stores\Index.cpp.obj.ddi CMakeFiles\scm_lib.dir\src\components\Repository.cpp.obj.ddi CMakeFiles\scm_lib.dir\src\utils\DeltaCompressor.cpp.obj.ddi CMakeFiles\scm_lib.dir\src\components\Commit.cpp.obj.ddi CMakeFiles\scm_lib.dir\src\components\Tree.cpp.obj.ddi CMakeFiles\scm_lib.dir\src\stores\Pack.cpp.obj.ddi | C$:\Users\Ahmed$ Mustafa\Desktop\SplitSCM\cmake-build-default\CMakeFiles\scm_lib.dir\CXXDependInfo.json
+build CMakeFiles\scm_lib.dir\src\SplitInterface.cpp.obj.ddi: CXX_SCAN__scm_lib_Debug C$:\Users\Ahmed$ Mustafa\Desktop\SplitSCM\src\SplitInterface.cpp || cmake_object_order_depends_target_scm_lib
+  DEP_FILE = CMakeFiles\scm_lib.dir\src\SplitInterface.cpp.obj.ddi.d
+  DYNDEP_INTERMEDIATE_FILE = CMakeFiles\scm_lib.dir\src\SplitInterface.cpp.obj.ddi
+  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++20 -MDd -Zi
+  INCLUDES = -I"C:\Users\Ahmed Mustafa\Desktop\SplitSCM\src" -I"C:\Users\Ahmed Mustafa\Desktop\SplitSCM\external\open-vcdiff\include"
+  OBJ_FILE = CMakeFiles\scm_lib.dir\src\SplitInterface.cpp.obj
+  PREPROCESSED_OUTPUT_FILE = CMakeFiles\scm_lib.dir\src\SplitInterface.cpp.obj.ddi.i
+
+build CMakeFiles\scm_lib.dir\src\SplitInterface.cpp.obj: CXX_COMPILER__scm_lib_scanned_Debug C$:\Users\Ahmed$ Mustafa\Desktop\SplitSCM\src\SplitInterface.cpp | CMakeFiles\scm_lib.dir\src\SplitInterface.cpp.obj.modmap || cmake_object_order_depends_target_scm_lib CMakeFiles\scm_lib.dir\CXX.dd
+  DYNDEP_MODULE_MAP_FILE = CMakeFiles\scm_lib.dir\src\SplitInterface.cpp.obj.modmap
+  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++20 -MDd -Zi
+  INCLUDES = -I"C:\Users\Ahmed Mustafa\Desktop\SplitSCM\src" -I"C:\Users\Ahmed Mustafa\Desktop\SplitSCM\external\open-vcdiff\include"
+  OBJECT_DIR = CMakeFiles\scm_lib.dir
+  OBJECT_FILE_DIR = CMakeFiles\scm_lib.dir\src
+  TARGET_COMPILE_PDB = CMakeFiles\scm_lib.dir\scm_lib.pdb
+  TARGET_PDB = scm_lib.pdb
+  dyndep = CMakeFiles/scm_lib.dir/CXX.dd
+
+build CMakeFiles\scm_lib.dir\CXX.dd | C$:\Users\Ahmed$ Mustafa\Desktop\SplitSCM\cmake-build-default\CMakeFiles\scm_lib.dir\CXXModules.json CMakeFiles\scm_lib.dir\src\stores\ObjectStore.cpp.obj.modmap CMakeFiles\scm_lib.dir\src\stores\Index.cpp.obj.modmap CMakeFiles\scm_lib.dir\src\components\Repository.cpp.obj.modmap CMakeFiles\scm_lib.dir\src\utils\DeltaCompressor.cpp.obj.modmap CMakeFiles\scm_lib.dir\src\components\Commit.cpp.obj.modmap CMakeFiles\scm_lib.dir\src\components\Tree.cpp.obj.modmap CMakeFiles\scm_lib.dir\src\stores\Pack.cpp.obj.modmap CMakeFiles\scm_lib.dir\src\SplitInterface.cpp.obj.modmap: CXX_DYNDEP__scm_lib_Debug CMakeFiles\scm_lib.dir\src\stores\ObjectStore.cpp.obj.ddi CMakeFiles\scm_lib.dir\src\stores\Index.cpp.obj.ddi CMakeFiles\scm_lib.dir\src\components\Repository.cpp.obj.ddi CMakeFiles\scm_lib.dir\src\utils\DeltaCompressor.cpp.obj.ddi CMakeFiles\scm_lib.dir\src\components\Commit.cpp.obj.ddi CMakeFiles\scm_lib.dir\src\components\Tree.cpp.obj.ddi CMakeFiles\scm_lib.dir\src\stores\Pack.cpp.obj.ddi CMakeFiles\scm_lib.dir\src\SplitInterface.cpp.obj.ddi | C$:\Users\Ahmed$ Mustafa\Desktop\SplitSCM\cmake-build-default\CMakeFiles\scm_lib.dir\CXXDependInfo.json
 
 
 # =============================================================================
@@ -185,7 +203,7 @@ build CMakeFiles\scm_lib.dir\CXX.dd | C$:\Users\Ahmed$ Mustafa\Desktop\SplitSCM\
 #############################################
 # Link the static library scm_lib.lib
 
-build scm_lib.lib: CXX_STATIC_LIBRARY_LINKER__scm_lib_Debug CMakeFiles\scm_lib.dir\src\stores\ObjectStore.cpp.obj CMakeFiles\scm_lib.dir\src\stores\Index.cpp.obj CMakeFiles\scm_lib.dir\src\components\Repository.cpp.obj CMakeFiles\scm_lib.dir\src\utils\DeltaCompressor.cpp.obj CMakeFiles\scm_lib.dir\src\components\Commit.cpp.obj CMakeFiles\scm_lib.dir\src\components\Tree.cpp.obj CMakeFiles\scm_lib.dir\src\stores\Pack.cpp.obj
+build scm_lib.lib: CXX_STATIC_LIBRARY_LINKER__scm_lib_Debug CMakeFiles\scm_lib.dir\src\stores\ObjectStore.cpp.obj CMakeFiles\scm_lib.dir\src\stores\Index.cpp.obj CMakeFiles\scm_lib.dir\src\components\Repository.cpp.obj CMakeFiles\scm_lib.dir\src\utils\DeltaCompressor.cpp.obj CMakeFiles\scm_lib.dir\src\components\Commit.cpp.obj CMakeFiles\scm_lib.dir\src\components\Tree.cpp.obj CMakeFiles\scm_lib.dir\src\stores\Pack.cpp.obj CMakeFiles\scm_lib.dir\src\SplitInterface.cpp.obj
   LANGUAGE_COMPILE_FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -MDd -Zi
   LINK_FLAGS = /machine:x64
   OBJECT_DIR = CMakeFiles\scm_lib.dir
@@ -824,6 +842,197 @@ build _deps\googletest-build\googletest\CMakeFiles\install\local.util: CUSTOM_CO
 build _deps\googletest-build\googletest\install\local: phony _deps\googletest-build\googletest\CMakeFiles\install\local.util
 
 # =============================================================================
+# Write statements declared in CMakeLists.txt:
+# C:/Users/Ahmed Mustafa/Desktop/SplitSCM/CMakeLists.txt
+# =============================================================================
+
+# =============================================================================
+# Object build statements for MODULE_LIBRARY target pyscm
+
+
+#############################################
+# Order-only phony target for pyscm
+
+build cmake_object_order_depends_target_pyscm: phony || cmake_object_order_depends_target_scm_lib
+
+build python\CMakeFiles\pyscm.dir\bindings.cpp.obj.ddi: CXX_SCAN__pyscm_Debug C$:\Users\Ahmed$ Mustafa\Desktop\SplitSCM\python\bindings.cpp || cmake_object_order_depends_target_pyscm
+  DEFINES = -Dpyscm_EXPORTS
+  DEP_FILE = python\CMakeFiles\pyscm.dir\bindings.cpp.obj.ddi.d
+  DYNDEP_INTERMEDIATE_FILE = python\CMakeFiles\pyscm.dir\bindings.cpp.obj.ddi
+  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++20 -MDd -Zi /bigobj
+  INCLUDES = -I"C:\Users\Ahmed Mustafa\Desktop\SplitSCM\src" -I"C:\Users\Ahmed Mustafa\Desktop\SplitSCM\external\open-vcdiff\include" -external:I"C:\Users\Ahmed Mustafa\AppData\Local\Programs\Python\Python312\include" -external:I"C:\Users\Ahmed Mustafa\Desktop\SplitSCM\cmake-build-default\_deps\pybind11-src\include" -external:W0
+  OBJ_FILE = python\CMakeFiles\pyscm.dir\bindings.cpp.obj
+  PREPROCESSED_OUTPUT_FILE = python\CMakeFiles\pyscm.dir\bindings.cpp.obj.ddi.i
+
+build python\CMakeFiles\pyscm.dir\bindings.cpp.obj: CXX_COMPILER__pyscm_scanned_Debug C$:\Users\Ahmed$ Mustafa\Desktop\SplitSCM\python\bindings.cpp | python\CMakeFiles\pyscm.dir\bindings.cpp.obj.modmap || cmake_object_order_depends_target_pyscm python\CMakeFiles\pyscm.dir\CXX.dd
+  DEFINES = -Dpyscm_EXPORTS
+  DYNDEP_MODULE_MAP_FILE = python\CMakeFiles\pyscm.dir\bindings.cpp.obj.modmap
+  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++20 -MDd -Zi /bigobj
+  INCLUDES = -I"C:\Users\Ahmed Mustafa\Desktop\SplitSCM\src" -I"C:\Users\Ahmed Mustafa\Desktop\SplitSCM\external\open-vcdiff\include" -external:I"C:\Users\Ahmed Mustafa\AppData\Local\Programs\Python\Python312\include" -external:I"C:\Users\Ahmed Mustafa\Desktop\SplitSCM\cmake-build-default\_deps\pybind11-src\include" -external:W0
+  OBJECT_DIR = python\CMakeFiles\pyscm.dir
+  OBJECT_FILE_DIR = python\CMakeFiles\pyscm.dir
+  TARGET_COMPILE_PDB = python\CMakeFiles\pyscm.dir\
+  TARGET_PDB = python\pyscm.pdb
+  dyndep = python/CMakeFiles/pyscm.dir/CXX.dd
+
+build python\CMakeFiles\pyscm.dir\CXX.dd | C$:\Users\Ahmed$ Mustafa\Desktop\SplitSCM\cmake-build-default\python\CMakeFiles\pyscm.dir\CXXModules.json python\CMakeFiles\pyscm.dir\bindings.cpp.obj.modmap: CXX_DYNDEP__pyscm_Debug python\CMakeFiles\pyscm.dir\bindings.cpp.obj.ddi | C$:\Users\Ahmed$ Mustafa\Desktop\SplitSCM\cmake-build-default\python\CMakeFiles\pyscm.dir\CXXDependInfo.json
+
+
+# =============================================================================
+# Link build statements for MODULE_LIBRARY target pyscm
+
+
+#############################################
+# Link the shared module python\pyscm.cp312-win_amd64.pyd
+
+build python\pyscm.cp312-win_amd64.pyd: CXX_MODULE_LIBRARY_LINKER__pyscm_Debug python\CMakeFiles\pyscm.dir\bindings.cpp.obj | C$:\Users\Ahmed$ Mustafa\AppData\Local\Programs\Python\Python312\libs\python312.lib scm_lib.lib C$:\Users\Ahmed$ Mustafa\Desktop\SplitSCM\external\open-vcdiff\lib\vcdcom.lib C$:\Users\Ahmed$ Mustafa\Desktop\SplitSCM\external\open-vcdiff\lib\vcddec.lib C$:\Users\Ahmed$ Mustafa\Desktop\SplitSCM\external\open-vcdiff\lib\vcdenc.lib C$:\Users\Ahmed$ Mustafa\Desktop\SplitSCM\external\open-vcdiff\lib\vcdiff.lib || scm_lib.lib
+  LANGUAGE_COMPILE_FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -MDd -Zi
+  LINK_FLAGS = /machine:x64 /debug /INCREMENTAL
+  LINK_LIBRARIES = "C:\Users\Ahmed Mustafa\AppData\Local\Programs\Python\Python312\libs\python312.lib"  scm_lib.lib  "C:\Users\Ahmed Mustafa\Desktop\SplitSCM\external\open-vcdiff\lib\vcdcom.lib"  "C:\Users\Ahmed Mustafa\Desktop\SplitSCM\external\open-vcdiff\lib\vcddec.lib"  "C:\Users\Ahmed Mustafa\Desktop\SplitSCM\external\open-vcdiff\lib\vcdenc.lib"  "C:\Users\Ahmed Mustafa\Desktop\SplitSCM\external\open-vcdiff\lib\vcdiff.lib"  kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib
+  OBJECT_DIR = python\CMakeFiles\pyscm.dir
+  POST_BUILD = cd .
+  PRE_LINK = cd .
+  TARGET_COMPILE_PDB = python\CMakeFiles\pyscm.dir\
+  TARGET_FILE = python\pyscm.cp312-win_amd64.pyd
+  TARGET_IMPLIB = python\pyscm.lib
+  TARGET_PDB = python\pyscm.pdb
+
+
+#############################################
+# Utility command for test
+
+build python\CMakeFiles\test.util: CUSTOM_COMMAND
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D "C:\Users\Ahmed Mustafa\Desktop\SplitSCM\cmake-build-default\python" && "C:\Program Files\JetBrains\CLion 2024.2.0.1\bin\cmake\win\x64\bin\ctest.exe" --force-new-ctest-process "
+  DESC = Running tests...
+  pool = console
+  restat = 1
+
+build python\test: phony python\CMakeFiles\test.util
+
+
+#############################################
+# Utility command for edit_cache
+
+build python\CMakeFiles\edit_cache.util: CUSTOM_COMMAND
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D "C:\Users\Ahmed Mustafa\Desktop\SplitSCM\cmake-build-default\python" && "C:\Program Files\JetBrains\CLion 2024.2.0.1\bin\cmake\win\x64\bin\cmake.exe" -E echo "No interactive CMake dialog available.""
+  DESC = No interactive CMake dialog available...
+  restat = 1
+
+build python\edit_cache: phony python\CMakeFiles\edit_cache.util
+
+
+#############################################
+# Utility command for rebuild_cache
+
+build python\CMakeFiles\rebuild_cache.util: CUSTOM_COMMAND
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D "C:\Users\Ahmed Mustafa\Desktop\SplitSCM\cmake-build-default\python" && "C:\Program Files\JetBrains\CLion 2024.2.0.1\bin\cmake\win\x64\bin\cmake.exe" --regenerate-during-build -S"C:\Users\Ahmed Mustafa\Desktop\SplitSCM" -B"C:\Users\Ahmed Mustafa\Desktop\SplitSCM\cmake-build-default""
+  DESC = Running CMake to regenerate build system...
+  pool = console
+  restat = 1
+
+build python\rebuild_cache: phony python\CMakeFiles\rebuild_cache.util
+
+
+#############################################
+# Utility command for list_install_components
+
+build python\list_install_components: phony
+
+
+#############################################
+# Utility command for install
+
+build python\CMakeFiles\install.util: CUSTOM_COMMAND python\all
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D "C:\Users\Ahmed Mustafa\Desktop\SplitSCM\cmake-build-default\python" && "C:\Program Files\JetBrains\CLion 2024.2.0.1\bin\cmake\win\x64\bin\cmake.exe" -P cmake_install.cmake"
+  DESC = Install the project...
+  pool = console
+  restat = 1
+
+build python\install: phony python\CMakeFiles\install.util
+
+
+#############################################
+# Utility command for install/local
+
+build python\CMakeFiles\install\local.util: CUSTOM_COMMAND python\all
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D "C:\Users\Ahmed Mustafa\Desktop\SplitSCM\cmake-build-default\python" && "C:\Program Files\JetBrains\CLion 2024.2.0.1\bin\cmake\win\x64\bin\cmake.exe" -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake"
+  DESC = Installing only the local directory...
+  pool = console
+  restat = 1
+
+build python\install\local: phony python\CMakeFiles\install\local.util
+
+# =============================================================================
+# Write statements declared in CMakeLists.txt:
+# C:/Users/Ahmed Mustafa/Desktop/SplitSCM/python/CMakeLists.txt
+# =============================================================================
+
+
+#############################################
+# Utility command for test
+
+build _deps\pybind11-build\CMakeFiles\test.util: CUSTOM_COMMAND
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D "C:\Users\Ahmed Mustafa\Desktop\SplitSCM\cmake-build-default\_deps\pybind11-build" && "C:\Program Files\JetBrains\CLion 2024.2.0.1\bin\cmake\win\x64\bin\ctest.exe" --force-new-ctest-process "
+  DESC = Running tests...
+  pool = console
+  restat = 1
+
+build _deps\pybind11-build\test: phony _deps\pybind11-build\CMakeFiles\test.util
+
+
+#############################################
+# Utility command for edit_cache
+
+build _deps\pybind11-build\CMakeFiles\edit_cache.util: CUSTOM_COMMAND
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D "C:\Users\Ahmed Mustafa\Desktop\SplitSCM\cmake-build-default\_deps\pybind11-build" && "C:\Program Files\JetBrains\CLion 2024.2.0.1\bin\cmake\win\x64\bin\cmake.exe" -E echo "No interactive CMake dialog available.""
+  DESC = No interactive CMake dialog available...
+  restat = 1
+
+build _deps\pybind11-build\edit_cache: phony _deps\pybind11-build\CMakeFiles\edit_cache.util
+
+
+#############################################
+# Utility command for rebuild_cache
+
+build _deps\pybind11-build\CMakeFiles\rebuild_cache.util: CUSTOM_COMMAND
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D "C:\Users\Ahmed Mustafa\Desktop\SplitSCM\cmake-build-default\_deps\pybind11-build" && "C:\Program Files\JetBrains\CLion 2024.2.0.1\bin\cmake\win\x64\bin\cmake.exe" --regenerate-during-build -S"C:\Users\Ahmed Mustafa\Desktop\SplitSCM" -B"C:\Users\Ahmed Mustafa\Desktop\SplitSCM\cmake-build-default""
+  DESC = Running CMake to regenerate build system...
+  pool = console
+  restat = 1
+
+build _deps\pybind11-build\rebuild_cache: phony _deps\pybind11-build\CMakeFiles\rebuild_cache.util
+
+
+#############################################
+# Utility command for list_install_components
+
+build _deps\pybind11-build\list_install_components: phony
+
+
+#############################################
+# Utility command for install
+
+build _deps\pybind11-build\CMakeFiles\install.util: CUSTOM_COMMAND _deps\pybind11-build\all
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D "C:\Users\Ahmed Mustafa\Desktop\SplitSCM\cmake-build-default\_deps\pybind11-build" && "C:\Program Files\JetBrains\CLion 2024.2.0.1\bin\cmake\win\x64\bin\cmake.exe" -P cmake_install.cmake"
+  DESC = Install the project...
+  pool = console
+  restat = 1
+
+build _deps\pybind11-build\install: phony _deps\pybind11-build\CMakeFiles\install.util
+
+
+#############################################
+# Utility command for install/local
+
+build _deps\pybind11-build\CMakeFiles\install\local.util: CUSTOM_COMMAND _deps\pybind11-build\all
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D "C:\Users\Ahmed Mustafa\Desktop\SplitSCM\cmake-build-default\_deps\pybind11-build" && "C:\Program Files\JetBrains\CLion 2024.2.0.1\bin\cmake\win\x64\bin\cmake.exe" -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake"
+  DESC = Installing only the local directory...
+  pool = console
+  restat = 1
+
+build _deps\pybind11-build\install\local: phony _deps\pybind11-build\CMakeFiles\install\local.util
+
+# =============================================================================
 # Target aliases.
 
 build SplitSCM: phony SplitSCM.exe
@@ -844,6 +1053,10 @@ build gtest_main: phony lib\gtest_main.lib
 
 build gtest_main.lib: phony lib\gtest_main.lib
 
+build pyscm: phony python\pyscm.cp312-win_amd64.pyd
+
+build pyscm.cp312-win_amd64.pyd: phony python\pyscm.cp312-win_amd64.pyd
+
 build runTests: phony runTests.exe
 
 build scm_lib: phony scm_lib.lib
@@ -856,7 +1069,7 @@ build scm_lib: phony scm_lib.lib
 #############################################
 # Folder: C:/Users/Ahmed Mustafa/Desktop/SplitSCM/cmake-build-default
 
-build all: phony scm_lib.lib SplitSCM.exe runTests.exe _deps\googletest-build\all
+build all: phony scm_lib.lib SplitSCM.exe runTests.exe _deps\googletest-build\all python\all
 
 # =============================================================================
 
@@ -880,20 +1093,34 @@ build _deps\googletest-build\googlemock\all: phony lib\gmock.lib lib\gmock_main.
 build _deps\googletest-build\googletest\all: phony lib\gtest.lib lib\gtest_main.lib
 
 # =============================================================================
+
+#############################################
+# Folder: C:/Users/Ahmed Mustafa/Desktop/SplitSCM/cmake-build-default/_deps/pybind11-build
+
+build _deps\pybind11-build\all: phony
+
+# =============================================================================
+
+#############################################
+# Folder: C:/Users/Ahmed Mustafa/Desktop/SplitSCM/cmake-build-default/python
+
+build python\all: phony python\pyscm.cp312-win_amd64.pyd _deps\pybind11-build\all
+
+# =============================================================================
 # Built-in targets
 
 
 #############################################
 # Re-run CMake if any of its inputs changed.
 
-build build.ninja: RERUN_CMAKE | C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\BasicConfigVersion-AnyNewerVersion.cmake.in C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\CMakeCInformation.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\CMakeCXXInformation.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\CMakeCommonLanguageInclude.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\CMakeDependentOption.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\CMakeGenericSystem.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\CMakeInitializeConfigs.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\CMakeLanguageInformation.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\CMakePackageConfigHelpers.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\CMakeRCInformation.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\CMakeSystemSpecificInformation.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\CMakeSystemSpecificInitialize.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\CheckCSourceCompiles.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\CheckIncludeFile.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\CheckLibraryExists.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\Compiler\CMakeCommonCompilerMacros.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\Compiler\MSVC-C.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\Compiler\MSVC-CXX.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\Compiler\MSVC.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\ExternalProject\shared_internal_commands.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\FetchContent.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\FetchContent\CMakeLists.cmake.in C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\FindPackageHandleStandardArgs.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\FindPackageMessage.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\FindThreads.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\GNUInstallDirs.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\GoogleTest.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\Internal\CheckSourceCompiles.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\Platform\Windows-Initialize.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\Platform\Windows-MSVC-C.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\Platform\Windows-MSVC-CXX.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\Platform\Windows-MSVC.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\Platform\Windows.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\Platform\WindowsPaths.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\WriteBasicConfigVersionFile.cmake C$:\Users\Ahmed$ Mustafa\Desktop\SplitSCM\CMakeLists.txt CMakeCache.txt CMakeFiles\3.29.6\CMakeCCompiler.cmake CMakeFiles\3.29.6\CMakeCXXCompiler.cmake CMakeFiles\3.29.6\CMakeRCCompiler.cmake CMakeFiles\3.29.6\CMakeSystem.cmake _deps\googletest-src\CMakeLists.txt _deps\googletest-src\googlemock\CMakeLists.txt _deps\googletest-src\googlemock\cmake\gmock.pc.in _deps\googletest-src\googlemock\cmake\gmock_main.pc.in _deps\googletest-src\googletest\CMakeLists.txt _deps\googletest-src\googletest\cmake\Config.cmake.in _deps\googletest-src\googletest\cmake\gtest.pc.in _deps\googletest-src\googletest\cmake\gtest_main.pc.in _deps\googletest-src\googletest\cmake\internal_utils.cmake
+build build.ninja: RERUN_CMAKE | C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\BasicConfigVersion-AnyNewerVersion.cmake.in C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\CMakeCInformation.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\CMakeCXXInformation.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\CMakeCheckCompilerFlagCommonPatterns.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\CMakeCommonLanguageInclude.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\CMakeDependentOption.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\CMakeGenericSystem.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\CMakeInitializeConfigs.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\CMakeLanguageInformation.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\CMakePackageConfigHelpers.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\CMakeRCInformation.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\CMakeSystemSpecificInformation.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\CMakeSystemSpecificInitialize.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\CheckCSourceCompiles.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\CheckCXXCompilerFlag.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\CheckCXXSourceCompiles.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\CheckIncludeFile.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\CheckLibraryExists.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\Compiler\CMakeCommonCompilerMacros.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\Compiler\MSVC-C.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\Compiler\MSVC-CXX.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\Compiler\MSVC.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\ExternalProject\shared_internal_commands.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\FetchContent.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\FetchContent\CMakeLists.cmake.in C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\FindPackageHandleStandardArgs.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\FindPackageMessage.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\FindPython.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\FindPython\Support.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\FindThreads.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\GNUInstallDirs.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\GoogleTest.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\Internal\CheckCompilerFlag.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\Internal\CheckFlagCommonConfig.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\Internal\CheckSourceCompiles.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\Platform\Windows-Initialize.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\Platform\Windows-MSVC-C.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\Platform\Windows-MSVC-CXX.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\Platform\Windows-MSVC.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\Platform\Windows.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\Platform\WindowsPaths.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\WriteBasicConfigVersionFile.cmake C$:\Users\Ahmed$ Mustafa\Desktop\SplitSCM\CMakeLists.txt C$:\Users\Ahmed$ Mustafa\Desktop\SplitSCM\python\CMakeLists.txt CMakeCache.txt CMakeFiles\3.29.6\CMakeCCompiler.cmake CMakeFiles\3.29.6\CMakeCXXCompiler.cmake CMakeFiles\3.29.6\CMakeRCCompiler.cmake CMakeFiles\3.29.6\CMakeSystem.cmake _deps\googletest-src\CMakeLists.txt _deps\googletest-src\googlemock\CMakeLists.txt _deps\googletest-src\googlemock\cmake\gmock.pc.in _deps\googletest-src\googlemock\cmake\gmock_main.pc.in _deps\googletest-src\googletest\CMakeLists.txt _deps\googletest-src\googletest\cmake\Config.cmake.in _deps\googletest-src\googletest\cmake\gtest.pc.in _deps\googletest-src\googletest\cmake\gtest_main.pc.in _deps\googletest-src\googletest\cmake\internal_utils.cmake _deps\pybind11-src\CMakeLists.txt _deps\pybind11-src\tools\JoinPaths.cmake _deps\pybind11-src\tools\pybind11Common.cmake _deps\pybind11-src\tools\pybind11NewTools.cmake
   pool = console
 
 
 #############################################
 # A missing CMake input file is not an error.
 
-build C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\BasicConfigVersion-AnyNewerVersion.cmake.in C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\CMakeCInformation.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\CMakeCXXInformation.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\CMakeCommonLanguageInclude.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\CMakeDependentOption.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\CMakeGenericSystem.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\CMakeInitializeConfigs.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\CMakeLanguageInformation.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\CMakePackageConfigHelpers.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\CMakeRCInformation.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\CMakeSystemSpecificInformation.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\CMakeSystemSpecificInitialize.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\CheckCSourceCompiles.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\CheckIncludeFile.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\CheckLibraryExists.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\Compiler\CMakeCommonCompilerMacros.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\Compiler\MSVC-C.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\Compiler\MSVC-CXX.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\Compiler\MSVC.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\ExternalProject\shared_internal_commands.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\FetchContent.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\FetchContent\CMakeLists.cmake.in C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\FindPackageHandleStandardArgs.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\FindPackageMessage.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\FindThreads.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\GNUInstallDirs.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\GoogleTest.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\Internal\CheckSourceCompiles.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\Platform\Windows-Initialize.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\Platform\Windows-MSVC-C.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\Platform\Windows-MSVC-CXX.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\Platform\Windows-MSVC.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\Platform\Windows.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\Platform\WindowsPaths.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\WriteBasicConfigVersionFile.cmake C$:\Users\Ahmed$ Mustafa\Desktop\SplitSCM\CMakeLists.txt CMakeCache.txt CMakeFiles\3.29.6\CMakeCCompiler.cmake CMakeFiles\3.29.6\CMakeCXXCompiler.cmake CMakeFiles\3.29.6\CMakeRCCompiler.cmake CMakeFiles\3.29.6\CMakeSystem.cmake _deps\googletest-src\CMakeLists.txt _deps\googletest-src\googlemock\CMakeLists.txt _deps\googletest-src\googlemock\cmake\gmock.pc.in _deps\googletest-src\googlemock\cmake\gmock_main.pc.in _deps\googletest-src\googletest\CMakeLists.txt _deps\googletest-src\googletest\cmake\Config.cmake.in _deps\googletest-src\googletest\cmake\gtest.pc.in _deps\googletest-src\googletest\cmake\gtest_main.pc.in _deps\googletest-src\googletest\cmake\internal_utils.cmake: phony
+build C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\BasicConfigVersion-AnyNewerVersion.cmake.in C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\CMakeCInformation.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\CMakeCXXInformation.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\CMakeCheckCompilerFlagCommonPatterns.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\CMakeCommonLanguageInclude.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\CMakeDependentOption.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\CMakeGenericSystem.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\CMakeInitializeConfigs.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\CMakeLanguageInformation.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\CMakePackageConfigHelpers.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\CMakeRCInformation.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\CMakeSystemSpecificInformation.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\CMakeSystemSpecificInitialize.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\CheckCSourceCompiles.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\CheckCXXCompilerFlag.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\CheckCXXSourceCompiles.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\CheckIncludeFile.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\CheckLibraryExists.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\Compiler\CMakeCommonCompilerMacros.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\Compiler\MSVC-C.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\Compiler\MSVC-CXX.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\Compiler\MSVC.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\ExternalProject\shared_internal_commands.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\FetchContent.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\FetchContent\CMakeLists.cmake.in C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\FindPackageHandleStandardArgs.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\FindPackageMessage.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\FindPython.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\FindPython\Support.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\FindThreads.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\GNUInstallDirs.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\GoogleTest.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\Internal\CheckCompilerFlag.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\Internal\CheckFlagCommonConfig.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\Internal\CheckSourceCompiles.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\Platform\Windows-Initialize.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\Platform\Windows-MSVC-C.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\Platform\Windows-MSVC-CXX.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\Platform\Windows-MSVC.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\Platform\Windows.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\Platform\WindowsPaths.cmake C$:\Program$ Files\JetBrains\CLion$ 2024.2.0.1\bin\cmake\win\x64\share\cmake-3.29\Modules\WriteBasicConfigVersionFile.cmake C$:\Users\Ahmed$ Mustafa\Desktop\SplitSCM\CMakeLists.txt C$:\Users\Ahmed$ Mustafa\Desktop\SplitSCM\python\CMakeLists.txt CMakeCache.txt CMakeFiles\3.29.6\CMakeCCompiler.cmake CMakeFiles\3.29.6\CMakeCXXCompiler.cmake CMakeFiles\3.29.6\CMakeRCCompiler.cmake CMakeFiles\3.29.6\CMakeSystem.cmake _deps\googletest-src\CMakeLists.txt _deps\googletest-src\googlemock\CMakeLists.txt _deps\googletest-src\googlemock\cmake\gmock.pc.in _deps\googletest-src\googlemock\cmake\gmock_main.pc.in _deps\googletest-src\googletest\CMakeLists.txt _deps\googletest-src\googletest\cmake\Config.cmake.in _deps\googletest-src\googletest\cmake\gtest.pc.in _deps\googletest-src\googletest\cmake\gtest_main.pc.in _deps\googletest-src\googletest\cmake\internal_utils.cmake _deps\pybind11-src\CMakeLists.txt _deps\pybind11-src\tools\JoinPaths.cmake _deps\pybind11-src\tools\pybind11Common.cmake _deps\pybind11-src\tools\pybind11NewTools.cmake: phony
 
 
 #############################################

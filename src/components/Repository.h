@@ -13,13 +13,12 @@
 namespace Split {
     class Repository {
 
-        std::string name;
         std::string rootPath;
         Index index;
         CommitHistory history;
 
     public:
-        Repository(std::string  name, const std::string& rootPath);
+        Repository(const std::string& rootPath);
 
         void init() const;
         void add(const std::string& filepath);
