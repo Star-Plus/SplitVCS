@@ -22,3 +22,4 @@ CMakeUserPresets.json
 
 # NodeJS
 nodejs/node_modules
+*/build
