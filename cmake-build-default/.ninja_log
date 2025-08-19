@@ -1,7 +1,7 @@
 # ninja log v6
 5	107	7768709595877055	CMakeFiles/SplitSCM.dir/src/utils/ObjectStore.cpp.obj.ddi	9e66803adeeac868
 34	100	7772754116151124	CMakeFiles/SplitSCM.dir/main.cpp.obj.modmap	b8e6b816db80177b
-37	77	7772757054923797	CMakeFiles/scm_lib.dir/src/stores/Index.cpp.obj.modmap	9941f6b25ec0409
+28	62	7772757767076084	CMakeFiles/scm_lib.dir/src/stores/Index.cpp.obj.modmap	9941f6b25ec0409
 34	100	7772754116151124	C:/Users/Ahmed Mustafa/Desktop/SplitSCM/cmake-build-default/CMakeFiles/SplitSCM.dir/CXXModules.json	b8e6b816db80177b
 55	522	7771842057785963	CMakeFiles/scm_lib.dir/src/components/Repository.cpp.obj.ddi	195901eb60b14525
 4	143	7769911583279579	CMakeFiles/scm_lib.dir/src/utils/ObjectStore.cpp.obj.ddi	4d03e07e81bb0716
@@ -11,11 +11,11 @@
 66	517	7771842057886241	python/CMakeFiles/pyscm.dir/bindings.cpp.obj.ddi	4fbd5ddb431685a
 5	127	7772473203149754	CMakeFiles/SplitSCM.dir/main.cpp.obj.ddi	2430788fb7e9deb4
 11	170	7768709595937122	CMakeFiles/SplitSCM.dir/src/stores/Repository.cpp.obj.ddi	2d5cc4f2071dde94
-37	77	7772757054923797	CMakeFiles/scm_lib.dir/src/SplitInterface.cpp.obj.modmap	9941f6b25ec0409
+28	62	7772757767076084	CMakeFiles/scm_lib.dir/src/SplitInterface.cpp.obj.modmap	9941f6b25ec0409
 170	1683	7769911584939580	CMakeFiles/scm_lib.dir/src/utils/ObjectStore.cpp.obj	1b4a27fcc3a362c
 34	100	7772754116151124	CMakeFiles/SplitSCM.dir/CXX.dd	b8e6b816db80177b
 49	273	7771656264639925	CMakeFiles/scm_lib.dir/src/components/Commit.cpp.obj.ddi	5b09fcd394e5e19e
-37	77	7772757054923797	CMakeFiles/scm_lib.dir/src/components/Repository.cpp.obj.modmap	9941f6b25ec0409
+28	62	7772757767076084	CMakeFiles/scm_lib.dir/src/components/Repository.cpp.obj.modmap	9941f6b25ec0409
 585	2669	7770062705000901	CMakeFiles/scm_lib.dir/src/stores/Repository.cpp.obj	ad0dbc1186ddc8da
 239	1846	7768709598209522	CMakeFiles/SplitSCM.dir/src/stores/Repository.cpp.obj	85224decc084e1c
 135	163	7768901201956081	CMakeFiles/SplitSCM.dir/src/utils/ObjectStore.cpp.obj.modmap	eb980469a7de3788
@@ -32,23 +32,23 @@
 108	517	7772754116883942	SplitSCM.exe	43fcb91f5d2866d6
 20	162	7768916131810223	CMakeFiles/runTests.dir/tests/DeltaCompressorTest.cpp.obj.ddi	8e925c4b900300a3
 4	33	7769930282897591	CMakeFiles/scm_lib.dir/src/utils/ObjectStore.cpp.obj.modmap	9c755b1ca82f37c4
-4	733	7772757765853810	build.ninja	932fc2e222bdbd97
+3	2537	7772776272702423	build.ninja	932fc2e222bdbd97
 16	501	7770062699303244	CMakeFiles/scm_lib.dir/src/stores/Repository.cpp.obj.ddi	c9dc9106834cf11a
 40	261	7771656264552389	CMakeFiles/scm_lib.dir/src/stores/Index.cpp.obj.ddi	abce6e90f9c7d507
 370	402	7770912140782625	CMakeFiles/runTests.dir/tests/PackTest.cpp.obj.modmap	6be26725d399400c
 370	402	7770912140782625	CMakeFiles/runTests.dir/CXX.dd	6be26725d399400c
-37	77	7772757054923797	CMakeFiles/scm_lib.dir/CXX.dd	9941f6b25ec0409
+28	62	7772757767076084	CMakeFiles/scm_lib.dir/CXX.dd	9941f6b25ec0409
 230	2798	7769934358901629	CMakeFiles/runTests.dir/tests/ObjectStoreTest.cpp.obj	e0381f6e0c4043a0
-37	77	7772757054923797	C:/Users/Ahmed Mustafa/Desktop/SplitSCM/cmake-build-default/CMakeFiles/scm_lib.dir/CXXModules.json	9941f6b25ec0409
+28	62	7772757767076084	C:/Users/Ahmed Mustafa/Desktop/SplitSCM/cmake-build-default/CMakeFiles/scm_lib.dir/CXXModules.json	9941f6b25ec0409
 48	134	7772483508962565	nodejs/nodescm.node	353ce19a5efc6f97
 140	164	7770644172755396	CMakeFiles/scm_lib.dir/src/stores/Repository.cpp.obj.modmap	b538fe0d8154621a
 346	2899	7771656267614685	CMakeFiles/scm_lib.dir/src/stores/Index.cpp.obj	312a5ac7f823ecc8
-37	77	7772757054923797	CMakeFiles/scm_lib.dir/src/components/Commit.cpp.obj.modmap	9941f6b25ec0409
-37	77	7772757054923797	CMakeFiles/scm_lib.dir/src/utils/DeltaCompressor.cpp.obj.modmap	9941f6b25ec0409
+28	62	7772757767076084	CMakeFiles/scm_lib.dir/src/components/Commit.cpp.obj.modmap	9941f6b25ec0409
+28	62	7772757767076084	CMakeFiles/scm_lib.dir/src/utils/DeltaCompressor.cpp.obj.modmap	9941f6b25ec0409
 355	1027	7771656267699975	CMakeFiles/scm_lib.dir/src/utils/DeltaCompressor.cpp.obj	6755740ff41cbc56
 370	402	7770912140782625	C:/Users/Ahmed Mustafa/Desktop/SplitSCM/cmake-build-default/CMakeFiles/runTests.dir/CXXModules.json	6be26725d399400c
 518	583	7771842063017137	C:/Users/Ahmed Mustafa/Desktop/SplitSCM/cmake-build-default/python/CMakeFiles/pyscm.dir/CXXModules.json	300b8a2ac4024610
-37	77	7772757054923797	CMakeFiles/scm_lib.dir/src/stores/Pack.cpp.obj.modmap	9941f6b25ec0409
+28	62	7772757767076084	CMakeFiles/scm_lib.dir/src/stores/Pack.cpp.obj.modmap	9941f6b25ec0409
 370	402	7770912140782625	CMakeFiles/runTests.dir/tests/DeltaCompressorTest.cpp.obj.modmap	6be26725d399400c
 33	1906	7768915861656954	_deps/googletest-build/googletest/CMakeFiles/gtest_main.dir/src/gtest_main.cc.obj	f34733abe8ddd394
 29	3881	7768915861606943	_deps/googletest-build/googletest/CMakeFiles/gtest.dir/src/gtest-all.cc.obj	384fc92cc4231038
@@ -67,12 +67,12 @@
 370	402	7770912140782625	CMakeFiles/runTests.dir/tests/IndexTest.cpp.obj.modmap	6be26725d399400c
 382	2819	7770674088198908	CMakeFiles/runTests.dir/tests/IndexTest.cpp.obj	3a3b8ff5ec29d373
 35	251	7771656264496639	CMakeFiles/scm_lib.dir/src/stores/ObjectStore.cpp.obj.ddi	32eb18d5fffd1e52
-37	77	7772757054923797	CMakeFiles/scm_lib.dir/src/stores/ObjectStore.cpp.obj.modmap	9941f6b25ec0409
+28	62	7772757767076084	CMakeFiles/scm_lib.dir/src/stores/ObjectStore.cpp.obj.modmap	9941f6b25ec0409
 653	2608	7771842063758869	CMakeFiles/scm_lib.dir/src/components/Repository.cpp.obj	57e705069308b280
 54	226	7771656264695139	CMakeFiles/scm_lib.dir/src/components/Tree.cpp.obj.ddi	da9ffad39bbaa58a
 4	147	7770734602113399	CMakeFiles/runTests.dir/tests/TimeTest.cpp.obj.ddi	d988a9cf9c1dec72
 370	402	7770912140782625	CMakeFiles/runTests.dir/tests/TimeTest.cpp.obj.modmap	6be26725d399400c
-37	77	7772757054923797	CMakeFiles/scm_lib.dir/src/components/Tree.cpp.obj.modmap	9941f6b25ec0409
+28	62	7772757767076084	CMakeFiles/scm_lib.dir/src/components/Tree.cpp.obj.modmap	9941f6b25ec0409
 363	1609	7771656267775261	CMakeFiles/scm_lib.dir/src/components/Tree.cpp.obj	b76c41f51f5423e4
 173	1543	7770734603793380	CMakeFiles/runTests.dir/tests/TimeTest.cpp.obj	ad3157238cd46b03
 359	2853	7771656267745189	CMakeFiles/scm_lib.dir/src/components/Commit.cpp.obj	2c8cd181fa3ab4b0
@@ -86,14 +86,3 @@
 590	3577	7771842063128294	python/CMakeFiles/pyscm.dir/bindings.cpp.obj	b406db100129e0e0
 3577	4274	7771842093001310	python/pyscm.cp312-win_amd64.pyd	2da7cd77284a495b
 6	48	7772483508540651	nodejs/CMakeFiles/nodescm.dir/bindings.cpp.obj	d981c5b565fd991b
-3	2537	7772757765853810	build.ninja	932fc2e222bdbd97
-28	62	7772757767076084	CMakeFiles/scm_lib.dir/CXX.dd	9941f6b25ec0409
-28	62	7772757767076084	C:/Users/Ahmed Mustafa/Desktop/SplitSCM/cmake-build-default/CMakeFiles/scm_lib.dir/CXXModules.json	9941f6b25ec0409
-28	62	7772757767076084	CMakeFiles/scm_lib.dir/src/stores/ObjectStore.cpp.obj.modmap	9941f6b25ec0409
-28	62	7772757767076084	CMakeFiles/scm_lib.dir/src/stores/Index.cpp.obj.modmap	9941f6b25ec0409
-28	62	7772757767076084	CMakeFiles/scm_lib.dir/src/components/Repository.cpp.obj.modmap	9941f6b25ec0409
-28	62	7772757767076084	CMakeFiles/scm_lib.dir/src/utils/DeltaCompressor.cpp.obj.modmap	9941f6b25ec0409
-28	62	7772757767076084	CMakeFiles/scm_lib.dir/src/components/Commit.cpp.obj.modmap	9941f6b25ec0409
-28	62	7772757767076084	CMakeFiles/scm_lib.dir/src/components/Tree.cpp.obj.modmap	9941f6b25ec0409
-28	62	7772757767076084	CMakeFiles/scm_lib.dir/src/stores/Pack.cpp.obj.modmap	9941f6b25ec0409
-28	62	7772757767076084	CMakeFiles/scm_lib.dir/src/SplitInterface.cpp.obj.modmap	9941f6b25ec0409

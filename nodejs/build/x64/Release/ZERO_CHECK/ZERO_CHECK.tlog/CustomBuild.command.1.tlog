@@ -1,0 +1,10 @@
+^C:\USERS\AHMED MUSTAFA\DESKTOP\SPLITSCM\NODEJS\BUILD\CMAKEFILES\8C9E5202786A471FA620347611977F11\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" "-SC:/Users/Ahmed Mustafa/Desktop/SplitSCM/nodejs" "-BC:/Users/Ahmed Mustafa/Desktop/SplitSCM/nodejs/build" --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file "C:/Users/Ahmed Mustafa/Desktop/SplitSCM/nodejs/build/nodescm.sln"
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
