@@ -19,3 +19,7 @@ CMakeUserPresets.json
 #cmake-build-*
 
 .idea
+
+# NodeJS
+nodejs/node_modules
+nodejs

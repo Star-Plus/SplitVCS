@@ -5,7 +5,7 @@
 int main() {
     std::cout << "Hello, Split Version Control System!" << std::endl;
 
-    Split::Repository repo("MyRepo", "test_repo");
+    Split::Repository repo("test_repo");
     repo.init();
 
     // Simulate adding a file and committing
