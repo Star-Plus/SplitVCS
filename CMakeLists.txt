@@ -85,4 +85,5 @@ gtest_discover_tests(runTests)
 
 # Bindings
 add_subdirectory(python)
-add_subdirectory(nodejs)
+#add_subdirectory(nodejs)
+add_subdirectory(rust)

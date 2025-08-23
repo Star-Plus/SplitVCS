@@ -1,5 +1,0 @@
-if(EXISTS "C:/Users/Ahmed Mustafa/Desktop/SplitSCM/cmake-build-default/runTests[1]_tests.cmake")
-  include("C:/Users/Ahmed Mustafa/Desktop/SplitSCM/cmake-build-default/runTests[1]_tests.cmake")
-else()
-  add_test(runTests_NOT_BUILT runTests_NOT_BUILT)
-endif()
