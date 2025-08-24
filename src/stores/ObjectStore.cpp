@@ -21,17 +21,20 @@ namespace Split {
 
     bool ObjectStore::hasObject(const std::string &hash) const {
         const std::string objectPath = path + "/" + hash;
-        const std::ifstream file(objectPath, std::ios::binary);
-        return file.good();
+        std::ifstream file(objectPath, std::ios::binary);
+        const auto state = file.good();
+        file.close();
+        return state;
     }
 
     std::string ObjectStore::storeFileObject(const std::string &filePath) const {
-        std::ifstream file(filePath, std::ios::binary);
+        const auto originalPath = rootPath + "/" + filePath;
+        std::ifstream file(originalPath, std::ios::binary);
         if (!file) {
             throw std::runtime_error("Failed to open file: " + filePath);
         }
 
-        std::string hash = Hashing::computeFileHash(filePath);
+        std::string hash = Hashing::computeFileHash(originalPath);
         const std::string objectPath = path + "/" + hash;
 
         if (hasObject(hash)) {
@@ -45,6 +48,7 @@ namespace Split {
 
         outFile << file.rdbuf();
         outFile.close();
+        file.close();
 
         return hash;
     }

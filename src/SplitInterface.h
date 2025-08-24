@@ -14,6 +14,8 @@ namespace Split {
         static void Add(const str& rootPath, const str& filePath);
         static void Commit(const str& rootPath, const str& commitMessage, const str& author);
         static void Checkout(const str& rootPath, const str& commitId);
+
+        static str GetStatus(const str& rootPath);
     };
 
 }

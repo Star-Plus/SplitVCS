@@ -27,6 +27,8 @@ namespace Split {
                 sha1.update(reinterpret_cast<uint8_t*>(buffer), file.gcount());
             }
 
+            file.close();
+
             return sha1.final();
         }
 

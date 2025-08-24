@@ -49,6 +49,8 @@ add_library(scm_lib
         src/core/Alias.h
         src/SplitInterface.cpp
         src/SplitInterface.h
+        src/features/RepositoryStatus.cpp
+        src/features/RepositoryStatus.h
 )
 target_include_directories(scm_lib PUBLIC src ${OPENVCDIFF_INCLUDE})
 target_link_libraries(scm_lib PRIVATE vcdiff)
@@ -76,6 +78,7 @@ add_executable(runTests
         tests/IndexTest.cpp
         tests/TimeTest.cpp
         tests/TreeTest.cpp
+        tests/RepositoryStatusTest.cpp
 )
 target_link_libraries(runTests PRIVATE scm_lib gtest_main)
 

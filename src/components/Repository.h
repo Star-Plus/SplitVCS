@@ -26,6 +26,8 @@ namespace Split {
         void checkout(const std::string& commitHash);
         std::vector<str> getCommitHistory() const;
 
+        const Index& getIndex() const { return index; }
+
     };
 }
 

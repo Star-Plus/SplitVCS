@@ -24,7 +24,7 @@ namespace Split {
     }
 
     void Repository::add(const std::string &filepath) {
-        index.stageFile(rootPath + "/" + filepath);
+        index.stageFile(filepath);
     }
 
     void Repository::commit(const std::string &message, const std::string &author) {

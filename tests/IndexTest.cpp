@@ -15,8 +15,8 @@ TEST(IndexTest, StageCreatedFile) {
 
     std::filesystem::create_directories(rootPath+ "/.split");
 
-    std::string filePath = "/test_file.txt";
-    std::ofstream file(rootPath+filePath);
+    std::string filePath = "test_file.txt";
+    std::ofstream file(rootPath+"/"+filePath);
     ASSERT_TRUE(file.is_open());
     file << "Test content for staging.";
     file.close();
@@ -27,7 +27,7 @@ TEST(IndexTest, StageCreatedFile) {
     ASSERT_TRUE(indexFile.is_open());
     indexFile.close();
 
-    const std::string hash = Split::Hashing::computeFileHash(rootPath+filePath);
+    const std::string hash = Split::Hashing::computeFileHash(rootPath+"/"+filePath);
 
     std::ifstream objectFile(rootPath + "/.split/objects/blobs/" + hash);
     ASSERT_TRUE(objectFile.is_open());

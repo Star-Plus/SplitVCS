@@ -5,6 +5,7 @@
 #include "SplitInterface.h"
 
 #include "components/Repository.h"
+#include "features/RepositoryStatus.h"
 
 namespace Split {
 
@@ -26,6 +27,10 @@ namespace Split {
     void SplitInterface::Checkout(const str& rootPath, const str& commitId) {
         Repository repo(rootPath);
         repo.checkout(commitId);
+    }
+
+    str SplitInterface::GetStatus(const str& rootPath) {
+        return RepositoryStatus::getRepoStatus(rootPath);
     }
 
 }

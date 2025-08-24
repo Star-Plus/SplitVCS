@@ -17,15 +17,16 @@ namespace Split {
         path(rootPath + "/.split/index"),
         rootPath(rootPath)
     {
-        std::fstream fs;
+        std::ifstream fs;
         fs.open(this->path, std::ios::in | std::ios::binary);
 
         if (!fs.is_open()) {
             fs.open(this->path, std::ios::out | std::ios::binary);
             fs.close();
         } else {
-            IndexEntry entry;
-            while (fs.read(reinterpret_cast<char*>(&entry.filePath), sizeof(entry.filePath))) {
+            IndexEntry entry = {};
+
+            while (fs.peek() != EOF) {
                 uint32_t pathLen;
                 fs.read(reinterpret_cast<char*>(&pathLen), sizeof(pathLen));
                 entry.filePath.resize(pathLen);
@@ -59,9 +60,11 @@ namespace Split {
 
         ObjectStore objectStore(rootPath, "/blobs");
 
+        const auto originalFilePath = rootPath + "/" + filepath;
+
         const std::string blobHash = objectStore.storeFileObject(filepath);
 
-        std::fstream originalFs(filepath, std::ios::in | std::ios::binary);
+        std::fstream originalFs(originalFilePath, std::ios::in | std::ios::binary);
         if (!originalFs.is_open()) {
             throw std::runtime_error("Failed to open file: " + filepath);
         }
@@ -79,15 +82,16 @@ namespace Split {
                 throw std::runtime_error("Failed to decode content for " + filepath);
             }
 
-            std::ostringstream fileStream;
-            fileStream << originalFs.rdbuf();
-            std::string targetContent = fileStream.str();
+            std::ostringstream fileStringStream;
+            fileStringStream << originalFs.rdbuf();
+            std::string targetContent = fileStringStream.str();
 
             if (decodedContent == "\n") {
                 auto baseBlobStream = objectStore.loadObject(entries[filepath].baseVersionHash);
                 std::ostringstream baseBlobStringStream;
                 baseBlobStringStream << baseBlobStream.rdbuf();
                 decodedContent = baseBlobStringStream.str();
+                baseBlobStream.close();
             }
 
             pack.encodeDelta(decodedContent, targetContent, entries[filepath].blobHash, blobHash);
@@ -99,7 +103,7 @@ namespace Split {
         originalFs.seekg(0, std::ios::end);
         entry.size = originalFs.tellg();
         originalFs.seekg(0, std::ios::beg);
-        entry.mtime = std::filesystem::last_write_time(filepath).time_since_epoch().count();
+        entry.mtime = std::filesystem::last_write_time(originalFilePath).time_since_epoch().count();
         originalFs.close();
 
         entry.blobHash = blobHash;
