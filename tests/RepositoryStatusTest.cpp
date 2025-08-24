@@ -79,3 +79,14 @@ TEST(RepositoryStatusTest, DeletedFiles) {
 
     std::filesystem::remove_all(repoPath);
 }
+
+TEST(RepositoryStatusTest, Interface) {
+    const str repoPath = "test_repo";
+    std::filesystem::create_directory(repoPath);
+
+    Split::SplitInterface::Init(repoPath);
+
+    const auto status = Split::SplitInterface::GetStatus(repoPath);
+
+    std::filesystem::remove_all(repoPath);
+}
