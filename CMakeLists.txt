@@ -21,10 +21,9 @@ if (WIN32)
     )
 elseif(UNIX)
     target_link_libraries(vcdiff INTERFACE
-            ${OPENVCDIFF_LIB}/libvcdcom.a
             ${OPENVCDIFF_LIB}/libvcddec.a
             ${OPENVCDIFF_LIB}/libvcdenc.a
-            ${OPENVCDIFF_LIB}/libvcdiff.a
+            ${OPENVCDIFF_LIB}/libvcdcom.a
     )
 else()
     message(FATAL_ERROR "Unsupported platform. Please add support for your platform.")
