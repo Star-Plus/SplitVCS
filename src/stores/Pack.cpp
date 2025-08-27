@@ -121,7 +121,7 @@ namespace Split {
         std::stack<str> deltaStack = (*it)->deltaHash.empty() ? std::stack<str>() : std::stack<str>({(*it)->deltaHash});
 
         auto tempRef = (*it)->baseRef;
-        auto tailRef = (*it)->baseRef;
+        auto tailRef = *it;
 
         while (tempRef != nullptr) {
             tailRef = tempRef;

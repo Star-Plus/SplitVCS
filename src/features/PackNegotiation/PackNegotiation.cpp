@@ -28,7 +28,7 @@ namespace Split {
 
         Pack pack(repo.getRootPath());
 
-        for (size_t i = itIdx; i < commitHistory.size(); ++i) {
+        for (size_t i = itIdx+1; i < commitHistory.size(); ++i) {
             auto commitObj = commitStore.loadObject(commitHistory[i]);
             auto commit = Commit::deserialize(commitObj);
 
@@ -42,11 +42,10 @@ namespace Split {
                     auto [hash, baseHash, deltaHash, baseRef] = pack.getPackUnitByHash(diff.hash);
                     if (baseHash.empty()) {
                         packData.insert(".split/objects/blobs/" + diff.hash);
-                        continue;
                     }
-
-                    packData.insert(".split/objects/deltas/" + deltaHash);
-                    packData.insert(".split/objects/blobs/" + baseHash);
+                    else {
+                        packData.insert(".split/objects/deltas/" + deltaHash);
+                    }
                 }
             }
         }
