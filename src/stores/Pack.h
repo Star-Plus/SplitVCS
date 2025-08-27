@@ -8,6 +8,7 @@
 #include <vector>
 #include <string>
 #include <memory>
+#include <stdexcept>
 
 #include "core/Alias.h"
 
@@ -32,6 +33,9 @@ namespace Split {
         void savePack(const str &hash) const;
         str getDecodedContent(const str&);
         str encodeDelta(const str& baseBytes, const str& targetBytes, const str& baseHash, const str& targetHash);
+
+        PackUnit getPackUnitByHash(const str& hash) const;
+
     };
 
 }

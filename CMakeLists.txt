@@ -52,6 +52,11 @@ add_library(scm_lib
         src/SplitInterface.h
         src/features/RepositoryStatus.cpp
         src/features/RepositoryStatus.h
+        src/features/PackNegotiation/PackNegotiation.cpp
+        src/features/PackNegotiation/PackNegotiation.h
+        src/features/PackNegotiation/CommitDiffer.cpp
+        src/features/PackNegotiation/CommitDiffer.h
+        src/features/PackNegotiation/DIFF_TYPE.h
 )
 target_include_directories(scm_lib PUBLIC src ${OPENVCDIFF_INCLUDE})
 target_link_libraries(scm_lib PRIVATE vcdiff)
@@ -80,6 +85,8 @@ add_executable(runTests
         tests/TimeTest.cpp
         tests/TreeTest.cpp
         tests/RepositoryStatusTest.cpp
+        tests/CommitDiffer.Test.cpp
+        tests/PackNegotiation.Test.cpp
 )
 target_link_libraries(runTests PRIVATE scm_lib gtest_main)
 

@@ -4,7 +4,9 @@
 
 #ifndef SPLITINTERFACE_H
 #define SPLITINTERFACE_H
+
 #include "core/Alias.h"
+#include <vector>
 
 namespace Split {
 
@@ -16,6 +18,7 @@ namespace Split {
         static void Checkout(const str& rootPath, const str& commitId);
 
         static str GetStatus(const str& rootPath);
+        static std::vector<str> GetCommitHistory(const str& rootPath);
     };
 
 }

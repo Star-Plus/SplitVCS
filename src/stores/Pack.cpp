@@ -203,4 +203,16 @@ namespace Split {
         return deltaHash;
     }
 
+    PackUnit Pack::getPackUnitByHash(const str& hash) const {
+        const auto it = std::ranges::find_if(packs, [&hash](const auto p) {
+            return isPackUnitByHash(*p, hash);
+        });
+
+        if (it == packs.end()) {
+            return PackUnit{hash, "", "", nullptr};
+        }
+
+        return **it;
+    }
+
 }

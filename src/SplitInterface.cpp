@@ -33,4 +33,9 @@ namespace Split {
         return RepositoryStatus::getRepoStatus(rootPath);
     }
 
+    std::vector<str> SplitInterface::GetCommitHistory(const str& rootPath) {
+        const Repository repo(rootPath);
+        return repo.getCommitHistory();
+    }
+
 }

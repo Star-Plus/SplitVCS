@@ -1,0 +1,19 @@
+sequenceDiagram
+    participant Client
+    participant PackNegotiation
+    participant CommitHistory
+    participant CommitDiff
+    participant Pack
+
+    Client->>+PackNegotiation: requestPack(requestedCommit)
+    PackNegotiation->>+CommitHistory: getCommitsAfter(requestedCommit)
+    CommitHistory-->>-PackNegotiation: commits
+    loop for each commit
+        PackNegotiation->>+CommitDiff: calculateDiffs(requestedCommit, commit)
+        CommitDiff-->>-PackNegotiation: diffs
+        PackNegotiation->>+Pack: getPackObjects(diffs)
+        Pack-->>-PackNegotiation: packObjects
+    end
+    PackNegotiation-->>-Client: stringParse(packObjects)
+
+

@@ -14,14 +14,15 @@ namespace Split {
 
     class Commit {
 
+
+    public:
+
         str rootPath;
         std::string treeHash;
         std::string parentHash;
         std::string message;
         std::string author;
         std::string timestamp;
-
-    public:
 
         Commit(const str &rootPath, const str& message, const str& author, const str& parentHash = "");
         void commit (const Index& index);

@@ -1,0 +1,19 @@
+classDiagram
+
+    class PackNegotiation {
+        - repo: Repository
+        + PackNegotiation(repoPath: string)
+        + requestPack(requestedCommit: string) string
+    }
+
+    class CommitDiff {
+        - repo: Repository
+        + CommitDiff(repoPath: string)
+        + calculateDiffs(baseCommit: string, targetCommit: string) list
+    }
+
+    PackNegotiation --o Repository : uses
+    CommitDiff --o Repository : uses
+    PackNegotiation ..> CommitDiff : utilizes
+    PackNegotiation ..> Pack : uses
+

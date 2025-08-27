@@ -27,6 +27,7 @@ namespace Split {
         std::vector<str> getCommitHistory() const;
 
         const Index& getIndex() const { return index; }
+        const str getRootPath() const { return rootPath; }
 
     };
 }

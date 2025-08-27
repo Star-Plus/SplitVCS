@@ -44,10 +44,8 @@ classDiagram
     }
 
     %% manages index, refs, and object storage
-    class Repository {
         - name : str
         - rootPath: str
-        - objectStore: ObjectStore
         - index: Index
         - history: CommitHistory
         + init()
