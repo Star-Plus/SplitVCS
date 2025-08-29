@@ -6,6 +6,7 @@
 
 #include "components/Repository.h"
 #include "features/RepositoryStatus.h"
+#include "features/PackNegotiation/PackNegotiation.h"
 
 namespace Split {
 
@@ -27,6 +28,11 @@ namespace Split {
     void SplitInterface::Checkout(const str& rootPath, const str& commitId) {
         Repository repo(rootPath);
         repo.checkout(commitId);
+    }
+
+    str SplitInterface::Negotiate(const str& repoPath, const str& requestedCommitId) {
+        const PackNegotiation negotiator(repoPath);
+        return negotiator.negotiatePack(requestedCommitId);
     }
 
     str SplitInterface::GetStatus(const str& rootPath) {

@@ -1,4 +1,9 @@
 #include <pybind11/pybind11.h>
+#include <pybind11/functional.h>
+#include <pybind11/stl.h>
+#include <pybind11/iostream.h>
+#include <pybind11/chrono.h>
+#include <pybind11/complex.h>
 
 #include <SplitInterface.h>
 
@@ -27,6 +32,14 @@ PYBIND11_MODULE(pyscm, m) {
 
     m.def("checkout", [](const str& rootPath, const str& commitId) {
         Split::SplitInterface::Checkout(rootPath, commitId);
+    });
+
+    m.def("negotiate", [](const str& rootPath, const str& requestedCommitId) {
+        Split::SplitInterface::Negotiate(rootPath, requestedCommitId);
+    });
+
+    m.def("getCommitHistory", [](const str& rootPath) {
+        return Split::SplitInterface::GetCommitHistory(rootPath);
     });
 
 }

@@ -24,4 +24,10 @@ extern "C" {
         return s.c_str();
     }
 
+    const char* negotiate(const char* rootPath, const char* requestedCommitId) {
+        static std::string s;
+        s = Split::SplitInterface::Negotiate(rootPath, requestedCommitId);
+        return s.c_str();
+    }
+
 }

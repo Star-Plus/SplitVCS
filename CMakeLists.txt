@@ -10,27 +10,6 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(OPENVCDIFF_INCLUDE "${CMAKE_SOURCE_DIR}/external/open-vcdiff/include")
 set(OPENVCDIFF_LIB "${CMAKE_SOURCE_DIR}/external/open-vcdiff/lib")
 
-# --- Wrap OpenVCDIFF into a single target ---
-add_library(vcdiff INTERFACE)
-target_include_directories(vcdiff INTERFACE ${OPENVCDIFF_INCLUDE})
-
-if (WIN32)
-    target_link_libraries(vcdiff INTERFACE
-            ${OPENVCDIFF_LIB}/vcdcom.lib
-            ${OPENVCDIFF_LIB}/vcddec.lib
-            ${OPENVCDIFF_LIB}/vcdenc.lib
-            ${OPENVCDIFF_LIB}/vcdiff.lib
-    )
-elseif(UNIX)
-    target_link_libraries(vcdiff INTERFACE
-            ${OPENVCDIFF_LIB}/libvcddec.a
-            ${OPENVCDIFF_LIB}/libvcdenc.a
-            ${OPENVCDIFF_LIB}/libvcdcom.a
-    )
-else()
-    message(FATAL_ERROR "Unsupported platform. Please add support for your platform.")
-endif()
-
 
 # --- Main library for your project ---
 add_library(scm_lib
@@ -58,8 +37,30 @@ add_library(scm_lib
         src/features/PackNegotiation/CommitDiffer.h
         src/features/PackNegotiation/DIFF_TYPE.h
 )
+
+# --- Wrap OpenVCDIFF into a single target ---
+#add_library(vcdiff INTERFACE)
+#target_include_directories(vcdiff INTERFACE ${OPENVCDIFF_INCLUDE})
+
 target_include_directories(scm_lib PUBLIC src ${OPENVCDIFF_INCLUDE})
-target_link_libraries(scm_lib PRIVATE vcdiff)
+
+if (WIN32)
+    target_link_libraries(scm_lib PRIVATE
+            ${OPENVCDIFF_LIB}/vcdcom.lib
+            ${OPENVCDIFF_LIB}/vcddec.lib
+            ${OPENVCDIFF_LIB}/vcdenc.lib
+            ${OPENVCDIFF_LIB}/vcdiff.lib
+    )
+elseif(UNIX)
+    target_link_libraries(scm_lib PRIVATE
+            ${OPENVCDIFF_LIB}/libvcddec.a
+            ${OPENVCDIFF_LIB}/libvcdenc.a
+            ${OPENVCDIFF_LIB}/libvcdcom.a
+    )
+else()
+    message(FATAL_ERROR "Unsupported platform. Please add support for your platform.")
+endif()
+
 
 # --- Main executable ---
 add_executable(SplitSCM main.cpp)

@@ -50,6 +50,9 @@ namespace Split {
             }
         }
 
+        // Push the history file
+        packData.insert(".split/history");
+
         str parsedPackData;
 
         for (const auto& item : packData) {

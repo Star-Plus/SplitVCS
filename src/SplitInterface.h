@@ -17,8 +17,11 @@ namespace Split {
         static void Commit(const str& rootPath, const str& commitMessage, const str& author);
         static void Checkout(const str& rootPath, const str& commitId);
 
+        static str Negotiate(const str& repoPath, const str& requestedCommitId);
+
         static str GetStatus(const str& rootPath);
         static std::vector<str> GetCommitHistory(const str& rootPath);
+
     };
 
 }
