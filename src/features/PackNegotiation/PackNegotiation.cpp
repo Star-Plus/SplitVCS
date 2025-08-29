@@ -3,15 +3,36 @@
 //
 
 #include <set>
+#include <filesystem>
 
 #include "PackNegotiation.h"
 #include "CommitDiffer.h"
 #include "stores/Pack.h"
+#include "utils/Parsers/ParserToString.h"
 
 
 namespace Split {
 
     str PackNegotiation::negotiatePack(const str& requestedCommit) const {
+
+        std::set<str> packData;
+
+        if (requestedCommit=="EMPTY") {
+            auto repoDir = std::filesystem::recursive_directory_iterator(repo.getRootPath() + "/.split");
+            for (const auto& entry : repoDir) {
+                // ignore index file
+                if (entry.path().stem() == "index") {
+                    continue;
+                }
+
+                if (entry.is_regular_file()) {
+                    packData.insert(entry.path().string().substr(repo.getRootPath().size()+1));
+                }
+            }
+
+            return ParserToString::fromSet(packData);
+        }
+
         const auto commitHistory = repo.getCommitHistory();
 
         // Search for the requested commit in the history
@@ -20,7 +41,6 @@ namespace Split {
 
         const CommitDiffer differ(repo.getRootPath());
 
-        std::set<str> packData;
 
         ObjectStore commitStore(repo.getRootPath(), "/commits");
         ObjectStore blobStore(repo.getRootPath(), "/blobs");
@@ -53,13 +73,7 @@ namespace Split {
         // Push the history file
         packData.insert(".split/history");
 
-        str parsedPackData;
-
-        for (const auto& item : packData) {
-            parsedPackData += item + "\n";
-        }
-
-        return parsedPackData;
+        return ParserToString::fromSet(packData);
 
     }
 

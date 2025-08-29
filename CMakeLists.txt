@@ -36,6 +36,8 @@ add_library(scm_lib
         src/features/PackNegotiation/CommitDiffer.cpp
         src/features/PackNegotiation/CommitDiffer.h
         src/features/PackNegotiation/DIFF_TYPE.h
+        src/utils/Parsers/ParserToString.cpp
+        src/utils/Parsers/ParserToString.h
 )
 
 # --- Wrap OpenVCDIFF into a single target ---
