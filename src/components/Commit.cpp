@@ -68,12 +68,8 @@ namespace Split {
                 decodedContent = baseBlobStringStream.str();
             }
 
-            if (!decodedContent.empty()) {
-                fileStream << decodedContent;
-                fileStream.close();
-            } else {
-                throw std::runtime_error("Failed to decode content for " + entry.first);
-            }
+            fileStream << decodedContent;
+            fileStream.close();
 
         }
 
@@ -84,6 +80,8 @@ namespace Split {
                 index.removeEntry(indexEntry.first);
             }
         }
+
+        index.save();
 
     }
 
