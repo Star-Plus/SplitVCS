@@ -50,7 +50,7 @@ namespace Split {
 
         for (size_t i = itIdx+1; i < commitHistory.size(); ++i) {
             auto commitObj = commitStore.loadObject(commitHistory[i]);
-            auto commit = Commit::deserialize(commitObj);
+            auto commit = Commit::deserialize(repo.getRootPath(), commitObj);
 
             packData.insert(".split/objects/commits/" + commitHistory[i]);
             packData.insert(".split/objects/trees/" + commit.treeHash);

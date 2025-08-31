@@ -42,7 +42,7 @@ namespace Split {
             throw std::runtime_error("Commit not found: " + commitHash);
         }
 
-        Commit commit = Commit::deserialize(commitStream);
+        Commit commit = Commit::deserialize(rootPath, commitStream);
         commitStream.close();
 
         commit.checkout(index);

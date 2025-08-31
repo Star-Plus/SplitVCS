@@ -17,8 +17,8 @@ namespace Split {
         auto commitAObj = commitStore.loadObject(commitA_Hash);
         auto commitBObj = commitStore.loadObject(commitB_Hash);
 
-        auto commitA = Commit::deserialize(commitAObj);
-        auto commitB = Commit::deserialize(commitBObj);
+        auto commitA = Commit::deserialize(repo.getRootPath(), commitAObj);
+        auto commitB = Commit::deserialize(repo.getRootPath(), commitBObj);
 
         auto treeAObj = treeStore.loadObject(commitA.treeHash);
         auto treeBObj = treeStore.loadObject(commitB.treeHash);

@@ -73,6 +73,11 @@ namespace Split {
 
         }
 
+        std::ofstream fileCheck(rootPath + "/" + "SPLIT_IS_CREATED", std::ios::binary);
+        fileCheck << "This file indicates that the repository has been initialized by Split VCS.";
+        fileCheck.close();
+
+
         // Delete files that are not in the commit
         for (const auto& indexEntry : currentEntries) {
             if (treeEntries.find(indexEntry.first) == treeEntries.end() && !indexEntry.second.isDeleted) {
@@ -86,24 +91,22 @@ namespace Split {
     }
 
     str Commit::serialize() const {
-        return rootPath + '\n'
-            + treeHash + '\n'
+        return treeHash + '\n'
             + parentHash + '\n'
             + message + '\n'
             + author + '\n'
             + timestamp;
     }
 
-    Commit Commit::deserialize(std::istream &in) {
-        str rootPath, treeHash, parentHash, message, author, timestamp;
-        std::getline(in, rootPath);
+    Commit Commit::deserialize(const str& repoPath, std::istream &in) {
+        str treeHash, parentHash, message, author, timestamp;
         std::getline(in, treeHash);
         std::getline(in, parentHash);
         std::getline(in, message);
         std::getline(in, author);
         std::getline(in, timestamp);
 
-        Commit commit(rootPath, message, author, parentHash);
+        Commit commit(repoPath, message, author, parentHash);
         commit.treeHash = treeHash;
         commit.timestamp = timestamp;
 

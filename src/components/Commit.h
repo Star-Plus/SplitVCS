@@ -28,7 +28,7 @@ namespace Split {
         void commit (const Index& index);
         void checkout(Index& index) const;
         str serialize() const;
-        static Commit deserialize(std::istream& in);
+        static Commit deserialize(const str&, std::istream& in);
 
     };
 
