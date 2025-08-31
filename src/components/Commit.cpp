@@ -73,11 +73,6 @@ namespace Split {
 
         }
 
-        std::ofstream fileCheck(rootPath + "/" + "SPLIT_IS_CREATED", std::ios::binary);
-        fileCheck << "This file indicates that the repository has been initialized by Split VCS.";
-        fileCheck.close();
-
-
         // Delete files that are not in the commit
         for (const auto& indexEntry : currentEntries) {
             if (treeEntries.find(indexEntry.first) == treeEntries.end() && !indexEntry.second.isDeleted) {
