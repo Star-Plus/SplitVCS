@@ -14,5 +14,12 @@ namespace Split {
         return result;
     }
 
+    str ParserToString::fromVector(const std::vector<str> &dataSet) {
+        str result;
+        for (const auto &item: dataSet) {
+            result += item + "\n";
+        }
+        return result;
+    }
 
 }

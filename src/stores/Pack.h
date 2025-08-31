@@ -35,6 +35,7 @@ namespace Split {
         str encodeDelta(const str& baseBytes, const str& targetBytes, const str& baseHash, const str& targetHash);
 
         PackUnit getPackUnitByHash(const str& hash) const;
+        str getBaseVersionHash(const str& hash) const;
 
     };
 

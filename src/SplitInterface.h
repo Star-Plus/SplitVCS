@@ -21,6 +21,7 @@ namespace Split {
 
         static str GetStatus(const str& rootPath);
         static std::vector<str> GetCommitHistory(const str& rootPath);
+        static str GetCommitHistoryAsString(const str& rootPath);
 
     };
 

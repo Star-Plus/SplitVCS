@@ -90,6 +90,7 @@ add_executable(runTests
         tests/RepositoryStatusTest.cpp
         tests/CommitDiffer.Test.cpp
         tests/PackNegotiation.Test.cpp
+        tests/Checkout.Test.cpp
 )
 target_link_libraries(runTests PRIVATE scm_lib gtest_main)
 

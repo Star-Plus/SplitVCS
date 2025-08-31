@@ -7,6 +7,7 @@
 #include "components/Repository.h"
 #include "features/RepositoryStatus.h"
 #include "features/PackNegotiation/PackNegotiation.h"
+#include "utils/Parsers/ParserToString.h"
 
 namespace Split {
 
@@ -42,6 +43,12 @@ namespace Split {
     std::vector<str> SplitInterface::GetCommitHistory(const str& rootPath) {
         const Repository repo(rootPath);
         return repo.getCommitHistory();
+    }
+
+    str SplitInterface::GetCommitHistoryAsString(const str& rootPath) {
+        const Repository repo(rootPath);
+        const auto commits = repo.getCommitHistory();
+        return ParserToString::fromVector(commits);
     }
 
 }

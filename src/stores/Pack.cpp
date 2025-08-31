@@ -215,4 +215,25 @@ namespace Split {
         return **it;
     }
 
+    str Pack::getBaseVersionHash(const str &hash) const {
+        const auto it = std::ranges::find_if(packs, [&hash](const auto p) {
+            return isPackUnitByHash(*p, hash);
+        });
+
+        if (it == packs.end()) {
+            return hash;
+        }
+
+        auto tempRef = (*it)->baseRef;
+        auto trailRef = *it;
+
+        while (tempRef != nullptr) {
+            trailRef = tempRef;
+            tempRef = tempRef->baseRef;
+        }
+
+        return trailRef->baseHash;
+    }
+
+
 }

@@ -35,7 +35,7 @@ PYBIND11_MODULE(pyscm, m) {
     });
 
     m.def("negotiate", [](const str& rootPath, const str& requestedCommitId) {
-        Split::SplitInterface::Negotiate(rootPath, requestedCommitId);
+        return Split::SplitInterface::Negotiate(rootPath, requestedCommitId);
     });
 
     m.def("getCommitHistory", [](const str& rootPath) {

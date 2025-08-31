@@ -6,6 +6,7 @@
 #define PARSERTOSTRING_H
 
 #include <set>
+#include <vector>
 
 #include "core/Alias.h"
 
@@ -14,7 +15,7 @@ namespace Split {
 
     public:
         static str fromSet(const std::set<str>& dataSet);
-
+        static str fromVector(const std::vector<str>& dataSet);
     };
 }
 

@@ -18,6 +18,12 @@ extern "C" {
         Split::SplitInterface::Checkout(rootPath, commitId);
     }
 
+    const char* getCommitHistory(const char* rootPath) {
+        static std::string s;
+        s = Split::SplitInterface::GetCommitHistoryAsString(rootPath);
+        return s.c_str();
+    }
+
     const char* rstatus(const char* rootPath) {
         static std::string s;
         s = Split::SplitInterface::GetStatus(rootPath);

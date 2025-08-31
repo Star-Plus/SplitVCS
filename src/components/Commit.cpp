@@ -37,46 +37,51 @@ namespace Split {
         treeStream.close();
 
         const auto currentEntries = index.getEntries();
+        const auto treeEntries = tree.getEntries();
 
-        for (const auto& entry : tree.getEntries()) {
+        for (const auto& entry : treeEntries) {
+            Pack pack(rootPath);
 
-            if (currentEntries.find(entry.first) == currentEntries.end()) {
-                index.removeEntry(entry.first);
-                std::filesystem::remove(entry.first);
+            IndexEntry indexEntry = {};
+
+            indexEntry.baseVersionHash = pack.getBaseVersionHash(entry.second);
+            indexEntry.blobHash = entry.second;
+            indexEntry.isDeleted = false;
+            index.updateEntry(entry.first, indexEntry);
+
+            auto decodedContent = pack.getDecodedContent(entry.second);
+
+            std::ofstream fileStream(rootPath + "/" + entry.first, std::ios::binary);
+            if (!fileStream.is_open()) {
+                throw std::runtime_error("Failed to open file for writing: " + entry.first);
             }
-            else {
-                IndexEntry indexEntry = currentEntries.at(entry.first);
-                indexEntry.blobHash = entry.second;
-                indexEntry.isDeleted = false;
-                index.updateEntry(entry.first, indexEntry);
 
-                Pack pack(rootPath);
-                auto decodedContent = pack.getDecodedContent(entry.second);
-
-                std::ofstream fileStream(entry.first, std::ios::binary);
-                if (!fileStream.is_open()) {
-                    throw std::runtime_error("Failed to open file for writing: " + entry.first);
+            // If content is empty it's the base blob
+            if (decodedContent == "\n") {
+                ObjectStore blobStore(rootPath, "/blobs");
+                auto baseBlobStream = blobStore.loadObject(indexEntry.baseVersionHash);
+                if (!baseBlobStream.is_open()) {
+                    throw std::runtime_error("Base blob not found: " + indexEntry.baseVersionHash);
                 }
+                std::ostringstream baseBlobStringStream;
+                baseBlobStringStream << baseBlobStream.rdbuf();
+                decodedContent = baseBlobStringStream.str();
+            }
 
-                // If content is empty it's the base blob
-                if (decodedContent == "\n") {
-                    ObjectStore blobStore(rootPath, "/blobs");
-                    auto baseBlobStream = blobStore.loadObject(indexEntry.baseVersionHash);
-                    if (!baseBlobStream.is_open()) {
-                        throw std::runtime_error("Base blob not found: " + indexEntry.baseVersionHash);
-                    }
-                    std::ostringstream baseBlobStringStream;
-                    baseBlobStringStream << baseBlobStream.rdbuf();
-                    decodedContent = baseBlobStringStream.str();
-                }
+            if (!decodedContent.empty()) {
+                fileStream << decodedContent;
+                fileStream.close();
+            } else {
+                throw std::runtime_error("Failed to decode content for " + entry.first);
+            }
 
-                if (!decodedContent.empty()) {
-                    fileStream << decodedContent;
-                    fileStream.close();
-                } else {
-                    throw std::runtime_error("Failed to decode content for " + entry.first);
-                }
+        }
 
+        // Delete files that are not in the commit
+        for (const auto& indexEntry : currentEntries) {
+            if (treeEntries.find(indexEntry.first) == treeEntries.end() && !indexEntry.second.isDeleted) {
+                std::filesystem::remove(indexEntry.first);
+                index.removeEntry(indexEntry.first);
             }
         }
 
