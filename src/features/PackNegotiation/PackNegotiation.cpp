@@ -64,7 +64,7 @@ namespace Split {
                         packData.insert(".split/objects/blobs/" + diff.hash);
                     }
                     else {
-                        packData.insert(".split/refs/packs/"+hash);
+                        packData.insert(".split/refs/packs/"+hash+".pack");
                         packData.insert(".split/objects/deltas/" + deltaHash);
                     }
                 }
