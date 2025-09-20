@@ -107,3 +107,5 @@ gtest_discover_tests(runTests)
 add_subdirectory(python)
 #add_subdirectory(nodejs)
 add_subdirectory(rust)
+
+add_subdirectory(lib/split-diff)
