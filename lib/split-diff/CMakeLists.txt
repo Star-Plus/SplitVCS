@@ -42,7 +42,8 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(opencv_contrib)
 
 # 🟢 Your executable
-add_executable(SplitDiff main.cpp)
+add_executable(SplitDiff main.cpp
+        core/Encoder.h)
 
 # 🟢 Link against OpenCV modules
 target_link_libraries(SplitDiff PRIVATE opencv_core opencv_imgproc opencv_imgcodecs)
