@@ -17,7 +17,7 @@ set(OPENVCDIFF_LIB "${CMAKE_SOURCE_DIR}/external/open-vcdiff/lib")
 
 
 # --- Main library for your project ---
-add_library(scm_lib
+add_library(scm_lib STATIC
         src/stores/ObjectStore.cpp
         src/stores/Index.cpp
         src/components/Repository.cpp
@@ -46,18 +46,19 @@ add_library(scm_lib
 )
 
 # --- Wrap OpenVCDIFF into a single target ---
-#add_library(vcdiff INTERFACE)
-#target_include_directories(vcdiff INTERFACE ${OPENVCDIFF_INCLUDE})
 
 target_include_directories(scm_lib PUBLIC src ${OPENVCDIFF_INCLUDE})
 
 if (WIN32)
-    target_link_libraries(scm_lib PRIVATE
-            ${OPENVCDIFF_LIB}/vcdcom.lib
-            ${OPENVCDIFF_LIB}/vcddec.lib
-            ${OPENVCDIFF_LIB}/vcdenc.lib
-            ${OPENVCDIFF_LIB}/vcdiff.lib
-    )
+
+    if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+        set(OPENVCDIFF_LIB "${OPENVCDIFF_LIB}/Windows/Debug")
+    else()
+        set(OPENVCDIFF_LIB "${OPENVCDIFF_LIB}/Windows/Release")
+    endif()
+
+    file(GLOB OPENVCDIFF_LIBS "${OPENVCDIFF_LIB}/*.lib")
+    target_link_libraries(scm_lib PRIVATE ${OPENVCDIFF_LIBS})
 elseif(UNIX)
     target_link_libraries(scm_lib PRIVATE
             ${OPENVCDIFF_LIB}/libvcddec.a
@@ -105,5 +106,6 @@ gtest_discover_tests(runTests)
 
 # Bindings
 add_subdirectory(python)
-#add_subdirectory(nodejs)
 add_subdirectory(rust)
+
+add_subdirectory(lib/split-diff)
