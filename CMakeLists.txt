@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.29)
-project(SplitSCM)
+project(SplitVCS)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -70,8 +70,8 @@ endif()
 
 
 # --- Main executable ---
-add_executable(SplitSCM main.cpp)
-target_link_libraries(SplitSCM PRIVATE scm_lib)
+add_executable(SplitVCS main.cpp)
+target_link_libraries(SplitVCS PRIVATE scm_lib)
 
 # --- Enable testing ---
 enable_testing()
