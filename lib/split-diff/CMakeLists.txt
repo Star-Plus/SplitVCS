@@ -5,7 +5,6 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
-# 🟢 Trim OpenCV build (set BEFORE FetchContent)
 set(BUILD_LIST core,imgproc,imgcodecs CACHE STRING "" FORCE)
 set(BUILD_opencv_world OFF CACHE BOOL "" FORCE)
 set(WITH_IPP OFF CACHE BOOL "" FORCE)
@@ -15,7 +14,6 @@ set(WITH_CUDA OFF CACHE BOOL "" FORCE)
 set(WITH_MSMF OFF CACHE BOOL "" FORCE)
 set(WITH_QT OFF CACHE BOOL "" FORCE)
 
-# 🟢 Runtime selection for MSVC
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreadedDebugDLL")
 else()
@@ -24,7 +22,6 @@ endif()
 
 include(FetchContent)
 
-# 🟢 Fetch OpenCV
 FetchContent_Declare(
         opencv
         GIT_REPOSITORY https://github.com/opencv/opencv
@@ -41,11 +38,9 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(opencv_contrib)
 
-# 🟢 Your executable
 add_executable(SplitDiff main.cpp
         core/Encoder.h)
 
-# 🟢 Link against OpenCV modules
 target_link_libraries(SplitDiff PRIVATE opencv_core opencv_imgproc opencv_imgcodecs)
 target_include_directories(SplitDiff PRIVATE
         ${opencv_SOURCE_DIR}/include
