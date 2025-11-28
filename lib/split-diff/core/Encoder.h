@@ -9,6 +9,7 @@
 #include <opencv2/opencv.hpp>
 #include <fstream>
 #include <iostream>
+#include <set>
 
 using namespace cv;
 using namespace std;
@@ -44,27 +45,18 @@ namespace Split {
 
             Mat diff = imgEdited16s - img16s;
 
-            ofstream ofs(dPath+".bin", ios::binary);
-            if (!ofs) {
-                cerr << "Failed to open output file\n";
-                return;
-            }
+            std::set<short> distinct = {};
 
-            // Iterate and store only nonzero diffs
-            int count = 0;
-            for (int y = 0; y < diff.rows; y++) {
-                for (int x = 0; x < diff.cols; x++) {
-                    Vec3s d = diff.at<Vec3s>(y, x); // signed 16-bit
-                    if (d[0] || d[1] || d[2]) {
-                        PixelDiff pd{(int16_t)x, (int16_t)y, d[0], d[1], d[2]};
-                        ofs.write(reinterpret_cast<const char*>(&pd), sizeof(PixelDiff));
-                        count++;
-                    }
+            for (int i = 0; i < diff.rows; i++) {
+                for (int j = 0; j < diff.cols; j++) {
+                    // Print the pixel value
+                    // std::cout << diff.at<short>(i, j) << " ";
+                    distinct.insert(diff.at<short>(i, j));
                 }
+                // std::cout << std::endl;
             }
 
-            ofs.close();
-            cout << "Saved " << count << " changed pixels into diff.bin\n";
+            std::cout << "Distinct: " << distinct.size() << std::endl;
         }
 
         static void decode(const std::string& oPath, const std::string& dPath, const std::string& outPath) {
