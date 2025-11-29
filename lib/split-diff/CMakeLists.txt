@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.29)
-project(SplitDiff LANGUAGES C CXX ASM)
+project(SplitDiff)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -22,7 +22,6 @@ endif()
 
 include(FetchContent)
 
-
 FetchContent_Declare(
         opencv_contrib
         GIT_REPOSITORY https://github.com/opencv/opencv_contrib
@@ -44,30 +43,16 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(opencv)
 
-
-
-FetchContent_Declare(
-        zstd
-        GIT_REPOSITORY https://github.com/facebook/zstd
-        GIT_TAG v1.5.5
-        SOURCE_SUBDIR build/cmake
+add_library(SplitDiff STATIC
+        core/Encoder.cpp
+        core/Encoder.h
 )
 
-FetchContent_MakeAvailable(zstd)
-
-add_executable(SplitDiff main.cpp
-        core/Encoder.h)
-
 target_link_libraries(SplitDiff PRIVATE opencv_core opencv_imgproc opencv_imgcodecs)
-target_include_directories(SplitDiff PRIVATE
+target_include_directories(SplitDiff PUBLIC
         ${opencv_SOURCE_DIR}/include
         ${opencv_SOURCE_DIR}/modules/core/include
         ${opencv_SOURCE_DIR}/modules/imgproc/include
         ${opencv_SOURCE_DIR}/modules/imgcodecs/include
         ${CMAKE_BINARY_DIR}
-)
-
-target_link_libraries(SplitDiff PRIVATE libzstd_static)
-target_include_directories(SplitDiff PRIVATE
-        ${zstd_SOURCE_DIR}/lib
 )

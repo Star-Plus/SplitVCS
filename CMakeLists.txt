@@ -45,6 +45,9 @@ add_library(scm_lib STATIC
         src/utils/Parsers/ParserToString.h
 )
 
+# Link SplitDiff to scm_lib
+target_link_libraries(scm_lib PRIVATE SplitDiff)
+
 # --- Wrap OpenVCDIFF into a single target ---
 
 target_include_directories(scm_lib PUBLIC src ${OPENVCDIFF_INCLUDE})
