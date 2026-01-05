@@ -43,6 +43,9 @@ add_library(scm_lib STATIC
         src/features/PackNegotiation/DIFF_TYPE.h
         src/utils/Parsers/ParserToString.cpp
         src/utils/Parsers/ParserToString.h
+
+        src/features/ManualCommit/ManualCommiter.h
+        src/features/ManualCommit/ManualCommiter.cpp
 )
 
 # Link SplitDiff to scm_lib
