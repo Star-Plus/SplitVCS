@@ -8,6 +8,7 @@
 #include "features/RepositoryStatus.h"
 #include "features/PackNegotiation/PackNegotiation.h"
 #include "utils/Parsers/ParserToString.h"
+#include "features/ManualCommit/ManualCommiter.h"
 
 namespace Split {
 
@@ -49,6 +50,16 @@ namespace Split {
         const Repository repo(rootPath);
         const auto commits = repo.getCommitHistory();
         return ParserToString::fromVector(commits);
+    }
+
+    void SplitInterface::ManualUploadTree(const str& repoPath, const str& treeHash, const str& treeContent) {
+        ManualCommiter commiter(repoPath);
+        commiter.uploadTree(treeHash, treeContent);
+    }
+
+    void SplitInterface::ManualUploadCommit(const str& repoPath, const str& commitHash, const str& commitContent) {
+        ManualCommiter commiter(repoPath);
+        commiter.uploadCommit(commitHash, commitContent);
     }
 
 }

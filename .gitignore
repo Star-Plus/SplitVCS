@@ -21,7 +21,10 @@ build/
 #cmake-build-*
 
 .idea
+.vscode
 
 # NodeJS
 nodejs/node_modules
 */build
+
+build/
