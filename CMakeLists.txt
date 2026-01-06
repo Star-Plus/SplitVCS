@@ -61,17 +61,19 @@ if (WIN32)
     endif()
 
     file(GLOB OPENVCDIFF_LIBS "${OPENVCDIFF_LIB}/*.lib")
-    target_link_libraries(scm_lib PRIVATE ${OPENVCDIFF_LIBS})
 elseif(UNIX)
-    target_link_libraries(scm_lib PRIVATE
-            ${OPENVCDIFF_LIB}/libvcddec.a
-            ${OPENVCDIFF_LIB}/libvcdenc.a
-            ${OPENVCDIFF_LIB}/libvcdcom.a
-    )
+    if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+        set(OPENVCDIFF_LIB "${OPENVCDIFF_LIB}/Linux/Debug")
+    else ()
+        set(OPENVCDIFF_LIB "${OPENVCDIFF_LIB}/Linux/Release")
+    endif ()
+
+    file(GLOB OPENVCDIFF_LIBS "${OPENVCDIFF_LIB}/*.a")
 else()
     message(FATAL_ERROR "Unsupported platform. Please add support for your platform.")
 endif()
 
+target_link_libraries(scm_lib PRIVATE ${OPENVCDIFF_LIBS})
 
 # --- Main executable ---
 add_executable(SplitVCS main.cpp)
@@ -112,3 +114,4 @@ add_subdirectory(python)
 add_subdirectory(rust)
 
 add_subdirectory(lib/split-diff)
+add_subdirectory(lib/split-live)
