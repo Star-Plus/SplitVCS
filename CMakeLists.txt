@@ -48,6 +48,13 @@ add_library(scm_lib STATIC
         src/features/ManualCommit/ManualCommiter.cpp
 )
 
+
+
+
+add_subdirectory(lib/split-diff)
+
+
+
 # Link SplitDiff to scm_lib
 target_link_libraries(scm_lib PRIVATE SplitDiff)
 
@@ -113,5 +120,3 @@ gtest_discover_tests(runTests)
 # Bindings
 add_subdirectory(python)
 add_subdirectory(rust)
-
-add_subdirectory(lib/split-diff)

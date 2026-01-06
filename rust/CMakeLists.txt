@@ -12,5 +12,5 @@ add_library(scm_bindings STATIC
 target_link_libraries(scm_bindings PRIVATE scm_lib)
 
 target_include_directories(scm_bindings PUBLIC
-        ${SCM_LIB_PATH}/src
+        ${CMAKE_SOURCE_DIR}/src
 )
