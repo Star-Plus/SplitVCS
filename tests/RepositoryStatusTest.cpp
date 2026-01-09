@@ -106,7 +106,9 @@ TEST(RepositoryStatusTest, AfterCheckout) {
     const auto commitHistory = repo.getCommitHistory();
 
     repo.checkout(commitHistory.back());
-    EXPECT_TRUE(repo.getIndex().getEntries().find("file1.txt") != repo.getIndex().getEntries().end());
+
+    Split::Repository repoRead(repoPath);
+    EXPECT_TRUE(repoRead.getIndex().getEntries().find("file1.txt") != repoRead.getIndex().getEntries().end());
     
     const auto status = Split::RepositoryStatus::getRepoStatus(repoPath);
     EXPECT_EQ(status, "file2.txt:Untracked\n");

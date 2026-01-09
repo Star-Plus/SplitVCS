@@ -41,7 +41,7 @@ namespace Split {
         for (const auto& entry : treeEntries) {
             Pack pack(rootPath);
 
-            IndexEntry indexEntry = {};
+            IndexEntry indexEntry = {entry.first};
 
             indexEntry.baseVersionHash = pack.getBaseVersionHash(entry.second);
             indexEntry.blobHash = entry.second;
