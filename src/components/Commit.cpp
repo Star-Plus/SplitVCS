@@ -36,7 +36,6 @@ namespace Split {
         Tree tree = Tree::deserialize(treeStream);
         treeStream.close();
 
-        const auto currentEntries = index.getEntries();
         const auto treeEntries = tree.getEntries();
 
         for (const auto& entry : treeEntries) {
@@ -73,11 +72,15 @@ namespace Split {
 
         }
 
+        const auto currentEntries = index.getEntries();
+
         // Delete files that are not in the commit
-        for (const auto& indexEntry : currentEntries) {
-            if (treeEntries.find(indexEntry.first) == treeEntries.end() && !indexEntry.second.isDeleted) {
-                std::filesystem::remove(indexEntry.first);
-                index.removeEntry(indexEntry.first);
+        for (const auto& [path, entry] : currentEntries) {
+            if (treeEntries.find(path) == treeEntries.end() && !entry.isDeleted) {
+                std::filesystem::remove(
+                    std::filesystem::path(rootPath) / std::filesystem::path(path)
+                );
+                index.removeEntry(path);
             }
         }
 

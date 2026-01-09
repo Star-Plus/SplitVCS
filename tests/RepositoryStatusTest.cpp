@@ -90,3 +90,26 @@ TEST(RepositoryStatusTest, Interface) {
 
     std::filesystem::remove_all(repoPath);
 }
+
+TEST(RepositoryStatusTest, AfterCheckout) {
+    const str repoPath = "test_repo";
+    std::filesystem::create_directory(repoPath);
+    std::ofstream(repoPath + "/file1.txt") << "This is an untracked file.";
+    std::ofstream(repoPath + "/file2.txt") << "This is another untracked file.";
+
+    Split::Repository repo(repoPath);
+
+    repo.init();
+    repo.add("file1.txt");
+    repo.commit("Add file1", "Tester");
+
+    const auto commitHistory = repo.getCommitHistory();
+
+    repo.checkout(commitHistory.back());
+    EXPECT_TRUE(repo.getIndex().getEntries().find("file1.txt") != repo.getIndex().getEntries().end());
+    
+    const auto status = Split::RepositoryStatus::getRepoStatus(repoPath);
+    EXPECT_EQ(status, "file2.txt:Untracked\n");
+
+    std::filesystem::remove_all(repoPath);
+}
