@@ -9,15 +9,27 @@ namespace Split {
     ManualCommiter::~ManualCommiter() {}
 
     void ManualCommiter::uploadTree(const str& treeHash, const str& treeContent) {
-        auto treeStore = ObjectStore(repoPath, "trees");
-        treeStore.storeBytesObject(treeContent);
+        const std::string objectPath = repoPath + "/.split/objects/trees/" + treeHash;
+
+        std::ofstream outFile(objectPath, std::ios::binary);
+        if (!outFile) {
+            throw std::runtime_error("Failed to create object file: " + objectPath);
+        }
+
+        outFile << treeContent;
+        outFile.close();
     }
 
     void ManualCommiter::uploadCommit(const str& commitHash, const str& commitContent) {
-        auto commitStore = ObjectStore(repoPath, "commits");
-        commitStore.storeBytesObject(commitContent);
-        auto commitHistory = CommitHistory(repoPath);
-        commitHistory.addCommit(commitHash);
+        const std::string objectPath = repoPath + "/.split/objects/commits/" + commitHash;
+
+        std::ofstream outFile(objectPath, std::ios::binary);
+        if (!outFile) {
+            throw std::runtime_error("Failed to create object file: " + objectPath);
+        }
+
+        outFile << commitContent;
+        outFile.close();
     }
 
 }
