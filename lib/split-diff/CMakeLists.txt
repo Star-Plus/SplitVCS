@@ -44,15 +44,33 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(opencv)
 
 add_library(SplitDiff STATIC
-        core/Encoder.cpp
-        core/Encoder.h
+        src/components/DeltaCompressor.cpp
+        src/interfaces/IDecoder.h
+        src/interfaces/IEncoder.h
+        src/components/EncoderFactory.h
+        src/components/DecoderFactory.h
+        src/images/ImageDecoder.h
+        src/images/ImageDecoder.cpp
+        src/images/ImageEncoder.h
+        src/images/ImageEncoder.cpp
+        src/enums/AssetType.h
+        src/enums/AssetType.cpp
+        src/utils/AssetInfo.h
+        src/utils/AssetInfo.cpp
+        src/atoms/Blob.h
 )
 
-target_link_libraries(SplitDiff PRIVATE opencv_core opencv_imgproc opencv_imgcodecs)
+target_link_libraries(SplitDiff PRIVATE SplitLog opencv_core opencv_imgproc opencv_imgcodecs)
 target_include_directories(SplitDiff PUBLIC
+        src
+        split-log/include
         ${opencv_SOURCE_DIR}/include
         ${opencv_SOURCE_DIR}/modules/core/include
         ${opencv_SOURCE_DIR}/modules/imgproc/include
         ${opencv_SOURCE_DIR}/modules/imgcodecs/include
         ${CMAKE_BINARY_DIR}
 )
+
+
+add_subdirectory(split-log)
+add_subdirectory(playground)
