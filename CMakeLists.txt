@@ -52,7 +52,7 @@ add_library(scm_lib STATIC
 
 
 add_subdirectory(lib/split-diff)
-
+add_subdirectory(lib/split-live)
 
 
 # Link SplitDiff to scm_lib
