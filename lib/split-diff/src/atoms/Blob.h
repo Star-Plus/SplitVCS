@@ -1,7 +1,8 @@
+#pragma once
+
 #include <istream>
 #include <variant>
 #include <string>
-#include "enums/AssetType.h"
 
 namespace Split {
     struct Blob {

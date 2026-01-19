@@ -1,5 +1,4 @@
-#include <istream>
-#include <ostream>
+#pragma once
 #include "components/EncoderFactory.h"
 #include "components/DecoderFactory.h"
 #include "atoms/Blob.h"
@@ -15,7 +14,7 @@ namespace Split {
 
         void decode(const std::istream& base, const std::istream* deltas, std::ostream& out);
 
-        void decode(const std::istream& base, const std::istream& delta, std::ostream& out);
+        void decode(const Blob& base, const Blob& delta, const Blob& out);
 
     private:
         EncoderFactory encoderFactory;

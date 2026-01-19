@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.29)
-project(SplitDiff)
+project(SplitDiff LANGUAGES C CXX ASM)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -43,34 +43,45 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(opencv)
 
+#FetchContent_Declare(
+#        zstd
+#        GIT_REPOSITORY https://github.com/facebook/zstd
+#        GIT_TAG v1.5.5
+#        SOURCE_SUBDIR build/cmake
+#)
+#
+#FetchContent_MakeAvailable(zstd)
+
 add_library(SplitDiff STATIC
         src/components/DeltaCompressor.cpp
         src/interfaces/IDecoder.h
         src/interfaces/IEncoder.h
         src/components/EncoderFactory.h
         src/components/DecoderFactory.h
-        src/images/ImageDecoder.h
-        src/images/ImageDecoder.cpp
-        src/images/ImageEncoder.h
-        src/images/ImageEncoder.cpp
+        src/features/images/ImageDecoder.h
+        src/features/images/ImageDecoder.cpp
+        src/features/images/ImageEncoder.h
+        src/features/images/ImageEncoder.cpp
         src/enums/AssetType.h
         src/enums/AssetType.cpp
         src/utils/AssetInfo.h
         src/utils/AssetInfo.cpp
         src/atoms/Blob.h
+        src/features/images/debug/ImageDebugUtils.cpp
+        src/features/images/utils/ReadAdapter.h
+        src/features/images/utils/FormatSniffer.h
 )
 
 target_link_libraries(SplitDiff PRIVATE SplitLog opencv_core opencv_imgproc opencv_imgcodecs)
 target_include_directories(SplitDiff PUBLIC
         src
-        split-log/include
+        ${SplitLog_SOURCE_DIR}/src
         ${opencv_SOURCE_DIR}/include
         ${opencv_SOURCE_DIR}/modules/core/include
         ${opencv_SOURCE_DIR}/modules/imgproc/include
         ${opencv_SOURCE_DIR}/modules/imgcodecs/include
         ${CMAKE_BINARY_DIR}
+#        ${zstd_SOURCE_DIR}/lib
 )
 
-
-add_subdirectory(split-log)
 add_subdirectory(playground)

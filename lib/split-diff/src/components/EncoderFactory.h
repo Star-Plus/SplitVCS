@@ -1,22 +1,29 @@
+#pragma once
 #include "interfaces/IEncoder.h"
+#include "features/images/ImageEncoder.h"
 #include "enums/AssetType.h"
 
 namespace Split {
 
     class EncoderFactory {
     public:
-        Encoder* getEncoder(const AssetType type) {
+        EncoderFactory() :
+        imageEncoder(new ImageEncoder())
+        {}
+
+        Encoder* getEncoder(const AssetType type) const {
             switch (type)
             {
             case AssetType::IMAGE:
-                break;
+                return this->imageEncoder;
             
             default:
                 throw std::invalid_argument("Unknown encoder type");
             }
-
-            return nullptr;
         }
+
+    private:
+        ImageEncoder* imageEncoder;
     };
 
 }
