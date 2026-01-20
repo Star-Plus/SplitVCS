@@ -3,7 +3,7 @@
 #include <sstream>
 #include <algorithm>
 #include <utils/DeltaCompressor.h>
-#include "lib/split-diff/core/Encoder.h"
+#include "lib/split-diff/core/ImageEncoder.h"
 
 int main() {
 
