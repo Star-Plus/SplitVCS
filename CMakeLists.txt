@@ -43,7 +43,17 @@ add_library(scm_lib STATIC
         src/features/PackNegotiation/DIFF_TYPE.h
         src/utils/Parsers/ParserToString.cpp
         src/utils/Parsers/ParserToString.h
+
+        src/features/ManualCommit/ManualCommiter.h
+        src/features/ManualCommit/ManualCommiter.cpp
 )
+
+
+
+
+add_subdirectory(lib/split-diff)
+
+
 
 # Link SplitDiff to scm_lib
 target_link_libraries(scm_lib PRIVATE SplitDiff)
@@ -61,17 +71,23 @@ if (WIN32)
     endif()
 
     file(GLOB OPENVCDIFF_LIBS "${OPENVCDIFF_LIB}/*.lib")
-    target_link_libraries(scm_lib PRIVATE ${OPENVCDIFF_LIBS})
 elseif(UNIX)
-    target_link_libraries(scm_lib PRIVATE
-            ${OPENVCDIFF_LIB}/libvcddec.a
-            ${OPENVCDIFF_LIB}/libvcdenc.a
-            ${OPENVCDIFF_LIB}/libvcdcom.a
+    if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+        set(OPENVCDIFF_LIB_DIR "${OPENVCDIFF_LIB}/Linux/Debug")
+    else()
+        set(OPENVCDIFF_LIB_DIR "${OPENVCDIFF_LIB}/Linux/Release")
+    endif()
+
+    set(OPENVCDIFF_LIBS
+        "${OPENVCDIFF_LIB_DIR}/libvcdenc.a"
+        "${OPENVCDIFF_LIB_DIR}/libvcddec.a"
+        "${OPENVCDIFF_LIB_DIR}/libvcdcom.a"
     )
 else()
     message(FATAL_ERROR "Unsupported platform. Please add support for your platform.")
 endif()
 
+target_link_libraries(scm_lib PRIVATE ${OPENVCDIFF_LIBS})
 
 # --- Main executable ---
 add_executable(SplitVCS main.cpp)
@@ -112,4 +128,3 @@ add_subdirectory(python)
 add_subdirectory(rust)
 
 add_subdirectory(lib/split-log)
-add_subdirectory(lib/split-diff)

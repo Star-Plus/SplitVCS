@@ -33,7 +33,7 @@ namespace Split {
 
         void stageFile(const std::string& filepath);
         std::map<std::string, std::string> getStagedFiles() const;
-        std::map<std::string, IndexEntry> getEntries() const { return entries; }
+        const std::map<std::string, IndexEntry>& getEntries() const { return entries; }
         void updateEntry(const std::string& filepath, const IndexEntry& entry);
         void removeEntry(const std::string& filepath);
         void save() const;

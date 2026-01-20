@@ -23,6 +23,9 @@ namespace Split {
         static std::vector<str> GetCommitHistory(const str& rootPath);
         static str GetCommitHistoryAsString(const str& rootPath);
 
+        static void ManualUploadTree(const str& repoPath, const str& treeHash, const str& treeContent);
+        static void ManualUploadCommit(const str& repoPath, const str& commitHash, const str& commitContent);
+
     };
 
 }
