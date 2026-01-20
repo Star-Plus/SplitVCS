@@ -74,6 +74,8 @@ add_library(SplitDiff STATIC
         src/features/binary/ByteEncoder.h
         src/features/binary/ByteDecoder.cpp
         src/features/binary/ByteDecoder.h
+        src/features/images/utils/PixelCalculator.h
+        src/features/images/utils/PixelCalculator.cpp
 )
 
 
@@ -90,18 +92,23 @@ if (WIN32)
     endif()
 
     file(GLOB OPENVCDIFF_LIBS "${OPENVCDIFF_LIB}/*.lib")
-    target_link_libraries(SplitDiff PRIVATE ${OPENVCDIFF_LIBS})
 elseif(UNIX)
-    target_link_libraries(SplitDiff PRIVATE
-            ${OPENVCDIFF_LIB}/libvcddec.a
-            ${OPENVCDIFF_LIB}/libvcdenc.a
-            ${OPENVCDIFF_LIB}/libvcdcom.a
+    if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+        set(OPENVCDIFF_LIB_DIR "${OPENVCDIFF_LIB}/Linux/Debug")
+    else()
+        set(OPENVCDIFF_LIB_DIR "${OPENVCDIFF_LIB}/Linux/Release")
+    endif()
+
+    set(OPENVCDIFF_LIBS
+            "${OPENVCDIFF_LIB_DIR}/libvcdenc.a"
+            "${OPENVCDIFF_LIB_DIR}/libvcddec.a"
+            "${OPENVCDIFF_LIB_DIR}/libvcdcom.a"
     )
 else()
     message(FATAL_ERROR "Unsupported platform. Please add support for your platform.")
 endif()
 
-target_link_libraries(SplitDiff PRIVATE SplitLog opencv_core opencv_imgproc opencv_imgcodecs)
+target_link_libraries(SplitDiff PUBLIC SplitLog opencv_core opencv_imgproc opencv_imgcodecs ${OPENVCDIFF_LIBS})
 target_include_directories(SplitDiff PUBLIC
         src
         ${SplitLog_SOURCE_DIR}/src
@@ -115,3 +122,4 @@ target_include_directories(SplitDiff PUBLIC
 )
 
 add_subdirectory(playground)
+add_subdirectory(analysis)

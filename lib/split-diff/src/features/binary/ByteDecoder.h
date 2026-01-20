@@ -8,9 +8,9 @@
 
 namespace Split {
 
-    class ByteDecoder : public Decoder {
+    class ByteDecoder final : public Decoder {
     public:
-        ByteDecoder();
+        ByteDecoder() {}
 
         void decode(const std::istream &base, const std::istream &delta, std::ostream &out) override;
     };

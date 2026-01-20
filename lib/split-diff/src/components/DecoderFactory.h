@@ -10,7 +10,8 @@ namespace Split {
     public:
 
         DecoderFactory() :
-        imageDecoder(new ImageDecoder())
+        imageDecoder(new ImageDecoder()),
+        byteDecoder(new ByteDecoder())
         {}
 
         Decoder* getDecoder(const AssetType type) const {

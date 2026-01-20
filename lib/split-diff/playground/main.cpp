@@ -4,9 +4,10 @@
 
 int main() {
 
-    const auto Base = "image.jpg";
-    const auto Modified = "image_edited.jpg";
-    const auto Delta = "delta.webp";
+    const auto Base = "OUR_CEO.png";
+    const auto Modified = "OUR_INTERN.png";
+    const auto Delta = "delta";
+    const auto Constructed = "constructed.png";
 
     std::ifstream fileA(Base, std::ios::binary);
     if (!fileA) {
@@ -33,9 +34,9 @@ int main() {
         Split::Blob(outputFile, Delta)
     );
 
-    std::ofstream constructedOutput("constructed.png", std::ios::binary);
+    std::ofstream constructedOutput(Constructed, std::ios::binary);
     if (!constructedOutput) {
-        std::cerr << "Failed to create constructed output file\n";
+        std::cerr << "Failed to create " << Constructed << std::endl;
         return 1;
     }
 
@@ -57,7 +58,7 @@ int main() {
     compressor.decode(
         Split::Blob(baseFile, Base),
         Split::Blob(diffFile, Delta),
-        Split::Blob(constructedOutput, "constructed.png")
+        Split::Blob(constructedOutput, Constructed)
     );
 
     return 0;

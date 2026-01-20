@@ -24,7 +24,7 @@ namespace Split {
         std::string output;
         if (!decoder.Decode(baseSS.str().c_str(),
             baseSS.str().size(),
-            deltaSS.str().c_str(),
+            deltaSS.str(),
             &output)
         ) {
             throw std::runtime_error("Error while decoding");
