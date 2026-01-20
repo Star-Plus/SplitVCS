@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.29)
-project(SplitDiff LANGUAGES C CXX ASM)
+project(SplitDiff)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -70,7 +70,36 @@ add_library(SplitDiff STATIC
         src/features/images/debug/ImageDebugUtils.cpp
         src/features/images/utils/ReadAdapter.h
         src/features/images/utils/FormatSniffer.h
+        src/features/binary/ByteEncoder.cpp
+        src/features/binary/ByteEncoder.h
+        src/features/binary/ByteDecoder.cpp
+        src/features/binary/ByteDecoder.h
 )
+
+
+# --- OpenVCDIFF Paths ---
+set(OPENVCDIFF_INCLUDE "${CMAKE_SOURCE_DIR}/external/open-vcdiff/include")
+set(OPENVCDIFF_LIB "${CMAKE_SOURCE_DIR}/external/open-vcdiff/lib")
+
+if (WIN32)
+
+    if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+        set(OPENVCDIFF_LIB "${OPENVCDIFF_LIB}/Windows/Debug")
+    else()
+        set(OPENVCDIFF_LIB "${OPENVCDIFF_LIB}/Windows/Release")
+    endif()
+
+    file(GLOB OPENVCDIFF_LIBS "${OPENVCDIFF_LIB}/*.lib")
+    target_link_libraries(SplitDiff PRIVATE ${OPENVCDIFF_LIBS})
+elseif(UNIX)
+    target_link_libraries(SplitDiff PRIVATE
+            ${OPENVCDIFF_LIB}/libvcddec.a
+            ${OPENVCDIFF_LIB}/libvcdenc.a
+            ${OPENVCDIFF_LIB}/libvcdcom.a
+    )
+else()
+    message(FATAL_ERROR "Unsupported platform. Please add support for your platform.")
+endif()
 
 target_link_libraries(SplitDiff PRIVATE SplitLog opencv_core opencv_imgproc opencv_imgcodecs)
 target_include_directories(SplitDiff PUBLIC
@@ -80,6 +109,7 @@ target_include_directories(SplitDiff PUBLIC
         ${opencv_SOURCE_DIR}/modules/core/include
         ${opencv_SOURCE_DIR}/modules/imgproc/include
         ${opencv_SOURCE_DIR}/modules/imgcodecs/include
+        ${OPENVCDIFF_INCLUDE}
         ${CMAKE_BINARY_DIR}
 #        ${zstd_SOURCE_DIR}/lib
 )
