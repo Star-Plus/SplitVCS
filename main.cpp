@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <algorithm>
 #include <utils/DeltaCompressor.h>
 #include "lib/split-diff/core/ImageEncoder.h"
 

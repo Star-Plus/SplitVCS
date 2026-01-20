@@ -36,4 +36,12 @@ extern "C" {
         return s.c_str();
     }
 
+    void manualUploadTree(const char* repoPath, const char* treeHash, const char* treeContent) {
+        Split::SplitInterface::ManualUploadTree(repoPath, treeHash, treeContent);
+    }
+
+    void manualUploadCommit(const char* repoPath, const char* commitHash, const char* commitContent) {
+        Split::SplitInterface::ManualUploadCommit(repoPath, commitHash, commitContent);
+    }
+
 }
