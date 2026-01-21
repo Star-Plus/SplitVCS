@@ -55,9 +55,13 @@ int main() {
         return 1;
     }
 
+    std::stack<Split::Blob*> deltaStack;
+    const auto delta = new Split::Blob(diffFile, Base);
+    deltaStack.push(delta);
+
     compressor.decode(
         Split::Blob(baseFile, Base),
-        Split::Blob(diffFile, Delta),
+        deltaStack,
         Split::Blob(constructedOutput, Constructed)
     );
 

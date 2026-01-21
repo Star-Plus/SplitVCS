@@ -62,7 +62,7 @@ namespace Split {
 
         const auto originalFilePath = rootPath + "/" + filepath;
 
-        const std::string blobHash = objectStore.storeFileObject(filepath);
+        const std::string blobHash = Hashing::computeFileHash(filepath);
 
         std::fstream originalFs(originalFilePath, std::ios::in | std::ios::binary);
         if (!originalFs.is_open()) {
@@ -73,28 +73,14 @@ namespace Split {
             if (entries[filepath].blobHash == blobHash) {
                 return;
             }
+
             entry.baseVersionHash = entries[filepath].baseVersionHash;
 
             Pack pack(rootPath);
-            auto decodedContent = pack.getDecodedContent(entries[filepath].blobHash);
+            std::stringstream decodedStream;
+            pack.decode(entries[filepath].blobHash, decodedStream);
 
-            if (decodedContent.empty()) {
-                throw std::runtime_error("Failed to decode content for " + filepath);
-            }
-
-            std::ostringstream fileStringStream;
-            fileStringStream << originalFs.rdbuf();
-            std::string targetContent = fileStringStream.str();
-
-            if (decodedContent == "\n") {
-                auto baseBlobStream = objectStore.loadObject(entries[filepath].baseVersionHash);
-                std::ostringstream baseBlobStringStream;
-                baseBlobStringStream << baseBlobStream.rdbuf();
-                decodedContent = baseBlobStringStream.str();
-                baseBlobStream.close();
-            }
-
-            pack.encodeDelta(decodedContent, targetContent, entries[filepath].blobHash, blobHash);
+            pack.encodeDelta(decodedStream, originalFs, entries[filepath].blobHash, blobHash);
         }
         else {
             entry.baseVersionHash = blobHash;

@@ -22,9 +22,11 @@ namespace Split {
         ObjectStore(const std::string& rootPath, const std::string& nestedPath = "");
 
         bool hasObject(const std::string& hash) const;
+        std::ofstream getStoreObject(const std::string& hash) const;
         std::string storeFileObject(const std::string& filePath) const;
         std::string storeBytesObject(const std::string& bytes) const;
-        std::fstream loadObject(const std::string& hash) const;
+
+        std::ifstream loadObject(const std::string &hash) const;
         void deleteObject(const std::string& hash) const;
     };
 

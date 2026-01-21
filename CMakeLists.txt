@@ -21,7 +21,6 @@ add_library(scm_lib STATIC
         src/stores/ObjectStore.cpp
         src/stores/Index.cpp
         src/components/Repository.cpp
-        src/utils/DeltaCompressor.cpp
         src/utils/SHA1.h
         src/utils/Hashing.h
         src/utils/Time.h
@@ -106,7 +105,6 @@ FetchContent_MakeAvailable(googletest)
 
 # --- Test executable ---
 add_executable(runTests
-        tests/DeltaCompressorTest.cpp
         tests/PackTest.cpp
         tests/ObjectStoreTest.cpp
         tests/IndexTest.cpp

@@ -5,11 +5,8 @@
 #include "Pack.h"
 #include <filesystem>
 #include <fstream>
-#include <iostream>
-#include <ranges>
-#include <stack>
-#include <utils/DeltaCompressor.h>
 #include "ObjectStore.h"
+#include "components/DeltaCompressor.h"
 
 namespace Split {
 
@@ -21,7 +18,7 @@ namespace Split {
         return pack.baseHash == baseHash;
     }
 
-    Pack::Pack(const str& rootPath) : path(rootPath + "/.split/refs/packs"), rootPath(rootPath) {
+    Pack::Pack(const str& rootPath) : rootPath(rootPath), path(rootPath + "/.split/refs/packs") {
 
         // Ensure the directory exists
         std::filesystem::create_directories(path);
@@ -72,7 +69,7 @@ namespace Split {
                 continue;
             }
 
-            auto baseIt = std::ranges::find_if(packs, [&pack](const auto p) {
+            auto baseIt = std::ranges::find_if(packs, [&pack](const auto& p) {
                 return isPackUnitByHash(*p, pack->baseHash);
             });
 
@@ -83,7 +80,7 @@ namespace Split {
     }
 
     void Pack::savePack(const str &hash) const {
-        const auto it = std::ranges::find_if(packs, [&hash](const auto p) {
+        const auto it = std::ranges::find_if(packs, [&hash](const auto& p) {
             return isPackUnitByHash(*p, hash);
         });
 
@@ -106,34 +103,41 @@ namespace Split {
         file.close();
     }
 
-    str Pack::getDecodedContent(const str& hash) {
+    void Pack::decode(const str& hash, std::ostream& out) {
 
-        auto it = std::ranges::find_if(packs.begin(), packs.end(), [&hash](const auto p) {
+        auto it = std::ranges::find_if(packs.begin(), packs.end(), [&hash](const auto& p) {
             return isPackUnitByHash(*p, hash);
         });
 
         if (it == packs.end()) {
-            return "\n";
+            throw std::runtime_error("Pack " + hash + " not found");
         }
+
+        const ObjectStore blobsObjectStore(rootPath, "/blobs");
+        const ObjectStore deltasObjectStore(rootPath, "/deltas");
 
         str baseHash;
 
-        std::stack<str> deltaStack = (*it)->deltaHash.empty() ? std::stack<str>() : std::stack<str>({(*it)->deltaHash});
+        std::stack<std::unique_ptr<Blob>> deltaStack = {};
 
-        auto tempRef = (*it)->baseRef;
+        auto tempRef = *it;
         auto tailRef = *it;
 
-        while (tempRef != nullptr) {
+        while (tempRef->baseRef != nullptr) {
             tailRef = tempRef;
-            deltaStack.push(tempRef->deltaHash);
+
+            const auto objectHash = tempRef->deltaHash;
+            if (!deltasObjectStore.hasObject(objectHash)) {
+                throw std::runtime_error("Object not found in deltas: " + objectHash);
+            }
+
+            std::ifstream deltaStream = deltasObjectStore.loadObject(objectHash);
+            deltaStack.push(std::make_unique<Blob>(Blob(&deltaStream)));
+
             tempRef = tempRef->baseRef;
         }
 
         baseHash = tailRef->baseHash;
-
-
-        const ObjectStore blobsObjectStore(rootPath, "/blobs");
-        const ObjectStore deltasObjectStore(rootPath, "/deltas");
 
         DeltaCompressor compressor;
 
@@ -141,47 +145,33 @@ namespace Split {
             throw std::runtime_error("Base object not found: " + hash);
         }
 
-        std::ostringstream oss;
-        oss << blobsObjectStore.loadObject(baseHash).rdbuf();
-        str content = oss.str();
+        auto baseStream = blobsObjectStore.loadObject(baseHash);
+        Blob baseBlob(&baseStream), outBlob(&out);
 
-        while (!deltaStack.empty()) {
-            str objectHash = deltaStack.top();
-            deltaStack.pop();
-
-            if (!deltasObjectStore.hasObject(objectHash)) {
-                throw std::runtime_error("Object not found in deltas: " + objectHash);
-            }
-
-            std::ostringstream deltaStream;
-            deltaStream << deltasObjectStore.loadObject(objectHash).rdbuf();
-            str deltaContent = deltaStream.str();
-
-            try {
-                content = compressor.decode(content, deltaContent);
-            } catch (const std::runtime_error &e) {
-                throw std::runtime_error("Failed to decode delta for object " + objectHash + ": " + e.what());
-            }
-        }
-
-        return content;
+        compressor.decode(baseBlob, deltaStack, outBlob);
     }
 
-    str Pack::encodeDelta(const str& baseBytes, const str& targetBytes, const str& baseHash, const str& targetHash) {
+    str Pack::encodeDelta(std::istream& v1, std::istream& v2, const str& baseHash, const str& targetHash) {
+        const ObjectStore deltasObjectStore(rootPath, "/deltas");
+
         DeltaCompressor compressor;
-        const auto delta = compressor.encode(baseBytes, targetBytes);
-        if (delta.empty()) {
+
+        std::ostringstream oss;
+
+        const Blob v1Blob(&v1), v2Blob(&v2), oBlob(&oss);
+
+        compressor.encode(v1Blob, v2Blob, oBlob);
+        if (oss.rdbuf()->str().empty()) {
             throw std::runtime_error("Failed to encode delta.");
         }
 
         // Save the delta to the deltas object store
-        const ObjectStore deltasObjectStore(rootPath, "/deltas");
-        str deltaHash = deltasObjectStore.storeBytesObject(delta);
+        str deltaHash = deltasObjectStore.storeBytesObject(oss.rdbuf()->str());
         if (deltaHash.empty()) {
             throw std::runtime_error("Failed to store delta object.");
         }
 
-        const auto baseIt = std::ranges::find_if(packs, [&baseHash](const auto p) {
+        const auto baseIt = std::ranges::find_if(packs, [&baseHash](const auto& p) {
             return isPackUnitByHash(*p, baseHash);
         });
 
@@ -204,7 +194,7 @@ namespace Split {
     }
 
     PackUnit Pack::getPackUnitByHash(const str& hash) const {
-        const auto it = std::ranges::find_if(packs, [&hash](const auto p) {
+        const auto it = std::ranges::find_if(packs, [&hash](const auto& p) {
             return isPackUnitByHash(*p, hash);
         });
 
@@ -216,7 +206,7 @@ namespace Split {
     }
 
     str Pack::getBaseVersionHash(const str &hash) const {
-        const auto it = std::ranges::find_if(packs, [&hash](const auto p) {
+        const auto it = std::ranges::find_if(packs, [&hash](const auto& p) {
             return isPackUnitByHash(*p, hash);
         });
 
@@ -234,6 +224,5 @@ namespace Split {
 
         return trailRef->baseHash;
     }
-
 
 }

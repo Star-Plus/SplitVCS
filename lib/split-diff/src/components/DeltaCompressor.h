@@ -2,6 +2,7 @@
 #include "components/EncoderFactory.h"
 #include "components/DecoderFactory.h"
 #include "atoms/Blob.h"
+#include <stack>
 
 namespace Split {
 
@@ -10,11 +11,11 @@ namespace Split {
 
         DeltaCompressor();
 
-        void encode(const Blob& v1, const Blob& v2, const Blob& out);
+        void encode(const Blob& v1, const Blob& v2, const Blob& out) const;
 
-        void decode(const std::istream& base, const std::istream* deltas, std::ostream& out);
+        void decode(const Blob& base, std::stack<std::unique_ptr<Blob>>& deltas, const Blob& out) const;
 
-        void decode(const Blob& base, const Blob& delta, const Blob& out);
+        void decode(const Blob& base, const Blob& delta, const Blob& out) const;
 
     private:
         EncoderFactory encoderFactory;

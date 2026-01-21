@@ -8,8 +8,6 @@
 #include <vector>
 #include <string>
 #include <memory>
-#include <stdexcept>
-
 #include "core/Alias.h"
 
 namespace Split {
@@ -29,10 +27,10 @@ namespace Split {
 
     public:
 
-        Pack(const str& rootPath);
+        explicit Pack(const str& rootPath);
         void savePack(const str &hash) const;
-        str getDecodedContent(const str&);
-        str encodeDelta(const str& baseBytes, const str& targetBytes, const str& baseHash, const str& targetHash);
+        void decode(const str&, std::ostream&);
+        str encodeDelta(std::istream& v1, std::istream& v2, const str& baseHash, const str& targetHash);
 
         PackUnit getPackUnitByHash(const str& hash) const;
         str getBaseVersionHash(const str& hash) const;
