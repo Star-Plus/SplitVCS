@@ -6,6 +6,7 @@
 
 #include "components/Repository.h"
 #include "features/RepositoryStatus.h"
+#include "features/IgnoreList/IgnoreList.h"
 #include "features/PackNegotiation/PackNegotiation.h"
 #include "utils/Parsers/ParserToString.h"
 #include "features/ManualCommit/ManualCommiter.h"
@@ -62,4 +63,21 @@ namespace Split {
         commiter.uploadCommit(commitHash, commitContent);
     }
 
+    void SplitInterface::AddIgnore(const str& repoPath, const str& ignorePath)
+    {
+        IgnoreList il(repoPath);
+        il.add(ignorePath);
+    }
+
+    void SplitInterface::RemoveIgnore(const str& repoPath, const str& ignorePath)
+    {
+        IgnoreList il(repoPath);
+        il.remove(ignorePath);
+    }
+
+    bool SplitInterface::IsIgnored(const str& repoPath, const str& ignorePath)
+    {
+        const IgnoreList il(repoPath);
+        return il.isIgnored(ignorePath);
+    }
 }

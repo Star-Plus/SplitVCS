@@ -30,6 +30,10 @@ namespace Split {
 
         outFile << commitContent;
         outFile.close();
+
+        CommitHistory history(repoPath);
+        history.addCommit(commitHash);
+        history.save();
     }
 
 }

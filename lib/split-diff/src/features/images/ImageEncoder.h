@@ -6,7 +6,9 @@
 #define ENCODER_H
 
 #include <filesystem>
+#include "main/Logger.h"
 #include <string>
+#include "interfaces/IEncoder.h"
 
 namespace Split {
 
@@ -15,12 +17,16 @@ namespace Split {
         int16_t db, dg, dr;
     };
 
-    class ImageEncoder {
+    class ImageEncoder final : public Encoder {
 
     public:
-        static void encode(const std::string& oPath, const std::string& ePath, const std::string& dPath);
+        ImageEncoder();
 
-        static void decode(const std::string& oPath, const std::string& dPath, const std::string& outPath);
+        static void encode(const std::string& oPath, const std::string& ePath, const std::string& dPath);
+        void encode(const std::istream& v1, const std::istream& v2, std::ostream& output) override;
+
+    private:
+        Logger logger;
     };
 
 }

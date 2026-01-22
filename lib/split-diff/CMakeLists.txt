@@ -43,16 +43,82 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(opencv)
 
+#FetchContent_Declare(
+#        zstd
+#        GIT_REPOSITORY https://github.com/facebook/zstd
+#        GIT_TAG v1.5.5
+#        SOURCE_SUBDIR build/cmake
+#)
+#
+#FetchContent_MakeAvailable(zstd)
+
 add_library(SplitDiff STATIC
-        core/Encoder.cpp
-        core/Encoder.h
+        src/components/DeltaCompressor.cpp
+        src/interfaces/IDecoder.h
+        src/interfaces/IEncoder.h
+        src/components/EncoderFactory.h
+        src/components/DecoderFactory.h
+        src/features/images/ImageDecoder.h
+        src/features/images/ImageDecoder.cpp
+        src/features/images/ImageEncoder.h
+        src/features/images/ImageEncoder.cpp
+        src/enums/AssetType.h
+        src/enums/AssetType.cpp
+        src/utils/AssetInfo.h
+        src/utils/AssetInfo.cpp
+        src/atoms/Blob.h
+        src/features/images/debug/ImageDebugUtils.cpp
+        src/features/images/utils/ReadAdapter.h
+        src/features/images/utils/FormatSniffer.h
+        src/features/binary/ByteEncoder.cpp
+        src/features/binary/ByteEncoder.h
+        src/features/binary/ByteDecoder.cpp
+        src/features/binary/ByteDecoder.h
+        src/features/images/utils/PixelCalculator.h
+        src/features/images/utils/PixelCalculator.cpp
 )
 
-target_link_libraries(SplitDiff PRIVATE opencv_core opencv_imgproc opencv_imgcodecs)
+
+# --- OpenVCDIFF Paths ---
+set(OPENVCDIFF_INCLUDE "${CMAKE_SOURCE_DIR}/external/open-vcdiff/include")
+set(OPENVCDIFF_LIB "${CMAKE_SOURCE_DIR}/external/open-vcdiff/lib")
+
+if (WIN32)
+
+    if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+        set(OPENVCDIFF_LIB "${OPENVCDIFF_LIB}/Windows/Debug")
+    else()
+        set(OPENVCDIFF_LIB "${OPENVCDIFF_LIB}/Windows/Release")
+    endif()
+
+    file(GLOB OPENVCDIFF_LIBS "${OPENVCDIFF_LIB}/*.lib")
+elseif(UNIX)
+    if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+        set(OPENVCDIFF_LIB_DIR "${OPENVCDIFF_LIB}/Linux/Debug")
+    else()
+        set(OPENVCDIFF_LIB_DIR "${OPENVCDIFF_LIB}/Linux/Release")
+    endif()
+
+    set(OPENVCDIFF_LIBS
+            "${OPENVCDIFF_LIB_DIR}/libvcdenc.a"
+            "${OPENVCDIFF_LIB_DIR}/libvcddec.a"
+            "${OPENVCDIFF_LIB_DIR}/libvcdcom.a"
+    )
+else()
+    message(FATAL_ERROR "Unsupported platform. Please add support for your platform.")
+endif()
+
+target_link_libraries(SplitDiff PUBLIC SplitLog opencv_core opencv_imgproc opencv_imgcodecs ${OPENVCDIFF_LIBS})
 target_include_directories(SplitDiff PUBLIC
+        src
+        ${SplitLog_SOURCE_DIR}/src
         ${opencv_SOURCE_DIR}/include
         ${opencv_SOURCE_DIR}/modules/core/include
         ${opencv_SOURCE_DIR}/modules/imgproc/include
         ${opencv_SOURCE_DIR}/modules/imgcodecs/include
+        ${OPENVCDIFF_INCLUDE}
         ${CMAKE_BINARY_DIR}
 )
+
+add_subdirectory(playground)
+add_subdirectory(analysis)
