@@ -17,7 +17,7 @@ namespace Split {
         const std::string repoPath = rootPath + "/.split";
 
         if (std::filesystem::exists(repoPath)) {
-            throw std::runtime_error("Repository already initialized at " + repoPath);
+            return;
         }
 
         std::filesystem::create_directories(repoPath);

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.29)
-project(SplitSCM)
+project(SplitVCS)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -21,7 +21,6 @@ add_library(scm_lib STATIC
         src/stores/ObjectStore.cpp
         src/stores/Index.cpp
         src/components/Repository.cpp
-        src/utils/DeltaCompressor.cpp
         src/utils/SHA1.h
         src/utils/Hashing.h
         src/utils/Time.h
@@ -43,36 +42,27 @@ add_library(scm_lib STATIC
         src/features/PackNegotiation/DIFF_TYPE.h
         src/utils/Parsers/ParserToString.cpp
         src/utils/Parsers/ParserToString.h
+
+        src/features/ManualCommit/ManualCommiter.h
+        src/features/ManualCommit/ManualCommiter.cpp
+        src/utils/Fs/PackOptimizer.cpp
+        src/utils/Fs/PackOptimizer.h
+        src/utils/Fs/FsMetadata.cpp
+        src/utils/Fs/FsMetadata.h
+        src/utils/Fs/DualStream.h
 )
 
-# --- Wrap OpenVCDIFF into a single target ---
+target_include_directories(scm_lib PUBLIC src lib)
 
-target_include_directories(scm_lib PUBLIC src ${OPENVCDIFF_INCLUDE})
 
-if (WIN32)
-
-    if (CMAKE_BUILD_TYPE STREQUAL "Debug")
-        set(OPENVCDIFF_LIB "${OPENVCDIFF_LIB}/Windows/Debug")
-    else()
-        set(OPENVCDIFF_LIB "${OPENVCDIFF_LIB}/Windows/Release")
-    endif()
-
-    file(GLOB OPENVCDIFF_LIBS "${OPENVCDIFF_LIB}/*.lib")
-    target_link_libraries(scm_lib PRIVATE ${OPENVCDIFF_LIBS})
-elseif(UNIX)
-    target_link_libraries(scm_lib PRIVATE
-            ${OPENVCDIFF_LIB}/libvcddec.a
-            ${OPENVCDIFF_LIB}/libvcdenc.a
-            ${OPENVCDIFF_LIB}/libvcdcom.a
-    )
-else()
-    message(FATAL_ERROR "Unsupported platform. Please add support for your platform.")
-endif()
-
+# Link SplitDiff to scm_lib
+add_subdirectory(lib/split-diff)
+target_link_libraries(scm_lib PRIVATE SplitDiff)
+target_include_directories(scm_lib PUBLIC lib/split-diff/src)
 
 # --- Main executable ---
-add_executable(SplitSCM main.cpp)
-target_link_libraries(SplitSCM PRIVATE scm_lib)
+add_executable(SplitVCS main.cpp)
+target_link_libraries(SplitVCS PRIVATE scm_lib)
 
 # --- Enable testing ---
 enable_testing()
@@ -87,7 +77,6 @@ FetchContent_MakeAvailable(googletest)
 
 # --- Test executable ---
 add_executable(runTests
-        tests/DeltaCompressorTest.cpp
         tests/PackTest.cpp
         tests/ObjectStoreTest.cpp
         tests/IndexTest.cpp
@@ -97,6 +86,8 @@ add_executable(runTests
         tests/CommitDiffer.Test.cpp
         tests/PackNegotiation.Test.cpp
         tests/Checkout.Test.cpp
+        src/utils/Fs/tests/FsMetadata.test.cpp
+        tests/HandlingImage.Test.cpp
 )
 target_link_libraries(runTests PRIVATE scm_lib gtest_main)
 
@@ -108,4 +99,4 @@ gtest_discover_tests(runTests)
 add_subdirectory(python)
 add_subdirectory(rust)
 
-add_subdirectory(lib/split-diff)
+add_subdirectory(lib/split-log)

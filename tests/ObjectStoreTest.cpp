@@ -9,7 +9,7 @@ TEST(ObjectStoreTest, StoreFiles) {
     const std::string filePath = "test_file.txt";
     const std::string objectPath = rootPath + "/.split/objects";
 
-    std::fstream file(filePath, std::ios::out);
+    std::fstream file(rootPath + "/" + filePath, std::ios::out);
     ASSERT_TRUE(file.is_open()) << "Failed to create test file for storing";
     file << "This is a test file for ObjectStore.";
     file.close();
@@ -22,6 +22,5 @@ TEST(ObjectStoreTest, StoreFiles) {
     object.close();
 
     // Delete test file and object store
-    std::remove(filePath.c_str());
     std::filesystem::remove_all(rootPath);
 }
