@@ -50,6 +50,9 @@ add_library(scm_lib STATIC
         src/utils/Fs/FsMetadata.cpp
         src/utils/Fs/FsMetadata.h
         src/utils/Fs/DualStream.h
+        src/features/IgnoreList/IgnoreList.cpp
+        src/features/IgnoreList/IgnoreList.h
+        src/utils/String/StringUtils.h
 )
 
 target_include_directories(scm_lib PUBLIC src lib)
@@ -88,6 +91,7 @@ add_executable(runTests
         tests/Checkout.Test.cpp
         src/utils/Fs/tests/FsMetadata.test.cpp
         tests/HandlingImage.Test.cpp
+        src/features/IgnoreList/tests/IgnoreList.Test.cpp
 )
 target_link_libraries(runTests PRIVATE scm_lib gtest_main)
 
