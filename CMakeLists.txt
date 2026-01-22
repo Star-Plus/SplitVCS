@@ -45,48 +45,20 @@ add_library(scm_lib STATIC
 
         src/features/ManualCommit/ManualCommiter.h
         src/features/ManualCommit/ManualCommiter.cpp
+        src/utils/Fs/PackOptimizer.cpp
+        src/utils/Fs/PackOptimizer.h
+        src/utils/Fs/FsMetadata.cpp
+        src/utils/Fs/FsMetadata.h
+        src/utils/Fs/DualStream.h
 )
 
-
-
-
-add_subdirectory(lib/split-diff)
-
+target_include_directories(scm_lib PUBLIC src lib)
 
 
 # Link SplitDiff to scm_lib
+add_subdirectory(lib/split-diff)
 target_link_libraries(scm_lib PRIVATE SplitDiff)
-
-# --- Wrap OpenVCDIFF into a single target ---
-
-target_include_directories(scm_lib PUBLIC src ${OPENVCDIFF_INCLUDE})
-
-if (WIN32)
-
-    if (CMAKE_BUILD_TYPE STREQUAL "Debug")
-        set(OPENVCDIFF_LIB "${OPENVCDIFF_LIB}/Windows/Debug")
-    else()
-        set(OPENVCDIFF_LIB "${OPENVCDIFF_LIB}/Windows/Release")
-    endif()
-
-    file(GLOB OPENVCDIFF_LIBS "${OPENVCDIFF_LIB}/*.lib")
-elseif(UNIX)
-    if (CMAKE_BUILD_TYPE STREQUAL "Debug")
-        set(OPENVCDIFF_LIB_DIR "${OPENVCDIFF_LIB}/Linux/Debug")
-    else()
-        set(OPENVCDIFF_LIB_DIR "${OPENVCDIFF_LIB}/Linux/Release")
-    endif()
-
-    set(OPENVCDIFF_LIBS
-        "${OPENVCDIFF_LIB_DIR}/libvcdenc.a"
-        "${OPENVCDIFF_LIB_DIR}/libvcddec.a"
-        "${OPENVCDIFF_LIB_DIR}/libvcdcom.a"
-    )
-else()
-    message(FATAL_ERROR "Unsupported platform. Please add support for your platform.")
-endif()
-
-target_link_libraries(scm_lib PRIVATE ${OPENVCDIFF_LIBS})
+target_include_directories(scm_lib PUBLIC lib/split-diff/src)
 
 # --- Main executable ---
 add_executable(SplitVCS main.cpp)
@@ -114,6 +86,8 @@ add_executable(runTests
         tests/CommitDiffer.Test.cpp
         tests/PackNegotiation.Test.cpp
         tests/Checkout.Test.cpp
+        src/utils/Fs/tests/FsMetadata.test.cpp
+        tests/HandlingImage.Test.cpp
 )
 target_link_libraries(runTests PRIVATE scm_lib gtest_main)
 

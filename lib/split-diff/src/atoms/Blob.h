@@ -9,20 +9,20 @@ namespace Split {
 
         std::variant<std::istream*, std::ostream*> data;
         size_t size;
-        std::string path;
+        AssetType type;
 
-        Blob(std::istream& inputStream, const std::string& assetPath)
-            : data(&inputStream), size(calculateStreamSize()), path(assetPath) {}
+        Blob(std::istream& inputStream, AssetType type)
+            : data(&inputStream), size(calculateStreamSize()), type(type) {}
 
-        Blob(std::ostream& outputStream, const std::string& assetPath)
-            : data(&outputStream), size(calculateStreamSize()), path(assetPath) {}
+        Blob(std::ostream& outputStream, AssetType type)
+            : data(&outputStream), size(calculateStreamSize()), type(type) {}
 
-        Blob(std::istream* inputStream)
-            : data(inputStream), size(calculateStreamSize()), path("") {
+        Blob(std::istream& inputStream)
+            : data(&inputStream), size(calculateStreamSize()), type(AssetType::BINARY) {
         }
 
-        Blob(std::ostream* outputStream)
-            : data(outputStream), size(calculateStreamSize()), path("") {
+        Blob(std::ostream& outputStream)
+            : data(&outputStream), size(calculateStreamSize()), type(AssetType::BINARY) {
         }
 
         std::istream* getInputStream() const {
@@ -39,26 +39,24 @@ namespace Split {
             return nullptr;
         }
 
-        size_t calculateStreamSize() {
+        size_t calculateStreamSize() const
+        {
             if (std::holds_alternative<std::istream*>(data)) {
-                
-                std::istream* is = std::get<std::istream*>(data);
+
+                const auto is = std::get<std::istream*>(data);
                 std::streampos currentPos = is->tellg();
                 is->seekg(0, std::ios::end);
-                size_t dataSize = static_cast<size_t>(is->tellg());
+                size_t dataSize = is->tellg();
                 is->seekg(currentPos);
                 return dataSize;
             }
-            else {
-                std::ostream* os = std::get<std::ostream*>(data);
-                std::streampos currentPos = os->tellp();
-                os->seekp(0, std::ios::end);
-                size_t dataSize = static_cast<size_t>(os->tellp());
-                os->seekp(currentPos);
-                return dataSize;
-            }
 
-            return 0;
+            std::ostream* os = std::get<std::ostream*>(data);
+            std::streampos currentPos = os->tellp();
+            os->seekp(0, std::ios::end);
+            size_t dataSize = os->tellp();
+            os->seekp(currentPos);
+            return dataSize;
         }
     };
 }

@@ -32,6 +32,21 @@ namespace Split {
             return sha1.final();
         }
 
+        static std::string computeFileHash(std::fstream& file)
+        {
+            SHA1 sha1;
+            char buffer[8192];
+            while (file.read(buffer, sizeof(buffer)) || file.gcount()) {
+                sha1.update(reinterpret_cast<uint8_t*>(buffer), file.gcount());
+            }
+
+            // Return file to begin
+            file.clear();
+            file.seekg(0, std::ios::beg);
+
+            return sha1.final();
+        }
+
         static std::string computeHash(const std::string& bytes) {
             SHA1 sha1;
             sha1.update(reinterpret_cast<const uint8_t*>(bytes.data()), bytes.size());

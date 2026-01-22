@@ -5,16 +5,21 @@ namespace Split {
     DeltaCompressor::DeltaCompressor() = default;
 
     void DeltaCompressor::encode(const Blob& v1, const Blob& v2, const Blob& out) const {
-        const AssetType type = assetTypeFromPath(v1.path);
-
-        const auto encoder = encoderFactory.getEncoder(type);
+        const auto encoder = encoderFactory.getEncoder(v1.type & v2.type);
         encoder->encode(*v1.getInputStream(), *v2.getInputStream(), *out.getOutputStream());
     }
 
     void DeltaCompressor::decode(const Blob& base, std::stack<std::unique_ptr<Blob>>& deltas, const Blob& out) const {
 
-        auto middleIn = new Blob(base.getInputStream());
-        middleIn->path = base.path;
+        auto middleIn = new Blob(*base.getInputStream());
+        middleIn->type = base.type;
+
+        if (deltas.empty())
+        {
+            *out.getOutputStream() << base.getInputStream()->rdbuf();
+            delete middleIn;
+            return;
+        }
 
         while (!deltas.empty()) {
             const auto delta = deltas.top().get();
@@ -27,7 +32,7 @@ namespace Split {
                 );
             } else {
                 std::ostringstream outStream;
-                const Blob middleOut(&outStream);
+                const Blob middleOut(outStream);
 
                 this->decode(
                     *middleIn,
@@ -37,8 +42,8 @@ namespace Split {
 
                 delete middleIn;
 
-                middleIn = new Blob(&outStream);
-                middleIn->path = base.path;
+                middleIn = new Blob(outStream);
+                middleIn->type = base.type;
             }
 
             deltas.pop();
@@ -46,8 +51,7 @@ namespace Split {
     }
 
     void DeltaCompressor::decode(const Blob& base, const Blob& delta, const Blob& out) const {
-        const AssetType type = assetTypeFromPath(base.path);
-        const auto decoder = decoderFactory.getDecoder(type);
+        const auto decoder = decoderFactory.getDecoder(base.type & delta.type);
         decoder->decode(*base.getInputStream(), *delta.getInputStream(), *out.getOutputStream());
     }
 

@@ -118,7 +118,6 @@ target_include_directories(SplitDiff PUBLIC
         ${opencv_SOURCE_DIR}/modules/imgcodecs/include
         ${OPENVCDIFF_INCLUDE}
         ${CMAKE_BINARY_DIR}
-#        ${zstd_SOURCE_DIR}/lib
 )
 
 add_subdirectory(playground)

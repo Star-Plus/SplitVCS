@@ -59,14 +59,15 @@ namespace Split {
 
             for (const auto& diff : diffs) {
                 if (diff.type == DiffType::ADDED || diff.type == DiffType::MODIFIED) {
-                    auto [hash, baseHash, deltaHash, baseRef] = pack.getPackUnitByHash(diff.hash);
+                    auto [hash, baseHash, deltaHash, baseRef, encode] = pack.getPackUnitByHash(diff.hash);
                     if (baseHash.empty()) {
                         packData.insert(".split/objects/blobs/" + diff.hash);
-                    }
-                    else {
-                        packData.insert(".split/refs/packs/"+hash+".pack");
+                    } else
+                    {
                         packData.insert(".split/objects/deltas/" + deltaHash);
                     }
+
+                    packData.insert(".split/refs/packs/"+hash+".pack");
                 }
             }
         }

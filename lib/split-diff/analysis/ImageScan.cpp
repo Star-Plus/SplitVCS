@@ -1,7 +1,7 @@
 #include <iostream>
 #include <opencv2/opencv.hpp>
 
-int main() {
+int main0() {
 
     cv::Mat sample1 = cv::imread("Samples/Split_Sample1.png", cv::IMREAD_COLOR);
     cv::Mat sample2 = cv::imread("Samples/Split_Sample2.png", cv::IMREAD_COLOR);

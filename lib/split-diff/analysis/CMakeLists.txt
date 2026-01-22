@@ -6,10 +6,12 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_executable(SplitDiffAnalysis
         ImageScan.cpp
+        BackwardDelta.cpp
 )
 
-target_link_libraries(SplitDiffAnalysis PRIVATE opencv_core opencv_imgproc opencv_imgcodecs)
-target_include_directories(SplitDiffAnalysis PRIVATE
+target_link_libraries(SplitDiffAnalysis PUBLIC SplitDiff)
+target_include_directories(SplitDiffAnalysis PUBLIC
+        ${SplitDiff_SOURCE_DIR}/src
         ${opencv_SOURCE_DIR}/include
         ${opencv_SOURCE_DIR}/modules/core/include
         ${opencv_SOURCE_DIR}/modules/imgproc/include

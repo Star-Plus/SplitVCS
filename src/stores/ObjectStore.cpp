@@ -58,6 +58,27 @@ namespace Split {
         return hash;
     }
 
+    std::string ObjectStore::storeFileObject(std::fstream& file) const
+    {
+        std::string hash = Hashing::computeFileHash(file);
+        const std::string objectPath = path + "/" + hash;
+
+        if (hasObject(hash)) {
+            return hash;
+        }
+
+        std::ofstream outObjectFile(objectPath, std::ios::binary);
+        if (!outObjectFile)
+        {
+            throw std::runtime_error("Failed to create object file: " + rootPath);
+        }
+
+        outObjectFile << file.rdbuf();
+        outObjectFile.close();
+
+        return hash;
+    }
+
     std::string ObjectStore::storeBytesObject(const std::string &bytes) const {
         if (bytes.empty()) {
             throw std::invalid_argument("Cannot store empty bytes.");

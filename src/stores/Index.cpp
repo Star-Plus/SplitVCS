@@ -62,27 +62,27 @@ namespace Split {
 
         const auto originalFilePath = rootPath + "/" + filepath;
 
-        const std::string blobHash = Hashing::computeFileHash(filepath);
+        std::string blobHash = Hashing::computeFileHash(originalFilePath);
 
         std::fstream originalFs(originalFilePath, std::ios::in | std::ios::binary);
         if (!originalFs.is_open()) {
             throw std::runtime_error("Failed to open file: " + filepath);
         }
 
+        Pack pack(rootPath);
+        const auto encodeType = Assets::assetTypeFromPath(originalFilePath);
+
         if (entries.find(filepath) != entries.end()) {
             if (entries[filepath].blobHash == blobHash) {
                 return;
             }
 
+
             entry.baseVersionHash = entries[filepath].baseVersionHash;
-
-            Pack pack(rootPath);
-            std::stringstream decodedStream;
-            pack.decode(entries[filepath].blobHash, decodedStream);
-
-            pack.encodeDelta(decodedStream, originalFs, entries[filepath].blobHash, blobHash);
+            pack.encodeDelta(originalFs, entries[filepath].blobHash, blobHash, encodeType);
         }
         else {
+            blobHash = pack.encodeBase(originalFs, encodeType);
             entry.baseVersionHash = blobHash;
         }
 
@@ -95,12 +95,6 @@ namespace Split {
         entry.blobHash = blobHash;
 
         entries[filepath] = entry;
-        // Delete the created blob
-        if (blobHash != entry.baseVersionHash) {
-            if (objectStore.hasObject(blobHash)) {
-                objectStore.deleteObject(blobHash);
-            }
-        }
 
         // Write the updated index to disk
         save();
