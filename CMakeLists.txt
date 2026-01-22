@@ -57,6 +57,9 @@ add_library(scm_lib STATIC
 
 target_include_directories(scm_lib PUBLIC src lib)
 
+add_subdirectory(lib/split-live)
+
+
 
 # Link SplitDiff to scm_lib
 add_subdirectory(lib/split-diff)
