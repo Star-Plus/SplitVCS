@@ -53,6 +53,10 @@ add_library(scm_lib STATIC
         src/features/IgnoreList/IgnoreList.cpp
         src/features/IgnoreList/IgnoreList.h
         src/utils/String/StringUtils.h
+        src/features/FastLiveAsset/TinyAsset.cpp
+        src/features/FastLiveAsset/TinyAsset.h
+        src/features/FastLiveAsset/TinyAsset.cpp
+        src/features/FastLiveAsset/TinyAsset.h
 )
 
 target_include_directories(scm_lib PUBLIC src lib)
