@@ -3,39 +3,13 @@
 #include <opencv2/opencv.hpp>
 
 #include "utils/FormatSniffer.h"
+#include "utils/PixelCalculator.h"
 #include "utils/ReadAdapter.h"
 
 using namespace cv;
 using namespace std;
 
 namespace Split {
-
-    class RowConstruct final : public ParallelLoopBody {
-        const Mat *A;
-        const Mat *B;
-        Mat* Construct;
-    public:
-        RowConstruct(
-            const Mat* _A,
-            const Mat* _B,
-            Mat* _Diff
-        ) : A(_A), B(_B), Construct(_Diff) {}
-
-        void operator()(const Range& range) const override {
-            for (int r = range.start; r < range.end; ++r) {
-                const uchar* pA = A->ptr<uchar>(r);
-                const uchar* pB = B->ptr<uchar>(r);
-                uchar* pDiff = Construct->ptr<uchar>(r);
-
-                const int len = A->cols * A->channels();
-
-                for (int i = 0; i < len; ++i) {
-                    pDiff[i] = uchar(int(pB[i]) + int(pA[i]) - 128);
-                }
-            }
-        }
-
-    };
 
     void ImageDecoder::decode(const std::istream& base, const std::istream& delta, std::ostream& out) {
 
@@ -56,8 +30,7 @@ namespace Split {
 
         Mat constructed(A.size(), A.type());
 
-        const RowConstruct constructedKernel(&A, &B, &constructed);
-        parallel_for_(Range(0, A.rows), constructedKernel);
+        PixelCalculator::clockAdder(A, B, constructed);
 
         std::vector<uchar> uncompressed;
 

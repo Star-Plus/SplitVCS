@@ -31,13 +31,18 @@ TEST(IndexTest, StageCreatedFile) {
 
     std::ifstream objectFile(rootPath + "/.split/objects/blobs/" + hash);
     ASSERT_TRUE(objectFile.is_open());
+
+    std::stringstream oss;
+    oss << objectFile.rdbuf();
+
+    ASSERT_EQ(oss.str(), "Test content for staging.");
+
     objectFile.close();
 
     const auto stagedEntries = index.getStagedFiles();
     ASSERT_EQ(stagedEntries.size(), 1);
     ASSERT_EQ(stagedEntries.begin()->first, filePath);
     ASSERT_EQ(stagedEntries.begin()->second, hash);
-
     // Clear the test environment
     std::filesystem::remove_all("test_repo");
 }

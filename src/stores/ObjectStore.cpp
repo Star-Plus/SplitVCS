@@ -27,6 +27,11 @@ namespace Split {
         return state;
     }
 
+    std::ofstream ObjectStore::getStoreObject(const std::string &hash) const {
+        std::ofstream stream(path + "/" + hash, std::ios::binary);
+        return stream;
+    }
+
     std::string ObjectStore::storeFileObject(const std::string &filePath) const {
         const auto originalPath = rootPath + "/" + filePath;
         std::ifstream file(originalPath, std::ios::binary);
@@ -49,6 +54,27 @@ namespace Split {
         outFile << file.rdbuf();
         outFile.close();
         file.close();
+
+        return hash;
+    }
+
+    std::string ObjectStore::storeFileObject(std::fstream& file) const
+    {
+        std::string hash = Hashing::computeFileHash(file);
+        const std::string objectPath = path + "/" + hash;
+
+        if (hasObject(hash)) {
+            return hash;
+        }
+
+        std::ofstream outObjectFile(objectPath, std::ios::binary);
+        if (!outObjectFile)
+        {
+            throw std::runtime_error("Failed to create object file: " + rootPath);
+        }
+
+        outObjectFile << file.rdbuf();
+        outObjectFile.close();
 
         return hash;
     }
@@ -76,9 +102,9 @@ namespace Split {
         return hash;
     }
 
-    std::fstream ObjectStore::loadObject(const std::string &hash) const {
+    std::ifstream ObjectStore::loadObject(const std::string &hash) const {
         const std::string objectPath = path + "/" + hash;
-        auto fileStream = std::fstream(objectPath, std::ios::in | std::ios::binary);
+        auto fileStream = std::ifstream(objectPath, std::ios::in | std::ios::binary);
         if (!fileStream.is_open()) {
             fileStream.close();
             throw std::runtime_error("Failed to open object file: " + objectPath);

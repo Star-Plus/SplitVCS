@@ -48,26 +48,13 @@ namespace Split {
             indexEntry.isDeleted = false;
             index.updateEntry(entry.first, indexEntry);
 
-            auto decodedContent = pack.getDecodedContent(entry.second);
 
             std::ofstream fileStream(rootPath + "/" + entry.first, std::ios::binary);
             if (!fileStream.is_open()) {
                 throw std::runtime_error("Failed to open file for writing: " + entry.first);
             }
 
-            // If content is empty it's the base blob
-            if (decodedContent == "\n") {
-                ObjectStore blobStore(rootPath, "/blobs");
-                auto baseBlobStream = blobStore.loadObject(indexEntry.baseVersionHash);
-                if (!baseBlobStream.is_open()) {
-                    throw std::runtime_error("Base blob not found: " + indexEntry.baseVersionHash);
-                }
-                std::ostringstream baseBlobStringStream;
-                baseBlobStringStream << baseBlobStream.rdbuf();
-                decodedContent = baseBlobStringStream.str();
-            }
-
-            fileStream << decodedContent;
+            pack.decode(entry.second, fileStream);
             fileStream.close();
 
         }
