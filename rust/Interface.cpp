@@ -44,4 +44,19 @@ extern "C" {
         Split::SplitInterface::ManualUploadCommit(repoPath, commitHash, commitContent);
     }
 
+    void addIgnore(const char* repoPath, const char* filePath)
+    {
+        Split::SplitInterface::AddIgnore(repoPath, filePath);
+    }
+
+    void removeIgnore(const char* repoPath, const char* filePath)
+    {
+        Split::SplitInterface::RemoveIgnore(repoPath, filePath);
+    }
+
+    bool isIgnored(const char* repoPath, const char* filePath)
+    {
+        return Split::SplitInterface::IsIgnored(repoPath, filePath);
+    }
+
 }

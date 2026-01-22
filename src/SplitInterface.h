@@ -26,6 +26,10 @@ namespace Split {
         static void ManualUploadTree(const str& repoPath, const str& treeHash, const str& treeContent);
         static void ManualUploadCommit(const str& repoPath, const str& commitHash, const str& commitContent);
 
+        static void AddIgnore(const str& repoPath, const str& ignorePath);
+        static void RemoveIgnore(const str& repoPath, const str& ignorePath);
+        static bool IsIgnored(const str& repoPath, const str& ignorePath);
+
     };
 
 }
