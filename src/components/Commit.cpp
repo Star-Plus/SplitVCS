@@ -43,7 +43,7 @@ namespace Split {
 
             IndexEntry indexEntry = {entry.first};
 
-            indexEntry.baseVersionHash = pack.getBaseVersionHash(entry.second);
+            indexEntry.baseVersionHash = pack.getBasePackByHash(entry.second).hash;
             indexEntry.blobHash = entry.second;
             indexEntry.isDeleted = false;
             index.updateEntry(entry.first, indexEntry);

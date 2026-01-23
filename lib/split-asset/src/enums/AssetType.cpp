@@ -1,4 +1,4 @@
-#include "enums/AssetType.h"
+#include "AssetType.h"
 
 #include <stdexcept>
 

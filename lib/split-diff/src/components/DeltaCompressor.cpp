@@ -5,7 +5,7 @@ namespace Split {
     DeltaCompressor::DeltaCompressor() = default;
 
     void DeltaCompressor::encode(const Blob& v1, const Blob& v2, const Blob& out) const {
-        const auto encoder = encoderFactory.getEncoder(v1.type & v2.type);
+        const auto encoder = encoderFactory.getEncoder(v2.type);
         encoder->encode(*v1.getInputStream(), *v2.getInputStream(), *out.getOutputStream());
     }
 
@@ -51,7 +51,7 @@ namespace Split {
     }
 
     void DeltaCompressor::decode(const Blob& base, const Blob& delta, const Blob& out) const {
-        const auto decoder = decoderFactory.getDecoder(base.type & delta.type);
+        const auto decoder = decoderFactory.getDecoder(delta.type);
         decoder->decode(*base.getInputStream(), *delta.getInputStream(), *out.getOutputStream());
     }
 

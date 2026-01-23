@@ -12,7 +12,7 @@ namespace Split {
     class ImageCompressor final : public ICompressor{
 
     public:
-        void encode(const std::string& source, const std::string& save, EncodeOptions options = {}) override;
+        std::string encode(const std::string& source, const std::string& save, EncodeOptions options = {}) override;
 
     };
 }

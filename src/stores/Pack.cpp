@@ -6,10 +6,12 @@
 #include "atoms/Blob.h"
 #include <filesystem>
 #include <fstream>
+#include <stack>
 #include "ObjectStore.h"
-#include "components/DeltaCompressor.h"
 #include "utils/Fs/DualStream.h"
+#include "components/DeltaCompressor.h"
 #include "utils/Fs/PackOptimizer.h"
+#include "enums/AssetType.h"
 
 namespace Split {
 
@@ -33,6 +35,7 @@ namespace Split {
 
                 str baseHash;
                 str deltaHash;
+                str encodeType;
 
                 std::ifstream file(entry.path());
 
@@ -52,6 +55,11 @@ namespace Split {
                     throw std::runtime_error("Failed to read base hash from pack file: " + entry.path().string());
                 }
 
+                if (!std::getline(file, encodeType))
+                {
+                    throw std::runtime_error("Failed to read encode type from pack file: " + entry.path().string());
+                }
+
                 file.close();
 
                 auto packUnit = std::make_shared<PackUnit>();
@@ -59,6 +67,7 @@ namespace Split {
                 packUnit->baseHash = baseHash;
                 packUnit->deltaHash = deltaHash;
                 packUnit->baseRef = nullptr;
+                packUnit->encodeType = Assets::typeFromString(encodeType);
                 packs.push_back(packUnit);
             }
         }
@@ -141,7 +150,7 @@ namespace Split {
         }
 
         auto baseStream = blobsObjectStore.loadObject(baseHash);
-        Blob baseBlob(baseStream, tailRef->encodeType), outBlob(out);
+        Blob baseBlob(baseStream), outBlob(out);
 
         compressor.decode(baseBlob, deltaStack, outBlob);
 
@@ -249,13 +258,13 @@ namespace Split {
         return **it;
     }
 
-    str Pack::getBaseVersionHash(const str &hash) const {
+    PackUnit Pack::getBasePackByHash(const str &hash) const {
         const auto it = std::ranges::find_if(packs, [&hash](const auto& p) {
             return isPackUnitByHash(*p, hash);
         });
 
         if (it == packs.end()) {
-            return hash;
+            throw std::runtime_error("Pack " + hash + " not found");
         }
 
         auto tempRef = (*it)->baseRef;
@@ -266,7 +275,7 @@ namespace Split {
             tempRef = tempRef->baseRef;
         }
 
-        return trailRef->baseHash;
+        return *trailRef;
     }
 
 }

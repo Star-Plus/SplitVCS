@@ -4,24 +4,42 @@
 
 #include "TinyAsset.h"
 
-#include <utility>
+#include <filesystem>
 
 #include "stores/Pack.h"
 #include <fstream>
 
 namespace Split
 {
-    TinyAsset::TinyAsset(str  rootPath) : rootPath(std::move(rootPath))
-    {}
+    TinyAsset::TinyAsset(const str& rootPath) : rootPath(rootPath), tmpDecodePath(rootPath+"/.split/tmp/decode"), tmpCompressPath(rootPath+"/.split/tmp/compressed")
+    {
+        if (tmpCompressPath.empty() | tmpDecodePath.empty())
+        {
+            throw std::invalid_argument("TinyAsset : invalid construction arguments");
+        }
 
-    void TinyAsset::encodeAsset(const str& assetHash)
+        std::filesystem::create_directories(tmpCompressPath);
+        std::filesystem::create_directories(tmpDecodePath);
+    }
+
+    str TinyAsset::encodeAsset(
+            const str& versionHash,
+            int quality
+    ) const
     {
         Pack pack(this->rootPath);
 
-        std::fstream outFile(this->rootPath + "./split/tmp/decode"+assetHash);
+        const auto packUnit = pack.getBasePackByHash(versionHash);
 
-        pack.decode(assetHash, outFile);
+        const str decodedFilePath = tmpDecodePath + "/" + versionHash;
+        const str compressedAssetPath =tmpCompressPath + "/" + versionHash;
 
+        std::fstream outFile(decodedFilePath, std::ios::out | std::ios::binary);
 
+        pack.decode(versionHash, outFile);
+        outFile.close();
+
+        auto resultPath = encoder.encode(decodedFilePath, compressedAssetPath, {quality, packUnit.encodeType});
+        return resultPath;
     }
 } // Split

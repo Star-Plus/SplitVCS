@@ -62,10 +62,6 @@ add_library(SplitDiff STATIC
         src/features/images/ImageDecoder.cpp
         src/features/images/ImageEncoder.h
         src/features/images/ImageEncoder.cpp
-        src/enums/AssetType.h
-        src/enums/AssetType.cpp
-        src/utils/AssetInfo.h
-        src/utils/AssetInfo.cpp
         src/atoms/Blob.h
         src/features/images/debug/ImageDebugUtils.cpp
         src/features/images/utils/ReadAdapter.h
@@ -108,10 +104,11 @@ else()
     message(FATAL_ERROR "Unsupported platform. Please add support for your platform.")
 endif()
 
-target_link_libraries(SplitDiff PUBLIC SplitLog opencv_core opencv_imgproc opencv_imgcodecs ${OPENVCDIFF_LIBS})
-target_include_directories(SplitDiff PUBLIC
+target_link_libraries(SplitDiff PRIVATE SplitLog SplitAsset opencv_core opencv_imgproc opencv_imgcodecs ${OPENVCDIFF_LIBS})
+target_include_directories(SplitDiff PRIVATE
         src
         ${SplitLog_SOURCE_DIR}/src
+        ${SplitAsset_SOURCE_DIR}/src
         ${opencv_SOURCE_DIR}/include
         ${opencv_SOURCE_DIR}/modules/core/include
         ${opencv_SOURCE_DIR}/modules/imgproc/include

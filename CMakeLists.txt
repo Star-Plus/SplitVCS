@@ -61,14 +61,20 @@ add_library(scm_lib STATIC
 
 target_include_directories(scm_lib PUBLIC src lib)
 
+add_subdirectory(lib/split-log)
+add_subdirectory(lib/split-asset)
 add_subdirectory(lib/split-live)
-
-
-
-# Link SplitDiff to scm_lib
 add_subdirectory(lib/split-diff)
-target_link_libraries(scm_lib PRIVATE SplitDiff)
-target_include_directories(scm_lib PUBLIC lib/split-diff/src)
+
+target_link_libraries(scm_lib PUBLIC SplitLog SplitAsset SplitLive SplitDiff)
+target_include_directories(scm_lib PRIVATE
+        ${SplitLog_SOURCE_DIR}/src
+        ${SplitAsset_SOURCE_DIR}/src
+        ${SplitDiff_SOURCE_DIR}/src
+        ${SplitLive_SOURCE_DIR}/src
+)
+
+
 
 # --- Main executable ---
 add_executable(SplitVCS main.cpp)
@@ -99,6 +105,9 @@ add_executable(runTests
         src/utils/Fs/tests/FsMetadata.test.cpp
         tests/HandlingImage.Test.cpp
         src/features/IgnoreList/tests/IgnoreList.Test.cpp
+        src/features/FastLiveAsset/tests/TinyAsset.test.cpp
+        bindings/c/shared/split_c_api.cpp
+        bindings/c/shared/split_c_api.h
 )
 target_link_libraries(runTests PRIVATE scm_lib gtest_main)
 
@@ -109,5 +118,4 @@ gtest_discover_tests(runTests)
 # Bindings
 add_subdirectory(python)
 add_subdirectory(rust)
-
-add_subdirectory(lib/split-log)
+add_subdirectory(bindings/c/shared)

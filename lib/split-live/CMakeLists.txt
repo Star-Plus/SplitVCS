@@ -47,18 +47,15 @@ add_library(SplitLive STATIC
         src/LiveEncoder.h
         src/features/ImageCompressor.cpp
         src/features/ImageCompressor.h
-        src/utils/AssetInfo.cpp
-        src/utils/AssetInfo.h
-        src/enums/AssetType.cpp
-        src/enums/AssetType.h
         src/components/CompressorFactory.h
         src/interfaces/ICompressor.h
 )
 
-target_link_libraries(SplitLive PRIVATE opencv_core opencv_imgproc opencv_imgcodecs)
+target_link_libraries(SplitLive PRIVATE SplitAsset opencv_core opencv_imgproc opencv_imgcodecs)
 
 target_include_directories(SplitLive PUBLIC
         src
+        ${SplitAsset_SOURCE_DIR}/src
         ${opencv_SOURCE_DIR}/include
         ${opencv_SOURCE_DIR}/modules/core/include
         ${opencv_SOURCE_DIR}/modules/imgproc/include
