@@ -105,7 +105,7 @@ else()
 endif()
 
 target_link_libraries(SplitDiff PRIVATE SplitLog SplitAsset opencv_core opencv_imgproc opencv_imgcodecs ${OPENVCDIFF_LIBS})
-target_include_directories(SplitDiff PRIVATE
+target_include_directories(SplitDiff PUBLIC
         src
         ${SplitLog_SOURCE_DIR}/src
         ${SplitAsset_SOURCE_DIR}/src

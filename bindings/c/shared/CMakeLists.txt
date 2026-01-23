@@ -5,6 +5,10 @@ add_library(split_c_api SHARED
         split_c_api.cpp
 )
 
+target_compile_definitions(split_c_api PRIVATE
+        SPLIT_C_EXPORTS
+)
+
 target_link_libraries(split_c_api PRIVATE
         scm_lib
 )

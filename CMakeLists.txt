@@ -67,7 +67,7 @@ add_subdirectory(lib/split-live)
 add_subdirectory(lib/split-diff)
 
 target_link_libraries(scm_lib PUBLIC SplitLog SplitAsset SplitLive SplitDiff)
-target_include_directories(scm_lib PRIVATE
+target_include_directories(scm_lib PUBLIC
         ${SplitLog_SOURCE_DIR}/src
         ${SplitAsset_SOURCE_DIR}/src
         ${SplitDiff_SOURCE_DIR}/src
