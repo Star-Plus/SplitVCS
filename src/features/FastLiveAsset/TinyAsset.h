@@ -5,18 +5,25 @@
 #ifndef SPLITVCS_TINYASSET_H
 #define SPLITVCS_TINYASSET_H
 #include "core/Alias.h"
+#include "split-live/src/LiveEncoder.h"
 
 namespace Split
 {
     class TinyAsset
     {
     public:
-        explicit TinyAsset(str  rootPath);
+        explicit TinyAsset(const str&  rootPath);
 
-        void encodeAsset(const str& assetHash);
+        str encodeAsset(
+            const str& versionHash,
+            int quality = 20
+        ) const;
 
     private:
         str rootPath;
+        LiveEncoder encoder;
+
+        str tmpDecodePath, tmpCompressPath;
     };
 } // Split
 

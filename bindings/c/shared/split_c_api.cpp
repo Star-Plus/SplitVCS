@@ -1,3 +1,8 @@
+//
+// Created by Ahmed Mustafa on 1/23/2026.
+//
+
+#include "split_c_api.h"
 #include <SplitInterface.h>
 
 extern "C" {

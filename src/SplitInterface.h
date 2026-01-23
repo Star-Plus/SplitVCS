@@ -30,6 +30,8 @@ namespace Split {
         static void RemoveIgnore(const str& repoPath, const str& ignorePath);
         static bool IsIgnored(const str& repoPath, const str& ignorePath);
 
+        static str GetTinyAsset(const str& repoPath, const str& versionHash, int quality);
+
     };
 
 }

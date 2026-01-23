@@ -8,7 +8,7 @@ namespace Split {
             LiveEncoder();
             ~LiveEncoder();
 
-            void encode(const std::string& , const std::string&, EncodeOptions = {}) const;
+            std::string encode(const std::string& , const std::string&, EncodeOptions = {}) const;
 
     private:
         CompressorFactory compressorFactory;

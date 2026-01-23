@@ -6,6 +6,7 @@
 
 #include "components/Repository.h"
 #include "features/RepositoryStatus.h"
+#include "features/FastLiveAsset/TinyAsset.h"
 #include "features/IgnoreList/IgnoreList.h"
 #include "features/PackNegotiation/PackNegotiation.h"
 #include "utils/Parsers/ParserToString.h"
@@ -79,5 +80,11 @@ namespace Split {
     {
         const IgnoreList il(repoPath);
         return il.isIgnored(ignorePath);
+    }
+
+    str SplitInterface::GetTinyAsset(const str& repoPath, const str& versionHash, int quality)
+    {
+        const TinyAsset ta(repoPath);
+        return ta.encodeAsset(versionHash, quality);
     }
 }

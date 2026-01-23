@@ -32,7 +32,7 @@ namespace Split {
         str encodeDelta(std::istream& v2, const str& baseHash, const str& targetHash, AssetType encodeType=AssetType::BINARY);
 
         PackUnit getPackUnitByHash(const str& hash) const;
-        str getBaseVersionHash(const str& hash) const;
+        PackUnit getBasePackByHash(const str& hash) const;
 
     private:
 

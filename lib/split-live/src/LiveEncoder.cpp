@@ -4,21 +4,16 @@
 
 namespace Split {
 
-    LiveEncoder::LiveEncoder() {
-        
-    }
+    LiveEncoder::LiveEncoder() = default;
 
-    LiveEncoder::~LiveEncoder() {
+    LiveEncoder::~LiveEncoder() = default;
 
-    }
-
-    void LiveEncoder::encode(const std::string& src, const std::string& save, const EncodeOptions options) const {
-        const auto type = assetTypeFromPath(src);
-        const auto compressor = compressorFactory.getCompressor(type);
+    std::string LiveEncoder::encode(const std::string& src, const std::string& save, const EncodeOptions options) const {
+        const auto compressor = compressorFactory.getCompressor(options.type);
 
         if (compressor == nullptr)
             throw std::runtime_error("Compressor cannot be null");
 
-        compressor->encode(src, save, options);
+        return compressor->encode(src, save, options);
     }
 }
