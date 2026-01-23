@@ -13,12 +13,6 @@ set(WITH_CUDA OFF CACHE BOOL "" FORCE)
 set(WITH_MSMF OFF CACHE BOOL "" FORCE)
 set(WITH_QT OFF CACHE BOOL "" FORCE)
 
-if (CMAKE_BUILD_TYPE STREQUAL "Debug")
-    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreadedDebugDLL")
-else()
-    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreadedDLL")
-endif()
-
 include(FetchContent)
 
 FetchContent_Declare(

@@ -29,9 +29,9 @@ int main() {
 
     Split::DeltaCompressor compressor;
     compressor.encode(
-        Split::Blob(fileA, Base),
-        Split::Blob(fileB, Modified),
-        Split::Blob(outputFile, Delta)
+        Split::Blob(fileA, Split::AssetType::BINARY),
+        Split::Blob(fileB, Split::AssetType::BINARY),
+        Split::Blob(outputFile, Split::AssetType::BINARY)
     );
 
     std::ofstream constructedOutput(Constructed, std::ios::binary);
@@ -56,13 +56,13 @@ int main() {
     }
 
     std::stack<Split::Blob*> deltaStack;
-    const auto delta = new Split::Blob(diffFile, Base);
+    const auto delta = new Split::Blob(diffFile, Split::AssetType::BINARY);
     deltaStack.push(delta);
 
     compressor.decode(
-        Split::Blob(baseFile, Base),
+        Split::Blob(baseFile),
         deltaStack,
-        Split::Blob(constructedOutput, Constructed)
+        Split::Blob(constructedOutput)
     );
 
     return 0;

@@ -77,7 +77,15 @@ target_include_directories(scm_lib PUBLIC
 
 
 # --- Main executable ---
-add_executable(SplitVCS main.cpp)
+add_executable(SplitVCS main.cpp
+        cli/Parser.cpp
+        cli/Parser.h
+        cli/Command.h
+        cli/CommandRegistry.cpp
+        cli/CommandRegistry.h
+        cli/commands/InitCommand.cpp
+        cli/OutStreamCommand.h
+        cli/commands/TinyAssetCommand.cpp)
 target_link_libraries(SplitVCS PRIVATE scm_lib)
 
 # --- Enable testing ---
