@@ -9,10 +9,10 @@ namespace Split {
         Logger();
         explicit Logger(bool debugMode);
 
-        void info(const std::string& message);
-        void warning(const std::string& message);
-        void error(const std::string& message);
-        void debug(const std::string& message);
+        void info(const std::string& message) const;
+        void warning(const std::string& message) const;
+        void error(const std::string& message) const;
+        void debug(const std::string& message) const;
 
         static void log(const std::string& message, Color color = Color::RESET);
 

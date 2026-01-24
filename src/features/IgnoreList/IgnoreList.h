@@ -7,6 +7,7 @@
 
 #include <string>
 #include <set>
+#include "main/Logger.h"
 
 namespace Split
 {
@@ -23,7 +24,8 @@ namespace Split
 
     private:
         std::set<std::string> ignoreList;
-        const std::string path;
+        const std::string ignoreFilePath;
+        Logger logger;
 
         void save() const;
     };

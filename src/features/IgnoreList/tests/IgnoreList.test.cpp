@@ -18,3 +18,13 @@ TEST(IgnoreListTest, SimpleCase)
     bool isIgnored = il.isIgnored("Hello/file.txt");
     ASSERT_TRUE(isIgnored);
 }
+
+TEST(IgnoreListTest, DotFileCase)
+{
+    const str rootPath = "test_repo";
+
+    Split::IgnoreList il(rootPath);
+    il.add(".env");
+    ASSERT_TRUE(il.isIgnored(".env"));
+    ASSERT_TRUE(il.isIgnored(".env/"));
+}

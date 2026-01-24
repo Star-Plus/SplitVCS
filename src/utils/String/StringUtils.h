@@ -30,6 +30,9 @@ namespace StringUtils
             token += input[i];
         }
 
+        if (!token.empty())
+            tokens.push_back(token);
+
         return tokens;
     }
 

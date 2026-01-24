@@ -13,15 +13,15 @@
 
 namespace Split
 {
-    IgnoreList::IgnoreList(const std::string& rootPath) : path(rootPath + "/.split/.split.ignore")
+    IgnoreList::IgnoreList(const std::string& rootPath) : ignoreFilePath(rootPath + "/.split/.split.ignore"), logger(true)
     {
         std::filesystem::create_directories(rootPath+"/.split/");
 
-        std::fstream file(path, std::ios::in);
+        std::fstream file(ignoreFilePath, std::ios::in);
 
         if (!file.is_open())
         {
-            file.open(path, std::ios::out);
+            file.open(ignoreFilePath, std::ios::out);
             file.close();
             return;
         }
@@ -51,10 +51,12 @@ namespace Split
     {
         auto parts = StringUtils::split(path, "/\\");
 
-        for (auto part : parts)
+        logger.debug("Size of parts: " + std::to_string(parts.size()));
+
+        for (const auto& part : parts)
         {
-            std::cout << part.data() << std::endl;
-            if (ignoreList.contains(part.data())) return true;
+            logger.debug(part);
+            if (ignoreList.contains(part)) return true;
         }
 
         return false;
@@ -62,7 +64,7 @@ namespace Split
 
     void IgnoreList::save() const
     {
-        std::ofstream file(path);
+        std::ofstream file(ignoreFilePath);
 
         for (auto ignoreItem : ignoreList)
         {

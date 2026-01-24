@@ -9,19 +9,19 @@ namespace Split {
     Logger::Logger() {}
     Logger::Logger(const bool debugMode) : debugMode(debugMode) {}
 
-    void Logger::info(const std::string& message) {
+    void Logger::info(const std::string& message) const {
         log(message, Color::GREEN);
     }
 
-    void Logger::warning(const std::string& message) {
+    void Logger::warning(const std::string& message) const {
         log(message, Color::YELLOW);
     }
 
-    void Logger::error(const std::string& message) {
+    void Logger::error(const std::string& message) const {
         log(message, Color::RED);
     }
 
-    void Logger::debug(const std::string& message) {
+    void Logger::debug(const std::string& message) const {
         log(message, Color::CYAN);
     }
 
