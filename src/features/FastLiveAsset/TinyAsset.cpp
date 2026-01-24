@@ -8,6 +8,7 @@
 
 #include "stores/Pack.h"
 #include <fstream>
+#include <iostream>
 
 namespace Split
 {

@@ -55,8 +55,8 @@ int main() {
         return 1;
     }
 
-    std::stack<Split::Blob*> deltaStack;
-    const auto delta = new Split::Blob(diffFile, Split::AssetType::BINARY);
+    std::stack<std::unique_ptr<Split::Blob>> deltaStack;
+    const auto delta = std::make_unique<Split::Blob>(diffFile, Split::AssetType::BINARY);
     deltaStack.push(delta);
 
     compressor.decode(

@@ -6,8 +6,8 @@
 
 namespace Split {
 
-    Logger::Logger() : debugMode(false) {}
-    Logger::Logger(bool debugMode) : debugMode(debugMode) {}
+    Logger::Logger() {}
+    Logger::Logger(const bool debugMode) : debugMode(debugMode) {}
 
     void Logger::info(const std::string& message) {
         log(message, Color::GREEN);

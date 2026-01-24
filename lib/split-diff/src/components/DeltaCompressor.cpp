@@ -1,58 +1,48 @@
 #include "DeltaCompressor.h"
 
+#include <iostream>
+
 namespace Split {
 
-    DeltaCompressor::DeltaCompressor() = default;
+    DeltaCompressor::DeltaCompressor() : logger(true) {}
 
     void DeltaCompressor::encode(const Blob& v1, const Blob& v2, const Blob& out) const {
         const auto encoder = encoderFactory.getEncoder(v2.type);
         encoder->encode(*v1.getInputStream(), *v2.getInputStream(), *out.getOutputStream());
     }
 
-    void DeltaCompressor::decode(const Blob& base, std::stack<std::unique_ptr<Blob>>& deltas, const Blob& out) const {
-
-        auto middleIn = new Blob(*base.getInputStream());
-        middleIn->type = base.type;
+    void DeltaCompressor::decode(const Blob& base, std::stack<std::unique_ptr<Blob>>& deltas, const Blob& out) const
+    {
 
         if (deltas.empty())
         {
             *out.getOutputStream() << base.getInputStream()->rdbuf();
-            delete middleIn;
             return;
         }
 
+        std::stringstream current;
+        current << base.getInputStream()->rdbuf();
+        current.seekg(0);
+
         while (!deltas.empty()) {
-            const auto delta = deltas.top().get();
-
-            if (deltas.size() == 1) {
-                this->decode(
-                    *middleIn,
-                    *delta,
-                    out
-                );
-            } else {
-                std::ostringstream outStream;
-                const Blob middleOut(outStream);
-
-                this->decode(
-                    *middleIn,
-                    *delta,
-                    middleOut
-                );
-
-                delete middleIn;
-
-                middleIn = new Blob(outStream);
-                middleIn->type = base.type;
-            }
-
+            const auto delta = *deltas.top();
             deltas.pop();
+
+            if (deltas.empty()) {
+                singleDecode(current, *delta.getInputStream(), *out.getOutputStream(), delta.type);
+            } else {
+                std::stringstream next;
+
+                singleDecode(current, *delta.getInputStream(), next, delta.type);
+                current.swap(next);
+                current.seekg(0);
+            }
         }
     }
 
-    void DeltaCompressor::decode(const Blob& base, const Blob& delta, const Blob& out) const {
-        const auto decoder = decoderFactory.getDecoder(delta.type);
-        decoder->decode(*base.getInputStream(), *delta.getInputStream(), *out.getOutputStream());
+    void DeltaCompressor::singleDecode(const std::istream& base, const std::istream& delta, std::ostream& out, const AssetType encodeType) const {
+        const auto decoder = decoderFactory.getDecoder(encodeType);
+        decoder->decode(base, delta, out);
     }
 
 }

@@ -14,16 +14,24 @@ namespace Split
     class TinyAssetCommand : public Command
     {
     public:
-        str name() const override { return "tinyasset"; }
+        str name() const override { return "tiny-asset"; }
         str description() const override { return "TinyAsset"; }
-        str usage() const override { return "tinyasset [repo path, asset hash, quality]"; }
+        str usage() const override { return "tiny-asset [repo path, asset hash, quality]"; }
 
         int run(const std::vector<str>& args) override
         {
-            const int quality = std::stoi(args.at(2));
-            const auto assetPath = SplitInterface::GetTinyAsset(args[0], args[1], quality);
-            std::cout << assetPath << std::endl;
-            return 0;
+            try
+            {
+                const int quality = std::stoi(args.at(2));
+                const auto assetPath = SplitInterface::GetTinyAsset(args[0], args[1], quality);
+                std::cout << assetPath << std::endl;
+                return 0;
+            } catch (std::exception& e)
+            {
+                std::cerr << "TinyAsset error " << e.what() << std::endl;
+                return 1;
+            }
+
         }
     };
 

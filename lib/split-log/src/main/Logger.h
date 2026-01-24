@@ -14,7 +14,7 @@ namespace Split {
         void error(const std::string& message);
         void debug(const std::string& message);
 
-        static void log(const std::string& message, const Color color = Color::RESET);
+        static void log(const std::string& message, Color color = Color::RESET);
 
         void setDebugMode(bool enabled);
 

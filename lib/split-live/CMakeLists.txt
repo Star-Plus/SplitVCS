@@ -13,6 +13,12 @@ set(WITH_CUDA OFF CACHE BOOL "" FORCE)
 set(WITH_MSMF OFF CACHE BOOL "" FORCE)
 set(WITH_QT OFF CACHE BOOL "" FORCE)
 
+if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreadedDebugDLL")
+else()
+    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreadedDLL")
+endif()
+
 include(FetchContent)
 
 FetchContent_Declare(
@@ -43,6 +49,8 @@ add_library(SplitLive STATIC
         src/features/ImageCompressor.h
         src/components/CompressorFactory.h
         src/interfaces/ICompressor.h
+        src/features/TextCompressor.cpp
+        src/features/TextCompressor.h
 )
 
 target_link_libraries(SplitLive PRIVATE SplitAsset opencv_core opencv_imgproc opencv_imgcodecs)

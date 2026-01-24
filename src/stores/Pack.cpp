@@ -6,6 +6,7 @@
 #include "atoms/Blob.h"
 #include <filesystem>
 #include <fstream>
+#include <iostream>
 #include <stack>
 #include "ObjectStore.h"
 #include "utils/Fs/DualStream.h"
@@ -57,7 +58,7 @@ namespace Split {
 
                 if (!std::getline(file, encodeType))
                 {
-                    throw std::runtime_error("Failed to read encode type from pack file: " + entry.path().string());
+                    encodeType = "binary";
                 }
 
                 file.close();
