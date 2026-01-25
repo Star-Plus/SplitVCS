@@ -1,6 +1,5 @@
 #include "ImageDecoder.h"
 #include <fstream>
-#include <opencv2/opencv.hpp>
 
 #include "utils/FormatSniffer.h"
 #include "utils/PixelCalculator.h"
@@ -51,6 +50,45 @@ namespace Split {
         } else {
             logger.error("Could not write to output stream!");
         }
-    };
+    }
 
+    void ImageDecoder::decode(const std::string& base, std::stack<std::string>& deltas, std::string& out)
+    {
+        std::fstream stream(base, std::ios::in);
+        const auto [extension, params] = FormatSniffer::sniff(stream);
+        const Mat OutMat = decode(base, deltas);
+        imwrite(out, OutMat, params);
+    }
+
+    Mat ImageDecoder::decode(const std::string& base, std::stack<std::string>& deltas)
+    {
+        const Mat BaseMat = imread(base, IMREAD_COLOR);
+
+        if (BaseMat.empty())
+        {
+            throw std::runtime_error("Could not base image!");
+        }
+
+        if (deltas.empty())
+        {
+            return BaseMat;
+        }
+
+        Mat OutMat(BaseMat.size(), BaseMat.type());
+        Mat MiddleOutMat(BaseMat.size(), BaseMat.type());
+        BaseMat.copyTo(MiddleOutMat);
+
+        while (!deltas.empty())
+        {
+            const Mat DeltaMat = imread(deltas.top(), IMREAD_COLOR);
+            deltas.pop();
+
+            PixelCalculator::clockAdder(MiddleOutMat, DeltaMat, OutMat);
+
+            if (!deltas.empty())
+                OutMat.copyTo(MiddleOutMat);
+        }
+
+        return OutMat;
+    }
 }

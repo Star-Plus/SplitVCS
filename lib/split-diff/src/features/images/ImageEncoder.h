@@ -22,7 +22,7 @@ namespace Split {
     public:
         ImageEncoder();
 
-        static void encode(const std::string& oPath, const std::string& ePath, const std::string& dPath);
+        std::string encode(const std::string& base, std::stack<std::string>& deltas, const std::string& v2, std::string& out) override;
         void encode(const std::istream& v1, const std::istream& v2, std::ostream& output) override;
 
     private:

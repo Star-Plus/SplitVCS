@@ -6,6 +6,9 @@
 #define SPLITVCS_TINYASSET_H
 #include "core/Alias.h"
 #include "split-live/src/LiveEncoder.h"
+#include <map>
+
+#include "main/Logger.h"
 
 namespace Split
 {
@@ -22,8 +25,12 @@ namespace Split
     private:
         str rootPath;
         LiveEncoder encoder;
-
         str tmpDecodePath, tmpCompressPath;
+        std::map<std::string, std::string> assetMap;
+
+        Logger logger;
+
+        void load();
     };
 } // Split
 

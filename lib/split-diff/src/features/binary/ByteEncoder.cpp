@@ -31,5 +31,9 @@ namespace Split {
         out << outDelta;
     }
 
-
+    std::string ByteEncoder::encode(const std::string& base, std::stack<std::string>& deltas, const std::string& v2,
+        std::string& out)
+    {
+        return "";
+    }
 }

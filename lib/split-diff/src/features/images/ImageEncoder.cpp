@@ -3,9 +3,9 @@
 //
 
 #include "ImageEncoder.h"
-#include <fstream>
-#include <iostream>
 #include <opencv2/opencv.hpp>
+
+#include "ImageDecoder.h"
 #include "debug/ImageDebugUtils.cpp"
 #include "utils/PixelCalculator.h"
 #include "utils/ReadAdapter.h"
@@ -15,7 +15,29 @@ using namespace std;
 
 namespace Split {
 
-    ImageEncoder::ImageEncoder() : logger(true) {}
+    ImageEncoder::ImageEncoder() : logger(true, "Image Encoder") {}
+
+    std::string ImageEncoder::encode(const std::string& base, std::stack<std::string>& deltas, const std::string& v2, std::string& out)
+    {
+        logger.setCheckPoint();
+
+        logger.debug("Decode v1");
+        const Mat v1Mat = ImageDecoder::decode(base, deltas);
+        logger.debug("Decoded");
+
+        logger.debug("Encode");
+
+        const Mat v2Mat = imread(v2, IMREAD_COLOR);
+
+        Mat outMat(v1Mat.size(), v1Mat.type());
+
+        PixelCalculator::clockDifference(v1Mat, v2Mat, outMat);
+        imwrite(out+".webp", outMat, {IMWRITE_WEBP_QUALITY, 101});
+
+        logger.debug("Encoded");
+
+        return out + ".webp";
+    }
 
     void ImageEncoder::encode(const std::istream& v1, const std::istream& v2, std::ostream& output) {
         const Mat A = ReadAdapter::fastReadImage(const_cast<std::istream&>(v1), IMREAD_COLOR);

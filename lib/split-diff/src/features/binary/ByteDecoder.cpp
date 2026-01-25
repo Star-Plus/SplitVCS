@@ -33,5 +33,7 @@ namespace Split {
         out << output;
     }
 
-
+    void ByteDecoder::decode(const std::string& base, std::stack<std::string>& deltas, std::string& out)
+    {
+    }
 }

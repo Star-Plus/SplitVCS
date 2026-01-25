@@ -4,11 +4,18 @@
 
 #include "PixelCalculator.h"
 
+#include "main/Logger.h"
+
 namespace Split {
 
     namespace PixelCalculator {
 
         void clockDifference(const cv::Mat &A, const cv::Mat &B, cv::Mat &C) {
+            Logger logger(true, "Clock Difference Calculator");
+
+
+            logger.debug("Start calculating");
+
             for (size_t i = 0; i < A.rows; i++) {
                 for (size_t j = 0; j < A.cols; j++) {
                     for (short k = 0; k < 3; k++) {
@@ -21,6 +28,8 @@ namespace Split {
                     }
                 }
             }
+
+            logger.debug("Done calculating");
         }
 
         void clockAdder(const cv::Mat &A, const cv::Mat &B, cv::Mat &C) {

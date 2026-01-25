@@ -36,6 +36,16 @@ namespace StringUtils
         return tokens;
     }
 
+    inline std::string concat(const std::vector<std::string>& tokens, const std::string& delimiter)
+    {
+        std::string result;
+        for (const auto& token : tokens)
+        {
+            result += token + delimiter;
+        }
+
+        return result;
+    }
 }
 
 #endif //SPLITVCS_STRINGUTILS_H

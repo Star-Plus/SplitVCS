@@ -9,6 +9,8 @@
 #include <map>
 #include <cstdint>
 
+#include "main/Logger.h"
+
 namespace Split {
 
     struct IndexEntry {
@@ -27,6 +29,8 @@ namespace Split {
         std::string rootPath;
         std::map<std::string, IndexEntry> entries; // Maps file paths to their base version hashes
 
+        Logger logger;
+
     public:
 
         explicit Index(const std::string& rootPath);
@@ -34,6 +38,7 @@ namespace Split {
         void stageFile(const std::string& filepath);
         std::map<std::string, std::string> getStagedFiles() const;
         const std::map<std::string, IndexEntry>& getEntries() const { return entries; }
+        IndexEntry getEntryByHash(const std::string& hash);
         void updateEntry(const std::string& filepath, const IndexEntry& entry);
         void removeEntry(const std::string& filepath);
         void save() const;

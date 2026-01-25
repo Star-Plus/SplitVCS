@@ -48,15 +48,8 @@ namespace Split {
             indexEntry.isDeleted = false;
             index.updateEntry(entry.first, indexEntry);
 
-
-            std::ofstream fileStream(rootPath + "/" + entry.first, std::ios::binary);
-            if (!fileStream.is_open()) {
-                throw std::runtime_error("Failed to open file for writing: " + entry.first);
-            }
-
-            pack.decode(entry.second, fileStream);
-            fileStream.close();
-
+            const auto entryPath = rootPath + "/" + entry.first;
+            pack.decode(entry.second, entryPath);
         }
 
         const auto currentEntries = index.getEntries();

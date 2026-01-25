@@ -6,13 +6,12 @@
 #include "atoms/Blob.h"
 #include <filesystem>
 #include <fstream>
-#include <iostream>
-#include <stack>
 #include "ObjectStore.h"
 #include "utils/Fs/DualStream.h"
 #include "components/DeltaCompressor.h"
-#include "utils/Fs/PackOptimizer.h"
 #include "enums/AssetType.h"
+#include "utils/Hashing.h"
+#include "utils/String/StringUtils.h"
 
 namespace Split {
 
@@ -24,7 +23,7 @@ namespace Split {
         return pack.baseHash == baseHash;
     }
 
-    Pack::Pack(const str& rootPath) : rootPath(rootPath), path(rootPath + "/.split/refs/packs") {
+    Pack::Pack(const str& rootPath) : rootPath(rootPath), path(rootPath + "/.split/refs/packs"), logger(true, "Pack") {
 
         // Ensure the directory exists
         std::filesystem::create_directories(path);
@@ -104,64 +103,14 @@ namespace Split {
         file.close();
     }
 
-    void Pack::decode(const str& hash, std::ostream& out) {
+    void Pack::decode(const str& hash, const std::string& out) {
 
-        auto it = std::ranges::find_if(packs.begin(), packs.end(), [&hash](const auto& p) {
-            return isPackUnitByHash(*p, hash);
-        });
+        const auto packLine = this->fetchPacksToAsset(hash);
 
-        if (it == packs.end()) {
-            throw std::runtime_error("Pack " + hash + " not found");
-        }
+        const DeltaCompressor compressor;
 
-        const ObjectStore blobsObjectStore(rootPath, "/blobs");
-        const ObjectStore deltasObjectStore(rootPath, "/deltas");
-
-        str baseHash;
-
-        std::stack<std::unique_ptr<Blob>> deltaStack;
-        std::stack<std::ifstream*> deltaFiles;
-
-        auto tempRef = *it;
-        auto tailRef = *it;
-
-        while (tempRef->baseRef != nullptr)
-        {
-            tailRef = tempRef;
-
-            const auto objectHash = tempRef->deltaHash;
-            if (!deltasObjectStore.hasObject(objectHash)) {
-                throw std::runtime_error("Object not found in deltas: " + objectHash);
-            }
-
-            auto deltaStream = new std::ifstream(deltasObjectStore.loadObject(objectHash));
-            auto blob = std::make_unique<Blob>(*deltaStream, tempRef->encodeType);
-            deltaStack.push(std::move(blob));
-            deltaFiles.push(deltaStream);
-
-            tempRef = tempRef->baseRef;
-        }
-
-        baseHash = tailRef->baseHash;
-
-        DeltaCompressor compressor;
-
-        if (!blobsObjectStore.hasObject(baseHash)) {
-            throw std::runtime_error("Base object not found: " + hash);
-        }
-
-        auto baseStream = blobsObjectStore.loadObject(baseHash);
-        Blob baseBlob(baseStream), outBlob(out);
-
-        compressor.decode(baseBlob, deltaStack, outBlob);
-
-        while (!deltaFiles.empty())
-        {
-            auto d = deltaFiles.top();
-            d->close();
-            deltaFiles.pop();
-            delete d;
-        }
+        Asset outAsset(out);
+        compressor.decode(packLine.first, packLine.second, outAsset);
     }
 
     str Pack::encodeBase(std::fstream& file, AssetType encodeType)
@@ -177,52 +126,25 @@ namespace Split {
         return hash;
     }
 
-    str Pack::encodeDelta(std::istream& v2, const str& baseHash, const str& targetHash, AssetType encodeType) {
-
-        const auto it = std::ranges::find_if(packs, [&baseHash](const auto& p)
-        {
-            return isPackUnitByHash(*p, baseHash);
-        });
-
-        if (it == packs.end())
-        {
-            throw std::runtime_error("Pack " + baseHash + " not found");
-        }
-
-        // Decode baseContent first
-
-        DualStream v1;
-
-        if (PackOptimizer::approximateDecodeSize(rootPath, *it) > DECODE_MAX_SIZE)
-        {
-            v1.emplaceFile(path + "/" + baseHash + ".tmp", std::ios::binary | std::ios::in | std::ios::out);
-        } else
-        {
-            v1.emplaceMemory();
-        }
-
-        this->decode(baseHash, v1.out());
-
-        // Start encoding
-
+    str Pack::encodeDelta(const std::string& v2Path, const str& baseHash, const str& v2Hash, AssetType encodeType) {
         const ObjectStore deltasObjectStore(rootPath, "/deltas");
 
-        DeltaCompressor compressor;
+        const DeltaCompressor compressor;
 
-        std::ostringstream oss;
+        const auto packLine = this->fetchPacksToAsset(baseHash);
 
-        const Blob v1Blob(v1.in(), encodeType), v2Blob(v2, encodeType), oBlob(oss);
-
-        compressor.encode(v1Blob, v2Blob, oBlob);
-        if (oss.rdbuf()->str().empty()) {
-            throw std::runtime_error("Failed to encode delta.");
-        }
+        const auto deltaPath = deltasObjectStore.getPath() + "/" + v2Hash;
+        Asset outAsset(deltaPath);
+        const auto producedPath = compressor.encode(packLine.first, packLine.second, Asset(v2Path , encodeType), outAsset);
 
         // Save the delta to the deltas object store
-        str deltaHash = deltasObjectStore.storeBytesObject(oss.rdbuf()->str());
-        if (deltaHash.empty()) {
-            throw std::runtime_error("Failed to store delta object.");
-        }
+        const auto deltaHash = Hashing::computeFileHash(producedPath);
+        logger.debug("Start Parsing path");
+        auto producedPathParts = StringUtils::split(producedPath, "/\\");
+        producedPathParts.erase(producedPathParts.begin()+producedPathParts.size()-1, producedPathParts.end());
+        const auto newPath = StringUtils::concat(producedPathParts, "/") + deltaHash;
+        std::filesystem::rename(producedPath, newPath);
+        logger.debug("End Parsing path");
 
         const auto baseIt = std::ranges::find_if(packs, [&baseHash](const auto& p) {
             return isPackUnitByHash(*p, baseHash);
@@ -237,13 +159,16 @@ namespace Split {
         }
 
         newPackUnit->baseHash = baseHash;
-        newPackUnit->hash = targetHash;
+        newPackUnit->hash = v2Hash;
         newPackUnit->deltaHash = deltaHash;
         newPackUnit->encodeType = encodeType;
 
         packs.push_back(newPackUnit);
 
         savePack(*newPackUnit);
+
+        logger.debug("End pack encoding delta");
+
         return deltaHash;
     }
 
@@ -279,4 +204,49 @@ namespace Split {
         return *trailRef;
     }
 
+    std::pair<Asset, std::vector<Asset>> Pack::fetchPacksToAsset(const std::string& hash) const
+    {
+        auto it = std::ranges::find_if(packs.begin(), packs.end(), [&hash](const auto& p) {
+            return isPackUnitByHash(*p, hash);
+        });
+
+        if (it == packs.end()) {
+            throw std::runtime_error("Pack " + hash + " not found");
+        }
+
+        ObjectStore deltasObjectStore(rootPath, "/deltas"), blobsObjectStore(rootPath, "/blobs");
+
+        str baseHash;
+
+        std::vector<Asset> deltaStack;
+
+        auto tempRef = *it;
+        auto tailRef = *it;
+
+        while (tempRef->baseRef != nullptr)
+        {
+            tailRef = tempRef;
+
+            const auto objectHash = tempRef->deltaHash;
+            if (!deltasObjectStore.hasObject(objectHash)) {
+                throw std::runtime_error("Object not found in deltas: " + objectHash);
+            }
+
+            auto asset = Asset(rootPath + "/.split/objects/deltas/" + objectHash, tempRef->encodeType);
+            deltaStack.push_back(asset);
+
+            tempRef = tempRef->baseRef;
+        }
+
+        baseHash = tailRef->baseHash;
+
+
+        if (!blobsObjectStore.hasObject(baseHash)) {
+            throw std::runtime_error("Base object not found: " + hash);
+        }
+
+        Asset baseAsset(rootPath+"/.split/objects/blobs/" + baseHash, tailRef->encodeType);
+
+        return {baseAsset, deltaStack};
+    }
 }

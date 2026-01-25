@@ -14,6 +14,7 @@ namespace Split {
         ~ByteEncoder() override = default;
 
         void encode(const std::istream& v1, const std::istream& v2, std::ostream& out) override;
+        std::string encode(const std::string& base, std::stack<std::string>& deltas, const std::string& v2, std::string& out) override;
 
     };
 

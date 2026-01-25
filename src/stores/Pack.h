@@ -8,8 +8,11 @@
 #include <vector>
 #include <string>
 #include <memory>
+
+#include "atoms/Asset.h"
 #include "core/Alias.h"
 #include "enums/AssetType.h"
+#include "main/Logger.h"
 
 namespace Split {
 
@@ -27,9 +30,9 @@ namespace Split {
 
         explicit Pack(const str& rootPath);
         void savePack(const PackUnit&) const;
-        void decode(const str&, std::ostream&);
+        void decode(const str&, const std::string&);
         str encodeBase(std::fstream&, AssetType=AssetType::BINARY);
-        str encodeDelta(std::istream& v2, const str& baseHash, const str& targetHash, AssetType encodeType=AssetType::BINARY);
+        str encodeDelta(const std::string& v2Path, const str& baseHash, const str& v2Hash, AssetType encodeType=AssetType::BINARY);
 
         PackUnit getPackUnitByHash(const str& hash) const;
         PackUnit getBasePackByHash(const str& hash) const;
@@ -40,7 +43,11 @@ namespace Split {
         std::string path;
         std::vector<std::shared_ptr<PackUnit>> packs;
 
+        Logger logger;
+
         size_t const DECODE_MAX_SIZE = 1024 * 1024 * 50;
+
+        std::pair<Asset, std::vector<Asset>> fetchPacksToAsset(const std::string& hash) const;
 
     };
 

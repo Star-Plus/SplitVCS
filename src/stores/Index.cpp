@@ -15,7 +15,8 @@ namespace Split {
 
     Index::Index(const std::string& rootPath) :
         path(rootPath + "/.split/index"),
-        rootPath(rootPath)
+        rootPath(rootPath),
+        logger(true, "Index")
     {
         std::ifstream fs;
         fs.open(this->path, std::ios::in | std::ios::binary);
@@ -77,16 +78,17 @@ namespace Split {
                 return;
             }
 
-
             entry.baseVersionHash = entries[filepath].baseVersionHash;
-            pack.encodeDelta(originalFs, entries[filepath].blobHash, blobHash, encodeType);
+            pack.encodeDelta(originalFilePath, entries[filepath].blobHash, blobHash, encodeType);
         }
         else {
             blobHash = pack.encodeBase(originalFs, encodeType);
             entry.baseVersionHash = blobHash;
         }
 
+        logger.debug("Moving to read size");
         originalFs.seekg(0, std::ios::end);
+        logger.debug("Moved to read size");
         entry.size = originalFs.tellg();
         originalFs.seekg(0, std::ios::beg);
         entry.mtime = std::filesystem::last_write_time(originalFilePath).time_since_epoch().count();
@@ -98,6 +100,7 @@ namespace Split {
 
         // Write the updated index to disk
         save();
+        logger.debug("Done staging");
     }
 
     std::map<std::string, std::string> Index::getStagedFiles() const {
@@ -108,6 +111,21 @@ namespace Split {
             }
         }
         return stagedFiles;
+    }
+
+    IndexEntry Index::getEntryByHash(const std::string& hash)
+    {
+        const auto it = std::ranges::find_if(entries.begin(), entries.end(), [&hash](const auto& pair)
+        {
+            return pair.second.blobHash == hash;
+        });
+
+        if (it != entries.end())
+        {
+            return it->second;
+        }
+
+        return {};
     }
 
     void Index::updateEntry(const std::string &filepath, const IndexEntry &entry) {

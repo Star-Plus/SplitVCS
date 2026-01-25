@@ -17,7 +17,6 @@ namespace Split {
             is.seekg(0, std::ios::beg);
 
             if (sz <= 0) {
-                Logger::log("Stream size = 0", Color::RED);
                 return cv::Mat();
             }
 
