@@ -10,6 +10,9 @@
 
 TEST(PackNegotiationTest, BasicTest) {
     const str rootPath = "test_repo";
+
+    std::filesystem::remove_all(rootPath);
+
     std::filesystem::create_directory(rootPath);
 
     Split::SplitInterface::Init(rootPath);
@@ -37,8 +40,6 @@ TEST(PackNegotiationTest, BasicTest) {
     ASSERT_FALSE(packData.empty());
 
     std::cout << "Pack Data:\n" << packData << std::endl;
-
-    std::filesystem::remove_all(rootPath);
 }
 
 TEST(PackNegotiationTest, ThreeCommits) {

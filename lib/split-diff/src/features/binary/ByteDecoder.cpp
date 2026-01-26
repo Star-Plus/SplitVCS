@@ -4,6 +4,7 @@
 
 #include "ByteDecoder.h"
 
+#include <fstream>
 #include <istream>
 #include <sstream>
 #include <google/vcdecoder.h>
@@ -35,5 +36,57 @@ namespace Split {
 
     void ByteDecoder::decode(const std::string& base, std::stack<std::string>& deltas, std::string& out)
     {
+        std::fstream outFile(out, std::ios::out);
+        if (!outFile)
+        {
+            throw std::runtime_error("Failed to open output file");
+        }
+
+        auto stream = decode(base, deltas);
+        if (!stream)
+        {
+            outFile.close();
+            throw std::runtime_error("Failed to open output file");
+        }
+
+        outFile << stream.rdbuf();
+        outFile.close();
+    }
+
+    std::stringstream ByteDecoder::decode(const std::string& base, std::stack<std::string>& deltas)
+    {
+
+        std::fstream baseFile(base, std::ios::in);
+
+        std::stringstream middle;
+        middle << baseFile.rdbuf();
+
+        while (!deltas.empty())
+        {
+            std::fstream deltaFile(deltas.top(), std::ios::in);
+            deltas.pop();
+
+            std::ostringstream deltaStream;
+            deltaStream << deltaFile.rdbuf();
+
+            open_vcdiff::VCDiffDecoder decoder;
+
+            std::string output;
+
+            if (!decoder.Decode(middle.str().c_str(),
+                middle.str().size(),
+                deltaStream.str(),
+                &output)
+            ) {
+                throw std::runtime_error("Error while decoding");
+            }
+
+            // Replace contents of middle to contents of output
+            middle.clear();
+            middle << output;
+        }
+
+        return middle;
+
     }
 }

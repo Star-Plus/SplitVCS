@@ -14,6 +14,7 @@ namespace Split {
 
         void decode(const std::istream &base, const std::istream &delta, std::ostream &out) override;
         void decode(const std::string& base, std::stack<std::string>& deltas, std::string& out) override;
+        static std::stringstream decode(const std::string& base, std::stack<std::string>& deltas);
 
     };
 
