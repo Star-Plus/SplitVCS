@@ -34,7 +34,7 @@ namespace Split {
 
     void Logger::setCheckPoint(const std::string& message)
     {
-        checkPointTime = std::chrono::high_resolution_clock::now();
+        checkPointTime = std::chrono::steady_clock::now();
         info("Set an checkout point " + message);
     }
 
@@ -42,7 +42,7 @@ namespace Split {
 
         setConsoleColor(color);
 
-        const auto currentTime = std::chrono::high_resolution_clock::now();
+        const auto currentTime = std::chrono::steady_clock::now();
 
         const auto duration = std::chrono::duration<double, std::milli>(currentTime - checkPointTime).count();
 
