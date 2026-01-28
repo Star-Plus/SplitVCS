@@ -63,7 +63,7 @@ namespace Split {
 
         while (!deltas.empty())
         {
-            std::fstream deltaFile(deltas.top(), std::ios::in);
+            std::fstream deltaFile(deltas.top(), std::ios::in | std::ios::binary);
             deltas.pop();
 
             std::ostringstream deltaStream;
@@ -73,8 +73,11 @@ namespace Split {
 
             std::string output;
 
-            if (!decoder.Decode(middle.str().c_str(),
-                middle.str().size(),
+            std::string dictionary = middle.str();
+
+            if (!decoder.Decode(
+                dictionary.data(),
+                dictionary.size(),
                 deltaStream.str(),
                 &output)
             ) {

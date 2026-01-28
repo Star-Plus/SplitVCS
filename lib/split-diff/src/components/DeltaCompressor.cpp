@@ -16,7 +16,7 @@ namespace Split {
         const auto encoder = encoderFactory.getEncoder(v2.type);
 
         std::stack<std::string> deltaPaths;
-        for (int i = deltas.size() - 1; i >= 0; --i)
+        for (int i = 0; i < deltas.size(); ++i)
         {
             deltaPaths.push(deltas[i].path);
         }
