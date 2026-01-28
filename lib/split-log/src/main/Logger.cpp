@@ -1,5 +1,6 @@
 #include <iostream>
 #include <source_location>
+#include <utility>
 #include "Logger.h"
 #include "utils/Format.h"
 
@@ -8,11 +9,19 @@ namespace Split {
 
     Logger::Logger()
     {
+        logFile = std::fstream("logs/ALL.log", std::ios::out | std::ios::app);
         setCheckPoint();
     }
-    Logger::Logger(const bool debugMode, const std::string& name) : debugMode(debugMode), name(name)
+    Logger::Logger(const bool debugMode, std::string name) : debugMode(debugMode), name(std::move(name))
     {
+        const auto logFileName = name.empty() ? "ALL.log" : name + ".log";
+        logFile = std::fstream("logs/" + logFileName, std::ios::out | std::ios::app);
         setCheckPoint();
+    }
+
+    Logger::~Logger()
+    {
+        logFile.close();
     }
 
     void Logger::info(const std::string& message) const {
@@ -39,20 +48,17 @@ namespace Split {
     }
 
     void Logger::log(const std::string& message, const Color color) const {
-
-        setConsoleColor(color);
-
         const auto currentTime = std::chrono::steady_clock::now();
 
         const auto duration = std::chrono::duration<double, std::milli>(currentTime - checkPointTime).count();
 
         const std::source_location location = std::source_location::current();
 
-        std::cout << "[" << Format::split(location.file_name(), '\\').back() << ":" << location.line() << "] " << "(" << name << ") " << "[" << static_cast<int>(duration) << " ms] " ;
-
-        std::cout << message << std::endl;
-        setConsoleColor(Color::RESET);
-
+        logFile << "[" << Format::split(location.file_name(), '\\').back()
+        << ":" << location.line() << "] "
+        << "(" << name << ") "
+        << "[" << static_cast<int>(duration) << " ms] "
+        << message << "\n";
     }
 
     void Logger::setDebugMode(const bool enabled) {

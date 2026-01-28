@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <chrono>
+#include <fstream>
 #include "utils/Color.h"
 
 namespace Split {
@@ -8,7 +9,8 @@ namespace Split {
     class Logger {
     public:
         Logger();
-        explicit Logger(bool debugMode, const std::string& name="");
+        explicit Logger(bool debugMode, std::string  name="");
+        ~Logger();
 
         void info(const std::string& message) const;
         void warning(const std::string& message) const;
@@ -24,7 +26,8 @@ namespace Split {
     private:
         bool debugMode = false;
         std::string name;
-        std::chrono::steady_clock::time_point checkPointTime;
+        std::chrono::steady_clock::time_point checkPointTime;\
+        mutable std::fstream logFile;
     };
 
 }

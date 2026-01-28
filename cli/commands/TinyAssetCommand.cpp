@@ -22,8 +22,8 @@ namespace Split
         {
             try
             {
-                const int quality = std::stoi(args.at(2));
-                const auto assetPath = SplitInterface::GetTinyAsset(args[0], args[1], quality);
+                const int quality = std::stoi(args.at(3));
+                const auto assetPath = SplitInterface::GetTinyAsset(args[0], args[1], args[2], quality);
                 std::cout << assetPath << std::endl;
                 return 0;
             } catch (std::exception& e)

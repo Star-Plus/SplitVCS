@@ -34,7 +34,7 @@ namespace Split {
                 break;
         }
 
-        std::cout << colorCode;
+        std::cerr << colorCode;
         
     }
 }

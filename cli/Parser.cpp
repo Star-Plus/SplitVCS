@@ -7,7 +7,7 @@
 namespace Split
 {
 
-    std::pair<std::string, std::vector<std::string>> Parser::Parse(int argc, char** argv)
+    std::pair<std::string, std::vector<std::string>> Parser::Parse(const int argc, char** argv)
     {
         if (argc < 2)
             return {"", {}};

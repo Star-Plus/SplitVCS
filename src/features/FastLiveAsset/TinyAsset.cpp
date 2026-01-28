@@ -7,7 +7,6 @@
 #include <filesystem>
 #include <fstream>
 
-#include "stores/Index.h"
 #include "stores/Pack.h"
 #include "utils/String/StringUtils.h"
 
@@ -28,10 +27,11 @@ namespace Split
 
     void TinyAsset::load()
     {
-        std::fstream assetMapFile(rootPath + "/.split/.tiny-map", std::ios::in);
+        const std::string tinyAssetFilePath = rootPath + "/.split/.tiny-map";
+        std::fstream assetMapFile(tinyAssetFilePath, std::ios::in);
         if (!assetMapFile.is_open())
         {
-            assetMapFile.open(tmpDecodePath, std::ios::out);
+            assetMapFile.open(tinyAssetFilePath, std::ios::out);
             assetMapFile.close();
         }
 
@@ -47,21 +47,20 @@ namespace Split
 
     str TinyAsset::encodeAsset(
             const str& versionHash,
+            const str& fileType,
             int quality
     ) const
     {
         if (const auto it = assetMap.find(versionHash); it != assetMap.end()) return it->second;
 
         Pack pack(this->rootPath);
-        Index index(this->rootPath);
 
         const auto packUnit = pack.getBasePackByHash(versionHash);
 
-        const auto indexFile = index.getEntryByHash(versionHash);
-        logger.debug(indexFile.filePath);
-        const auto fileType = StringUtils::split(indexFile.filePath, ".").back();
+        const auto fileExtension = fileType.empty() ? "" : "." + fileType;
+        logger.debug(fileExtension);
 
-        const str decodedFilePath = tmpDecodePath + "/" + versionHash + "." + fileType;
+        const str decodedFilePath = tmpDecodePath + "/" + versionHash + fileExtension;
         const str compressedAssetPath =tmpCompressPath + "/" + versionHash;
 
         pack.decode(versionHash, decodedFilePath);

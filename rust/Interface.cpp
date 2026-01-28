@@ -59,10 +59,10 @@ extern "C" {
         return Split::SplitInterface::IsIgnored(repoPath, filePath);
     }
 
-    const char* getTinyAsset(const char* repoPath, const char* versionHash, int quality)
+    const char* getTinyAsset(const char* repoPath, const char* versionHash, const char* fileType, int quality)
     {
         static std::string s;
-        s = Split::SplitInterface::GetTinyAsset(repoPath, versionHash, quality).c_str();
+        s = Split::SplitInterface::GetTinyAsset(repoPath, versionHash, fileType, quality);
         return s.c_str();
     }
 

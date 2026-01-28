@@ -114,8 +114,6 @@ add_executable(runTests
         tests/HandlingImage.Test.cpp
         src/features/IgnoreList/tests/IgnoreList.test.cpp
         src/features/FastLiveAsset/tests/TinyAsset.test.cpp
-        bindings/c/shared/split_c_api.cpp
-        bindings/c/shared/split_c_api.h
 )
 target_link_libraries(runTests PRIVATE scm_lib gtest_main)
 
@@ -126,4 +124,3 @@ gtest_discover_tests(runTests)
 # Bindings
 add_subdirectory(python)
 add_subdirectory(rust)
-add_subdirectory(bindings/c/shared)

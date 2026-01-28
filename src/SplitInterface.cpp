@@ -82,9 +82,9 @@ namespace Split {
         return il.isIgnored(ignorePath);
     }
 
-    str SplitInterface::GetTinyAsset(const str& repoPath, const str& versionHash, int quality)
+    str SplitInterface::GetTinyAsset(const str& repoPath, const str& versionHash, const str& fileType, int quality)
     {
         const TinyAsset ta(repoPath);
-        return ta.encodeAsset(versionHash, quality);
+        return ta.encodeAsset(versionHash, fileType, quality);
     }
 }

@@ -19,6 +19,7 @@ namespace Split
 
         str encodeAsset(
             const str& versionHash,
+            const str& fileType = "",
             int quality = 20
         ) const;
 
