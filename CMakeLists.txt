@@ -112,7 +112,7 @@ add_executable(runTests
         tests/Checkout.Test.cpp
         src/utils/Fs/tests/FsMetadata.test.cpp
         tests/HandlingImage.Test.cpp
-        src/features/IgnoreList/tests/IgnoreList.Test.cpp
+        src/features/IgnoreList/tests/IgnoreList.test.cpp
         src/features/FastLiveAsset/tests/TinyAsset.test.cpp
         bindings/c/shared/split_c_api.cpp
         bindings/c/shared/split_c_api.h
