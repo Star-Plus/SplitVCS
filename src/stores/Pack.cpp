@@ -9,7 +9,7 @@
 #include "ObjectStore.h"
 #include "utils/Fs/DualStream.h"
 #include "components/DeltaCompressor.h"
-#include "enums/AssetType.h"
+#include "enums/EncodeType.h"
 #include "utils/Hashing.h"
 #include "utils/String/StringUtils.h"
 
@@ -113,7 +113,7 @@ namespace Split {
         compressor.decode(packLine.first, packLine.second, outAsset);
     }
 
-    str Pack::encodeBase(std::fstream& file, AssetType encodeType)
+    str Pack::encodeBase(std::fstream& file, EncodeType encodeType)
     {
         const ObjectStore blobObjectStore(rootPath, "/blobs");
 
@@ -126,7 +126,7 @@ namespace Split {
         return hash;
     }
 
-    str Pack::encodeDelta(const std::string& v2Path, const str& baseHash, const str& v2Hash, AssetType encodeType) {
+    str Pack::encodeDelta(const std::string& v2Path, const str& baseHash, const str& v2Hash, EncodeType encodeType) {
         const ObjectStore deltasObjectStore(rootPath, "/deltas");
 
         const DeltaCompressor compressor;

@@ -1,6 +1,6 @@
 #pragma once
 #include "interfaces/IDecoder.h"
-#include "enums/AssetType.h"
+#include "enums/EncodeType.h"
 #include "features/binary/ByteDecoder.h"
 #include "features/images/ImageDecoder.h"
 
@@ -14,12 +14,12 @@ namespace Split {
         byteDecoder(new ByteDecoder())
         {}
 
-        Decoder* getDecoder(const AssetType type) const {
+        Decoder* getDecoder(const EncodeType type) const {
             switch (type)
             {
-                case AssetType::IMAGE:
+                case EncodeType::IMAGE:
                     return this->imageDecoder;
-                case AssetType::BINARY:
+                case EncodeType::BINARY:
                     return this->byteDecoder;
             
                 default:

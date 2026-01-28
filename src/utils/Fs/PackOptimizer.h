@@ -13,7 +13,7 @@ namespace Split
     public:
         static size_t approximateDecodeSize(const str& rootPath, const std::shared_ptr<PackUnit>& leaf);
     private:
-        static float getDecodeSizeFactor(AssetType);
+        static float getDecodeSizeFactor(EncodeType);
     };
 }
 

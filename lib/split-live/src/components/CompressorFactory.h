@@ -5,7 +5,7 @@
 #ifndef SPLITVCS_COMPRESSORFACTORY_H
 #define SPLITVCS_COMPRESSORFACTORY_H
 
-#include "enums/AssetType.h"
+#include "enums/EncodeType.h"
 #include "features/ImageCompressor.h"
 #include "features/TextCompressor.h"
 
@@ -20,11 +20,11 @@ namespace Split {
             textCompressor(new TextCompressor())
         {}
 
-        ICompressor* getCompressor(const AssetType type) const {
+        ICompressor* getCompressor(const EncodeType type) const {
             switch (type) {
-            case AssetType::IMAGE:
+            case EncodeType::IMAGE:
                 return this->imageCompressor;
-            case AssetType::BINARY:
+            case EncodeType::BINARY:
                 return this->textCompressor;
 
             default:

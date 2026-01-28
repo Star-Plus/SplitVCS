@@ -13,7 +13,7 @@ int main()
 
     Split::DeltaCompressor compressor;
 
-    compressor.encode(Split::Blob(s1), Split::Blob(s2, Split::AssetType::BINARY), Split::Blob(out1));
+    compressor.encode(Split::Blob(s1), Split::Blob(s2, Split::EncodeType::BINARY), Split::Blob(out1));
     std::cout << out1.str() << std::endl;
 
     compressor.encode(Split::Blob(s2), Split::Blob(s3), Split::Blob(out2));

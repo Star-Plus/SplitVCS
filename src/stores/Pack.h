@@ -11,7 +11,7 @@
 
 #include "atoms/Asset.h"
 #include "core/Alias.h"
-#include "enums/AssetType.h"
+#include "enums/EncodeType.h"
 #include "main/Logger.h"
 
 namespace Split {
@@ -21,7 +21,7 @@ namespace Split {
         str baseHash;
         str deltaHash;
         std::shared_ptr<PackUnit> baseRef = nullptr;
-        AssetType encodeType = AssetType::BINARY;
+        EncodeType encodeType = EncodeType::BINARY;
     };
 
     class Pack {
@@ -31,8 +31,8 @@ namespace Split {
         explicit Pack(const str& rootPath);
         void savePack(const PackUnit&) const;
         void decode(const str&, const std::string&);
-        str encodeBase(std::fstream&, AssetType=AssetType::BINARY);
-        str encodeDelta(const std::string& v2Path, const str& baseHash, const str& v2Hash, AssetType encodeType=AssetType::BINARY);
+        str encodeBase(std::fstream&, EncodeType=EncodeType::BINARY);
+        str encodeDelta(const std::string& v2Path, const str& baseHash, const str& v2Hash, EncodeType encodeType=EncodeType::BINARY);
 
         PackUnit getPackUnitByHash(const str& hash) const;
         PackUnit getBasePackByHash(const str& hash) const;

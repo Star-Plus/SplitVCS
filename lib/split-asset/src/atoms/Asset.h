@@ -7,7 +7,7 @@
 
 #include <string>
 
-#include "enums/AssetType.h"
+#include "enums/EncodeType.h"
 
 namespace Split
 {
@@ -15,7 +15,7 @@ namespace Split
     struct Asset
     {
         std::string path;
-        AssetType type;
+        EncodeType type;
     };
 
 }

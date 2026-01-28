@@ -37,13 +37,13 @@ namespace Split
         return estimatedSize;
     }
 
-    float PackOptimizer::getDecodeSizeFactor(const AssetType type)
+    float PackOptimizer::getDecodeSizeFactor(const EncodeType type)
     {
         switch (type)
         {
-        case AssetType::BINARY:
+        case EncodeType::BINARY:
             return 1.0;
-        case AssetType::IMAGE:
+        case EncodeType::IMAGE:
             return 0.1;
         }
 

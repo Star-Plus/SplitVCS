@@ -6,13 +6,13 @@
 #define SPLITVCS_ICOMPRESSOR_H
 
 #include <string>
-#include <enums/AssetType.h>
+#include <enums/EncodeType.h>
 
 namespace Split {
 
     struct EncodeOptions {
         int quality = 50;
-        AssetType type = AssetType::BINARY;
+        EncodeType type = EncodeType::BINARY;
     };
 
     class ICompressor {

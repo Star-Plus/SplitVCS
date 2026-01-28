@@ -1,7 +1,7 @@
 #pragma once
 #include "interfaces/IEncoder.h"
 #include "features/images/ImageEncoder.h"
-#include "enums/AssetType.h"
+#include "enums/EncodeType.h"
 #include "features/binary/ByteEncoder.h"
 
 namespace Split {
@@ -13,13 +13,13 @@ namespace Split {
         byteEncoder(new ByteEncoder())
         {}
 
-        Encoder* getEncoder(const AssetType type) const {
+        Encoder* getEncoder(const EncodeType type) const {
             switch (type)
             {
-                case AssetType::IMAGE:
+                case EncodeType::IMAGE:
                     return this->imageEncoder;
 
-                case AssetType::BINARY:
+                case EncodeType::BINARY:
                     return this->byteEncoder;
             
                 default:

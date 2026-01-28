@@ -9,20 +9,20 @@ namespace Split {
 
         std::variant<std::istream*, std::ostream*> data;
         size_t size;
-        AssetType type;
+        EncodeType type;
 
-        Blob(std::istream& inputStream, AssetType type)
+        Blob(std::istream& inputStream, EncodeType type)
             : data(&inputStream), size(calculateStreamSize()), type(type) {}
 
-        Blob(std::ostream& outputStream, AssetType type)
+        Blob(std::ostream& outputStream, EncodeType type)
             : data(&outputStream), size(calculateStreamSize()), type(type) {}
 
         Blob(std::istream& inputStream)
-            : data(&inputStream), size(calculateStreamSize()), type(AssetType::BINARY) {
+            : data(&inputStream), size(calculateStreamSize()), type(EncodeType::BINARY) {
         }
 
         Blob(std::ostream& outputStream)
-            : data(&outputStream), size(calculateStreamSize()), type(AssetType::BINARY) {
+            : data(&outputStream), size(calculateStreamSize()), type(EncodeType::BINARY) {
         }
 
         std::istream* getInputStream() const {

@@ -18,7 +18,7 @@ namespace Split {
 
         void decode(const Asset& base, const std::vector<Asset>& deltas, Asset& out) const;
 
-        void singleDecode(const std::istream& base, const std::istream& delta, std::ostream& out, AssetType encodeType) const;
+        void singleDecode(const std::istream& base, const std::istream& delta, std::ostream& out, EncodeType encodeType) const;
 
     private:
         EncoderFactory encoderFactory;

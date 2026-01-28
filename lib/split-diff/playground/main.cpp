@@ -29,9 +29,9 @@ int main() {
 
     Split::DeltaCompressor compressor;
     compressor.encode(
-        Split::Blob(fileA, Split::AssetType::BINARY),
-        Split::Blob(fileB, Split::AssetType::BINARY),
-        Split::Blob(outputFile, Split::AssetType::BINARY)
+        Split::Blob(fileA, Split::EncodeType::BINARY),
+        Split::Blob(fileB, Split::EncodeType::BINARY),
+        Split::Blob(outputFile, Split::EncodeType::BINARY)
     );
 
     std::ofstream constructedOutput(Constructed, std::ios::binary);
@@ -56,7 +56,7 @@ int main() {
     }
 
     std::stack<std::unique_ptr<Split::Blob>> deltaStack;
-    const auto delta = std::make_unique<Split::Blob>(diffFile, Split::AssetType::BINARY);
+    const auto delta = std::make_unique<Split::Blob>(diffFile, Split::EncodeType::BINARY);
     deltaStack.push(delta);
 
     compressor.decode(

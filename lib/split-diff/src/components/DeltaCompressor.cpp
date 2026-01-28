@@ -66,7 +66,7 @@ namespace Split {
         decoder->decode(base.path, deltaPaths, out.path);
     }
 
-    void DeltaCompressor::singleDecode(const std::istream& base, const std::istream& delta, std::ostream& out, const AssetType encodeType) const {
+    void DeltaCompressor::singleDecode(const std::istream& base, const std::istream& delta, std::ostream& out, const EncodeType encodeType) const {
         const auto decoder = decoderFactory.getDecoder(encodeType);
         decoder->decode(base, delta, out);
     }

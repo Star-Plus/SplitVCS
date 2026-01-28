@@ -71,7 +71,7 @@ namespace Split {
         }
 
         Pack pack(rootPath);
-        const auto encodeType = Assets::assetTypeFromPath(originalFilePath);
+        const auto encodeType = Assets::encodeTypeFromPath(originalFilePath);
 
         if (entries.find(filepath) != entries.end()) {
             if (entries[filepath].blobHash == blobHash) {
