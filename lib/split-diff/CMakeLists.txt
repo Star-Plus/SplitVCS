@@ -104,12 +104,13 @@ else()
     message(FATAL_ERROR "Unsupported platform. Please add support for your platform.")
 endif()
 
-target_link_libraries(SplitDiff PRIVATE SplitLog SplitAsset opencv_core opencv_imgproc opencv_imgcodecs ${OPENVCDIFF_LIBS})
+target_link_libraries(SplitDiff PUBLIC SplitLog SplitAsset opencv_core opencv_imgproc opencv_imgcodecs ${OPENVCDIFF_LIBS} Psd)
 target_include_directories(SplitDiff PUBLIC
         src
         ${SplitLog_SOURCE_DIR}/src
         ${SplitAsset_SOURCE_DIR}/src
         ${opencv_SOURCE_DIR}/include
+        ${PSDSDK_DIR}
         ${opencv_SOURCE_DIR}/modules/core/include
         ${opencv_SOURCE_DIR}/modules/imgproc/include
         ${opencv_SOURCE_DIR}/modules/imgcodecs/include
@@ -119,3 +120,24 @@ target_include_directories(SplitDiff PUBLIC
 
 add_subdirectory(playground)
 add_subdirectory(analysis)
+
+# --- Enable testing ---
+enable_testing()
+include(FetchContent)
+
+# Fetch GoogleTest
+FetchContent_Declare(
+        googletest
+        URL https://github.com/google/googletest/archive/refs/heads/main.zip
+)
+FetchContent_MakeAvailable(googletest)
+
+# --- Test executable ---
+add_executable(SplitDiffTests
+        tests/PsdIntegration.test.cpp
+)
+target_link_libraries(SplitDiffTests PRIVATE SplitDiff gtest_main)
+
+# --- Discover tests automatically ---
+include(GoogleTest)
+gtest_discover_tests(SplitDiffTests)

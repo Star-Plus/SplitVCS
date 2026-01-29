@@ -11,10 +11,6 @@ else()
     set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreadedDLL")
 endif()
 
-# --- OpenVCDIFF Paths ---
-set(OPENVCDIFF_INCLUDE "${CMAKE_SOURCE_DIR}/external/open-vcdiff/include")
-set(OPENVCDIFF_LIB "${CMAKE_SOURCE_DIR}/external/open-vcdiff/lib")
-
 
 # --- Main library for your project ---
 add_library(scm_lib STATIC
@@ -61,6 +57,9 @@ add_library(scm_lib STATIC
 
 target_include_directories(scm_lib PUBLIC src lib)
 
+set(PSDSDK_DIR "${CMAKE_SOURCE_DIR}/external/psd-sdk/include")
+add_subdirectory(${PSDSDK_DIR}/PsdSdk)
+
 add_subdirectory(lib/split-log)
 add_subdirectory(lib/split-asset)
 add_subdirectory(lib/split-live)
@@ -85,7 +84,8 @@ add_executable(SplitVCS main.cpp
         cli/CommandRegistry.h
         cli/commands/InitCommand.cpp
         cli/OutStreamCommand.h
-        cli/commands/TinyAssetCommand.cpp)
+        cli/commands/TinyAssetCommand.cpp
+        cli/commands/AddCommand.cpp)
 target_link_libraries(SplitVCS PRIVATE scm_lib)
 
 # --- Enable testing ---
