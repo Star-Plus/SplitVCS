@@ -17,6 +17,6 @@ TEST(PsdEncoderTest, EncodeBase)
     psdFile.close();
 
     Split::PsdEncoder encoder;
-    auto result = encoder.encode(rootPath+"/Sample.psd", rootPath+"/encoded.psd");
+    auto result = encoder.encode(rootPath+"/Sample.psd", rootPath+"/encoded");
 
 }

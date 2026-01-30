@@ -65,8 +65,8 @@ namespace Split
         const bool hasValidMask =
             layer->layerMask &&
             layer->layerMask->data &&
-            (layer->layerMask->right > layer->layerMask->left) &&
-            (layer->layerMask->bottom > layer->layerMask->top);
+            layer->layerMask->right > layer->layerMask->left &&
+            layer->layerMask->bottom > layer->layerMask->top;
 
         if (hasValidMask)
         {

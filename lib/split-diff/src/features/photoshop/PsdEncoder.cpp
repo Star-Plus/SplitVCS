@@ -82,7 +82,8 @@ namespace Split
 
                 psd::UpdateLayer(exportDoc, &allocator, layerIndex, psd::exportChannel::ALPHA,
                                  layer->layerMask->left, layer->layerMask->top,
-                                 layer->layerMask->right, layer->layerMask->bottom, static_cast<const uint8_t*>(zeroMaskBuffer), psd::compressionType::RLE);
+                                 layer->layerMask->right, layer->layerMask->bottom,
+                                 static_cast<const uint8_t*>(zeroMaskBuffer), psd::compressionType::RLE);
 
                 allocator.Free(zeroMaskBuffer);
             }
@@ -91,7 +92,7 @@ namespace Split
         }
 
         // 2. Write the Zeroed PSD
-        std::filesystem::path outPath(out);
+        const std::filesystem::path outPath(out + ".psd");
         psd::NativeFile outFile(&allocator);
         if (outFile.OpenWrite(outPath.wstring().c_str()))
         {
