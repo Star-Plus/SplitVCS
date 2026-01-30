@@ -72,6 +72,12 @@ add_library(SplitDiff STATIC
         src/features/binary/ByteDecoder.h
         src/features/images/utils/PixelCalculator.h
         src/features/images/utils/PixelCalculator.cpp
+        src/utils/psd/ChannelUtils.h
+        src/utils/psd/TrackingFile.h
+        src/features/photoshop/PsdEncoder.cpp
+        src/features/photoshop/PsdEncoder.h
+        src/features/photoshop/utils/PsdMatAdapter.cpp
+        src/features/photoshop/utils/PsdMatAdapter.h
 )
 
 
@@ -135,6 +141,7 @@ FetchContent_MakeAvailable(googletest)
 # --- Test executable ---
 add_executable(SplitDiffTests
         tests/PsdIntegration.test.cpp
+        src/features/photoshop/tests/PsdEncoder.test.cpp
 )
 target_link_libraries(SplitDiffTests PRIVATE SplitDiff gtest_main)
 

@@ -1,0 +1,13 @@
+---
+title: Encode a PSD
+---
+
+flowchart TB
+
+    ExtractImageLayers --> Loop[LayersRemain >= 0]
+    Loop -->|T| ConvertLayerToMatObject
+    ConvertLayerToMatObject --> EncodeMatWithImageEncoder[EncodeMat hash+layerID+layerType]
+    EncodeMatWithImageEncoder --> Loop
+    Loop -->|F| ClearLayers[Replace all channels with zeros]
+    ClearLayers --> WriteTemporaryPSD
+    WriteTemporaryPSD --> EncodeTempPSDWithByteEncoder
