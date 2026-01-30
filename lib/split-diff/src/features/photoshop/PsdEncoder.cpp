@@ -5,7 +5,11 @@
 #include "PsdEncoder.h"
 
 #include <filesystem>
+#include <fstream>
+#include <map>
+#include <set>
 
+#include "features/dissolve/AssetDissolver.h"
 #include "PsdSdk/PsdDocument.h"
 #include "PsdSdk/PsdLayerMaskSection.h"
 #include "PsdSdk/PsdMallocAllocator.h"
@@ -13,10 +17,9 @@
 #include "PsdSdk/PsdParseDocument.h"
 #include "PsdSdk/PsdParseLayerMaskSection.h"
 #include "PsdSdk/PsdLayer.h"
-#include "PsdSdk/PsdChannelType.h"
 #include "PsdSdk/PsdExport.h"
-#include "PsdSdk/PsdLayerMask.h"
 #include "utils/psd/ChannelUtils.h"
+#include "utils/stream/OffsetBound.h"
 
 
 namespace Split
@@ -33,9 +36,8 @@ namespace Split
         psd::Document* document = psd::CreateDocument(&file, &allocator);
         psd::LayerMaskSection* layerMask = psd::ParseLayerMaskSection(document, &file, &allocator);
 
-        // 1. Create the Export Document (Matching original dimensions and bit depth)
-        psd::ExportDocument* exportDoc = psd::CreateExportDocument(&allocator,
-            document->width, document->height, document->bitsPerChannel, psd::exportColorMode::RGB);
+        std::map<const std::string, std::vector<OffsetBound>> excludeSet;
+        std::set<OffsetBound> fileExcludeSet;
 
         for (unsigned int i = 0; i < layerMask->layerCount; i++)
         {
@@ -44,67 +46,41 @@ namespace Split
             auto exportedLayers = psdAdapter.pixelsToMat(document, file, allocator, layer);
             const std::string savePrefix = out + "-" + layer->name.c_str();
             cv::imwrite(savePrefix + ".webp", exportedLayers.rgba, {cv::IMWRITE_WEBP_QUALITY, 101});
-            cv::imwrite(savePrefix + "-mask.webp", exportedLayers.mask, {cv::IMWRITE_WEBP_QUALITY, 101});
 
+            std::vector<OffsetBound> excludes;
 
-            const unsigned int layerIndex = psd::AddLayer(exportDoc, &allocator, layer->name.c_str());
-            const int layerW = layer->right - layer->left;
-            const int layerH = layer->bottom - layer->top;
-            const size_t bufferSize = layerW * layerH * (document->bitsPerChannel / 8);
-
-            // Create a zeroed buffer
-            void* zeroBuffer = allocator.Allocate(bufferSize, 16u);
-            memset(zeroBuffer, 0, bufferSize);
-
-            // Update standard channels
-            psd::UpdateLayer(exportDoc, &allocator, layerIndex, psd::exportChannel::RED,
-                             layer->left, layer->top, layer->right, layer->bottom, static_cast<const uint8_t*>(zeroBuffer), psd::compressionType::RLE);
-            psd::UpdateLayer(exportDoc, &allocator, layerIndex, psd::exportChannel::GREEN,
-                             layer->left, layer->top, layer->right, layer->bottom, static_cast<const uint8_t*>(zeroBuffer), psd::compressionType::RLE);
-            psd::UpdateLayer(exportDoc, &allocator, layerIndex, psd::exportChannel::BLUE,
-                             layer->left, layer->top, layer->right, layer->bottom, static_cast<const uint8_t*>(zeroBuffer), psd::compressionType::RLE);
-
-            if (ChannelUtils::FindChannel(layer, psd::channelType::TRANSPARENCY_MASK) != ChannelUtils::CHANNEL_NOT_FOUND)
+            for (unsigned int j = 0; j < 4; j++)
             {
-                psd::UpdateLayer(exportDoc, &allocator, layerIndex, psd::exportChannel::ALPHA,
-                                 layer->left, layer->top, layer->right, layer->bottom, static_cast<const uint8_t*>(zeroBuffer), psd::compressionType::RLE);
+                const auto channel = layer->channels[j];
+                const OffsetBound exclude(channel.fileOffset, channel.size);
+                excludes.push_back(exclude);
+                fileExcludeSet.insert(exclude);
             }
 
-            // Zero out the Layer Mask if it exists
-            if (layer->layerMask)
-            {
-                const int maskW = layer->layerMask->right - layer->layerMask->left;
-                const int maskH = layer->layerMask->bottom - layer->layerMask->top;
-                const size_t maskSize = maskW * maskH * (document->bitsPerChannel / 8);
-
-                void* zeroMaskBuffer = allocator.Allocate(maskSize, 16u);
-                memset(zeroMaskBuffer, 0, maskSize);
-
-                psd::UpdateLayer(exportDoc, &allocator, layerIndex, psd::exportChannel::ALPHA,
-                                 layer->layerMask->left, layer->layerMask->top,
-                                 layer->layerMask->right, layer->layerMask->bottom,
-                                 static_cast<const uint8_t*>(zeroMaskBuffer), psd::compressionType::RLE);
-
-                allocator.Free(zeroMaskBuffer);
-            }
-
-            allocator.Free(zeroBuffer);
+            excludeSet.insert({layer->name.c_str(), excludes});
         }
 
-        // 2. Write the Zeroed PSD
-        const std::filesystem::path outPath(out + ".psd");
-        psd::NativeFile outFile(&allocator);
-        if (outFile.OpenWrite(outPath.wstring().c_str()))
-        {
-            psd::WriteDocument(exportDoc, &allocator, &outFile);
-            outFile.Close();
-        }
+        AssetDissolver dissolver;
+        dissolver.dissolve(base, out + "-psd", fileExcludeSet);
 
         // Cleanup
-        psd::DestroyExportDocument(exportDoc, &allocator);
         psd::DestroyLayerMaskSection(layerMask, &allocator);
         psd::DestroyDocument(document, &allocator);
         file.Close();
+
+        std::ofstream metadataFile(out,std::ios::binary);
+
+        for (auto entry : excludeSet)
+        {
+            metadataFile << entry.first << "\n";
+            for (auto exclude : entry.second)
+            {
+                metadataFile << exclude.offset;
+                metadataFile << "\n";
+            }
+        }
+
+        metadataFile.close();
 
         return out;
     }

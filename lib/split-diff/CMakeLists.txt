@@ -82,6 +82,15 @@ add_library(SplitDiff STATIC
         src/features/photoshop/PsdDecoder.h
         src/features/photoshop/PsdDecoder.cpp
         src/features/photoshop/PsdDecoder.h
+        src/utils/stream/OffsetBound.h
+        src/utils/stream/OffsetBound.cpp
+        src/features/dissolve/AssetDissolver.cpp
+        src/features/dissolve/AssetDissolver.h
+        src/features/dissolve/AssetDissolver.cpp
+        src/features/dissolve/AssetDissolver.h
+        src/features/dissolve/AssetBlocking.cpp
+        src/features/dissolve/AssetBlocking.h
+        src/features/dissolve/BlockUnit.h
 )
 
 

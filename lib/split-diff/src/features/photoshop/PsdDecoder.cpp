@@ -9,14 +9,12 @@
 #include "opencv2/imgproc.hpp"
 #include "opencv2/core/mat.hpp"
 #include "PsdSdk/PsdDocument.h"
-#include "PsdSdk/PsdExport.h"
 #include "PsdSdk/PsdLayerMaskSection.h"
 #include "PsdSdk/PsdMallocAllocator.h"
 #include "PsdSdk/PsdNativeFile.h"
 #include "PsdSdk/PsdParseDocument.h"
 #include "PsdSdk/PsdParseLayerMaskSection.h"
 #include "PsdSdk/PsdLayer.h"
-#include "PsdSdk/PsdLayerMask.h"
 
 namespace psd
 {
@@ -38,15 +36,11 @@ namespace Split
         psd::Document* document = psd::CreateDocument(&file, &allocator);
         psd::LayerMaskSection* layerMask = psd::ParseLayerMaskSection(document, &file, &allocator);
 
-        psd::ExportDocument* exportDoc = psd::CreateExportDocument(&allocator,
-        document->width, document->height, document->bitsPerChannel, psd::exportColorMode::RGB);
-
         for (unsigned int i = 0; i < layerMask->layerCount; i++)
         {
             psd::Layer* layer = &layerMask->layers[i];
             const std::string layerName = layer->name.c_str();
             const std::string layerPath = base + "-" + layerName + ".webp";
-            const std::string maskPath = base + "-" + layerName + "-mask.webp";
 
             cv::Mat image = cv::imread(layerPath, cv::IMREAD_COLOR);
             if (image.empty()) throw std::runtime_error("Could not open image");
@@ -75,37 +69,10 @@ namespace Split
                 }
             }
 
-            const unsigned int layerIndex = psd::AddLayer(exportDoc, &allocator, layerName.c_str());
-
-            psd::UpdateLayer(exportDoc, &allocator, layerIndex, psd::exportChannel::RED, layer->left, layer->top, layer->right, layer->bottom, r, psd::compressionType::RLE);
-            psd::UpdateLayer(exportDoc, &allocator, layerIndex, psd::exportChannel::GREEN, layer->left, layer->top, layer->right, layer->bottom, g, psd::compressionType::RLE);
-            psd::UpdateLayer(exportDoc, &allocator, layerIndex, psd::exportChannel::BLUE, layer->left, layer->top, layer->right, layer->bottom, b, psd::compressionType::RLE);
-            psd::UpdateLayer(exportDoc, &allocator, layerIndex, psd::exportChannel::ALPHA, layer->left, layer->top, layer->right, layer->bottom, a, psd::compressionType::RLE);
-
-            if (layer->layerMask)
-            {
-                cv::Mat mask = cv::imread(maskPath, cv::IMREAD_GRAYSCALE);
-                if (!mask.empty())
-                {
-                    psd::UpdateLayer(exportDoc, &allocator, layerIndex, psd::exportChannel::ALPHA,
-                        layer->layerMask->left, layer->layerMask->top,
-                        layer->layerMask->right, layer->layerMask->bottom,
-                        mask.data, psd::compressionType::RLE);
-                }
-            }
-
             allocator.Free(r); allocator.Free(g); allocator.Free(b); allocator.Free(a);
 
         }
 
-        psd::NativeFile outFile(&allocator);
-        std::filesystem::path outPath(out);
-        if (!outFile.OpenWrite(outPath.wstring().c_str())) throw std::runtime_error("Could not open output file");
-
-        psd::WriteDocument(exportDoc, &allocator, &outFile);
-        outFile.Close();
-
-        psd::DestroyExportDocument(exportDoc, &allocator);
         psd::DestroyLayerMaskSection(layerMask, &allocator);
         psd::DestroyDocument(document, &allocator);
     }
