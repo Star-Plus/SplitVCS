@@ -12,9 +12,9 @@ namespace Split
         return lhs.offset < rhs.offset;
     }
 
-    void operator << (std::ostream& out, OffsetBound offsetExclude)
+    void operator << (std::ostream& out, const OffsetBound offsetExclude)
     {
-        out << offsetExclude.offset << "-" << offsetExclude.length;
+        out << offsetExclude.offset << "\n" << offsetExclude.length;
     }
 
 }

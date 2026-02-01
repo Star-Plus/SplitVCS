@@ -12,10 +12,14 @@
 
 namespace Split
 {
-    class AssetBlocking
+    class AssetBlockBuilder
     {
     public:
-        void combine(const std::string& building, std::set<BlockUnit>& blocks, const std::string& out);
+        void combine(
+            const std::string& building,
+            std::set<BlockUnit>& blocks,
+            const std::string& out
+            );
     };
 } // Split
 

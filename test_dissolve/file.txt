@@ -1,0 +1,20 @@
+Line 1: This is the first line of test data.
+Line 2: The dissolve feature will split this file.
+Line 3: Some important data that we want to preserve.
+Line 4: This section will be marked for extraction.
+Line 5: The asset dissolver removes excluded portions.
+Line 6: Another section of content here for testing.
+Line 7: Multiple blocks can be handled by the system.
+Line 8: The combine feature reassembles the pieces.
+Line 9: Offset and length values are critical here.
+Line 10: Binary data can be processed efficiently now.
+Line 11: This demonstrates the core functionality well.
+Line 12: Performance is optimized with buffering logic.
+Line 13: Large files are handled with streaming approach.
+Line 14: Each block is tracked with metadata structures.
+Line 15: The OffsetBound stores position information.
+Line 16: Extract operation isolates specific regions.
+Line 17: Combine merges content back together seamlessly.
+Line 18: Test case validates all major operations here.
+Line 19: Error handling covers edge cases properly done.
+Line 20: Complete workflow ensures data integrity maintained.

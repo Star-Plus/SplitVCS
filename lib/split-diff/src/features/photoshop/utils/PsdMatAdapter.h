@@ -7,7 +7,9 @@
 
 #include <opencv2/opencv.hpp>
 
+#include "PsdSdk/PsdCompressionType.h"
 #include "PsdSdk/PsdDocument.h"
+#include "PsdSdk/PsdExportChannel.h"
 #include "PsdSdk/PsdLayer.h"
 #include "PsdSdk/PsdNativeFile.h"
 
@@ -20,6 +22,12 @@ namespace Split
         cv::Mat mask;
     };
 
+    struct ImportedLayerChannel
+    {
+        std::shared_ptr<std::istream> stream;
+        size_t size;
+    };
+
     class PsdMatAdapter
     {
     public:
@@ -30,6 +38,12 @@ namespace Split
             psd::NativeFile& file,
             psd::Allocator& allocator,
             psd::Layer* layer
+        );
+
+        std::vector<ImportedLayerChannel> matToPsdBuffer(
+            const cv::Mat& mat,
+            const std::vector<uint16_t>& compressionTypes,
+            const std::vector<bool>& isAlphaChannels
         );
 
     };

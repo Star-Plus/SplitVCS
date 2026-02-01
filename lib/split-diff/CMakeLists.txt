@@ -88,9 +88,14 @@ add_library(SplitDiff STATIC
         src/features/dissolve/AssetDissolver.h
         src/features/dissolve/AssetDissolver.cpp
         src/features/dissolve/AssetDissolver.h
-        src/features/dissolve/AssetBlocking.cpp
-        src/features/dissolve/AssetBlocking.h
+        src/features/dissolve/AssetBlockBuilder.cpp
+        src/features/dissolve/AssetBlockBuilder.h
         src/features/dissolve/BlockUnit.h
+        src/utils/adapters/OpenCvAdapter.h
+        src/features/photoshop/utils/PsdLayersMetadata.h
+        src/features/photoshop/utils/PsdLayerMetadataParser.h
+        src/utils/psd/PsdChannelSizeUpdater.h
+        src/utils/psd/PsdChannelSizeUpdater.cpp
 )
 
 
@@ -156,6 +161,7 @@ add_executable(SplitDiffTests
         tests/PsdIntegration.test.cpp
         src/features/photoshop/tests/PsdEncoder.test.cpp
         src/features/photoshop/tests/PsdDecoder.test.cpp
+        src/features/dissolve/tests/AssetDissolve.test.cpp
 )
 target_link_libraries(SplitDiffTests PRIVATE SplitDiff gtest_main)
 

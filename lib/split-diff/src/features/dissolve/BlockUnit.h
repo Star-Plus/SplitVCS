@@ -13,7 +13,7 @@ namespace Split
 {
     struct BlockUnit
     {
-        std::istream& stream;
+        std::shared_ptr<std::istream> stream;
         OffsetBound offset;
     };
 

@@ -11,9 +11,12 @@ namespace Split
 {
     struct OffsetBound
     {
-        size_t offset, length;
+        size_t offset = 0, length = 0, updatedLength = 0;
 
-        OffsetBound(size_t offset, size_t length) : offset(offset), length(length) {}
+        OffsetBound() {}
+        OffsetBound(const size_t offset, const size_t length) : offset(offset), length(length), updatedLength(length) {}
+        OffsetBound(const size_t offset, const size_t length, const size_t updatedLength) :
+        offset(offset), length(length), updatedLength(updatedLength) {}
     };
 
     bool operator < (OffsetBound lhs, OffsetBound rhs);

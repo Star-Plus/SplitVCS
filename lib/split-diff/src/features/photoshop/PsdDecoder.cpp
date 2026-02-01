@@ -4,22 +4,19 @@
 
 #include <filesystem>
 #include "PsdDecoder.h"
+#include <fstream>
+#include <iostream>
 
-#include "opencv2/imgcodecs.hpp"
-#include "opencv2/imgproc.hpp"
-#include "opencv2/core/mat.hpp"
-#include "PsdSdk/PsdDocument.h"
-#include "PsdSdk/PsdLayerMaskSection.h"
-#include "PsdSdk/PsdMallocAllocator.h"
-#include "PsdSdk/PsdNativeFile.h"
-#include "PsdSdk/PsdParseDocument.h"
-#include "PsdSdk/PsdParseLayerMaskSection.h"
-#include "PsdSdk/PsdLayer.h"
+#include "features/dissolve/AssetBlockBuilder.h"
+#include "utils/PsdLayersMetadata.h"
+#include "utils/PsdLayerMetadataParser.h"
+#include "utils/PsdMatAdapter.h"
+#include "utils/psd/PsdChannelSizeUpdater.h"
 
 namespace psd
 {
     struct ExportDocument;
-    struct LayerMaskSection;
+    struct LayerMaskSection;;
     struct Document;
 }
 
@@ -27,53 +24,32 @@ namespace Split
 {
     void PsdDecoder::decode(const std::string& base, std::stack<std::string>& deltas, std::string& out)
     {
-        psd::MallocAllocator allocator;
-        psd::NativeFile file(&allocator);
+        std::fstream metadataFile(base, std::ios::in);
+        if (!metadataFile.is_open()) throw std::ios_base::failure("Cannot open metadata file");
 
-        std::filesystem::path basePath(base + ".psd");
-        if (!file.OpenRead(basePath.wstring().c_str())) throw std::runtime_error("Could not open base file");
+        PsdLayerMetadataParser metadataParser;
+        auto metadata = metadataParser.parse(metadataFile);
 
-        psd::Document* document = psd::CreateDocument(&file, &allocator);
-        psd::LayerMaskSection* layerMask = psd::ParseLayerMaskSection(document, &file, &allocator);
+        AssetBlockBuilder assetBuilder;
 
-        for (unsigned int i = 0; i < layerMask->layerCount; i++)
+        std::set<BlockUnit> blocks;
+
+        for (auto& layer : metadata.layers)
         {
-            psd::Layer* layer = &layerMask->layers[i];
-            const std::string layerName = layer->name.c_str();
-            const std::string layerPath = base + "-" + layerName + ".webp";
+            const auto startChannel = layer.channels.begin();
+            const auto endChannel = layer.channels.rbegin();
 
-            cv::Mat image = cv::imread(layerPath, cv::IMREAD_COLOR);
-            if (image.empty()) throw std::runtime_error("Could not open image");
+            const auto startOffset = startChannel->offset.offset;
+            const auto blockSize = endChannel->offset.offset - startOffset + endChannel->offset.length;
 
-            if (image.channels() == 3) cv::cvtColor(image, image, cv::COLOR_BGR2BGRA);
+            auto stream = std::make_shared<std::ifstream>(layer.storePath, std::ios::binary);
 
-            const int w = image.cols;
-            const int h = image.rows;
-            const size_t planeSize = static_cast<size_t>(w * h);
-
-            uint8_t* r = static_cast<uint8_t*>(allocator.Allocate(planeSize, 16u));
-            uint8_t* g = static_cast<uint8_t*>(allocator.Allocate(planeSize, 16u));
-            uint8_t* b = static_cast<uint8_t*>(allocator.Allocate(planeSize, 16u));
-            uint8_t* a = static_cast<uint8_t*>(allocator.Allocate(planeSize, 16u));
-
-            for (int y = 0; y < h; y++)
-            {
-                for (int x = 0; x < w; x++)
-                {
-                    auto pixel = image.at<cv::Vec4b>(y, x);
-                    size_t offset = static_cast<size_t>(y) * w + x;
-                    b[offset] = pixel[0];
-                    g[offset] = pixel[1];
-                    r[offset] = pixel[2];
-                    a[offset] = pixel[3];
-                }
-            }
-
-            allocator.Free(r); allocator.Free(g); allocator.Free(b); allocator.Free(a);
-
+            BlockUnit block = {stream, OffsetBound(startOffset, blockSize)};
+            blocks.insert(block);
         }
 
-        psd::DestroyLayerMaskSection(layerMask, &allocator);
-        psd::DestroyDocument(document, &allocator);
+        const std::string basePsdFile = base + "-psd";
+
+        assetBuilder.combine(basePsdFile, blocks, out);
     }
 } // Split

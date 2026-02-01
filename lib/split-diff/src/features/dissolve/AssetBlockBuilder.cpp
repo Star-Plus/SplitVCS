@@ -2,15 +2,20 @@
 // Created by Ahmed Mustafa on 1/31/2026.
 //
 
-#include "AssetBlocking.h"
+#include "AssetBlockBuilder.h"
 #include <fstream>
+#include <iostream>
 #include <vector>
 
 namespace Split
 {
-    void AssetBlocking::combine(const std::string& building, std::set<BlockUnit>& blocks, const std::string& out)
+    void AssetBlockBuilder::combine(
+        const std::string& building,
+        std::set<BlockUnit>& blocks,
+        const std::string& out
+        )
     {
-        std::ifstream inFile(building, std::ifstream::in);
+        std::ifstream inFile(building, std::ios::binary);
         if (!inFile.is_open()) throw std::runtime_error("Cannot open file");
 
         std::ofstream outFile(out, std::ios::binary | std::ios::trunc);
@@ -25,15 +30,18 @@ namespace Split
         std::vector<char> buffer(BufferSize, 0);
 
         size_t currentOffset = 0;
+        size_t readOffset = 0;
+
+        size_t shift = 0;
 
         for (const auto& block : blocks)
         {
-            const size_t targetOffset = block.offset.offset;
+            const size_t targetOffset = block.offset.offset + shift;
             const size_t blockSize = block.offset.length;
 
             if (currentOffset < targetOffset)
             {
-                inFile.seekg(currentOffset, std::ios::beg);
+                inFile.seekg(readOffset, std::ios::beg);
 
                 size_t gap = targetOffset - currentOffset;
                 while (gap > 0)
@@ -42,29 +50,42 @@ namespace Split
                     inFile.read(buffer.data(), chunk);
                     outFile.write(buffer.data(), chunk);
                     gap -= chunk;
+
+                    readOffset += chunk;
                 }
+
                 currentOffset = targetOffset;
             }
 
-            size_t remaining = blockSize;
-            while (remaining > 0)
+            const auto newBlockSize = block.offset.updatedLength;
+            size_t remaining = newBlockSize;
+
+            block.stream->clear();
+            block.stream->seekg(0, std::ios::beg);
+
+            while (remaining)
             {
                 const size_t chunk = std::min(BufferSize, remaining);
-                block.stream.read(buffer.data(), chunk);
+                block.stream->read(buffer.data(), chunk);
 
-                if (block.stream.gcount() != static_cast<std::streamsize>(chunk))
-                    throw std::runtime_error("Cannot read from stream");
+                const std::streamsize readBytes = block.stream->gcount();
+
+                if (readBytes <= 0)
+                    throw std::runtime_error("Unexpected EOF while reading block stream");
 
                 outFile.write(buffer.data(), chunk);
-                remaining -= chunk;
                 currentOffset += chunk;
+                remaining -= chunk;
             }
+
+            shift += newBlockSize - blockSize;
         }
 
-        if (currentOffset < fileSize)
+        if (readOffset < fileSize)
         {
-            inFile.seekg(currentOffset, std::ios::beg);
-            size_t remaining = fileSize - currentOffset;
+            inFile.seekg(readOffset, std::ios::beg);
+            size_t remaining = fileSize - readOffset;
+
             while (remaining > 0)
             {
                 const size_t chunk = std::min(BufferSize, remaining);
