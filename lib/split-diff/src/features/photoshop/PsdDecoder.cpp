@@ -30,25 +30,62 @@ namespace Split
         PsdLayerMetadataParser metadataParser;
         auto metadata = metadataParser.parse(metadataFile);
 
+        std::cout << "Initial layerMaskSectionSize: " << metadata.layerMaskSectionSize << std::endl;
+
         AssetBlockBuilder assetBuilder;
+        PsdMatAdapter adapter;
 
         std::set<BlockUnit> blocks;
 
+        std::vector<size_t> allChannelSizeFieldOffsets;
+        std::vector<uint32_t> allNewChannelSizes;
+
         for (auto& layer : metadata.layers)
         {
-            const auto startChannel = layer.channels.begin();
-            const auto endChannel = layer.channels.rbegin();
+            auto channel = layer.channels.begin();
 
-            const auto startOffset = startChannel->offset.offset;
-            const auto blockSize = endChannel->offset.offset - startOffset + endChannel->offset.length;
+            auto image = cv::imread(base + "-" + layer.name.c_str() + ".webp", cv::IMREAD_UNCHANGED);
 
-            auto stream = std::make_shared<std::ifstream>(layer.storePath, std::ios::binary);
+            std::vector<uint16_t> compressionTypes;
+            std::vector<bool> alphaFlags;
 
-            BlockUnit block = {stream, OffsetBound(startOffset, blockSize)};
-            blocks.insert(block);
+            for (auto& c : layer.channels)
+            {
+                compressionTypes.push_back(0);
+                alphaFlags.push_back(c.isAlpha);
+            }
+
+            auto planers = adapter.matToPsdBuffer(image, compressionTypes, alphaFlags);
+
+            for (int i = 0; i < layer.channels.size(); i++)
+            {
+                const auto startOffset = channel->offset.offset;
+                const auto blockSize = channel->offset.length;
+
+                BlockUnit block = {planers.at(i).stream, OffsetBound(startOffset, blockSize, planers.at(i).size)};
+                blocks.insert(block);
+
+                allChannelSizeFieldOffsets.push_back(channel->channelSizeFieldOffset);
+                allNewChannelSizes.push_back(planers.at(i).size);
+
+
+                metadata.layerMaskSectionSize += planers.at(i).size - channel->offset.length;
+
+                ++channel;
+            }
         }
 
+        std::cout << "Final layerMaskSectionSize: " << metadata.layerMaskSectionSize << std::endl;
+
         const std::string basePsdFile = base + "-psd";
+
+        PsdChannelSizeUpdater::updateChannelSizes(
+            base,
+            allChannelSizeFieldOffsets,
+            allNewChannelSizes,
+            metadata.layerMaskSectionSizeOffset,
+            metadata.layerMaskSectionSize
+        );
 
         assetBuilder.combine(basePsdFile, blocks, out);
     }

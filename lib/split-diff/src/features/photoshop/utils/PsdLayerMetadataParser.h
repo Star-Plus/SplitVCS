@@ -44,15 +44,26 @@ namespace Split
 
             if (std::getline(in, line))
             {
+                metadata.layerMaskSectionSizeOffset = std::stoi(line);
+            }
+
+            if (std::getline(in, line))
+            {
+                metadata.layerMaskSectionSize = std::stoi(line);
+            }
+
+            if (std::getline(in, line))
+            {
                 numOfLayers = std::stoi(line);
             }
 
             for (int i = 0; i < numOfLayers; i++)
             {
                 LayerMetadata layerMetadata;
+                std::string layerName;
 
-                if (std::string layerName; std::getline(in, layerName)) layerMetadata.name = layerName;
-                if (std::string storePath; std::getline(in, storePath)) layerMetadata.storePath = storePath;
+                if (std::getline(in, layerName)) layerMetadata.name = layerName;
+
 
                 int numOfChannels = 0;
                 if (std::getline(in, line)) numOfChannels = std::stoi(line);
@@ -61,6 +72,24 @@ namespace Split
                 {
                     ChannelMetadata channelMetadata;
                     channelMetadata.offset = parseOffsetBounds(in);
+
+                    // Read compression type
+                    if (std::getline(in, line))
+                    {
+                        channelMetadata.compressionType = static_cast<uint16_t>(std::stoi(line));
+                    }
+
+                    // Read channel size field offset
+                    if (std::getline(in, line))
+                    {
+                        channelMetadata.channelSizeFieldOffset = std::stoi(line);
+                    }
+
+                    // Read whether this is an alpha channel
+                    if (std::getline(in, line))
+                    {
+                        channelMetadata.isAlpha = std::stoi(line) != 0;
+                    }
 
                     layerMetadata.channels.insert(channelMetadata);
                 }

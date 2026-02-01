@@ -15,6 +15,9 @@ namespace Split
     struct ChannelMetadata
     {
         OffsetBound offset;
+        uint16_t compressionType;
+        size_t channelSizeFieldOffset;
+        bool isAlpha;
     };
 
     inline bool operator < (const ChannelMetadata& lhs, const ChannelMetadata& rhs)
@@ -25,12 +28,15 @@ namespace Split
     inline void operator << (std::ostream& os, const ChannelMetadata& channelMetadata)
     {
         os << channelMetadata.offset;
+        os << "\n";
+        os << channelMetadata.compressionType << "\n";
+        os << channelMetadata.channelSizeFieldOffset << "\n";
+        os << channelMetadata.isAlpha;
     }
 
     struct LayerMetadata
     {
         std::string name;
-        std::string storePath;
         std::set<ChannelMetadata> channels;
     };
 
@@ -42,7 +48,6 @@ namespace Split
     inline void operator << (std::ostream& os, const LayerMetadata& layerMetadata)
     {
         os << layerMetadata.name << "\n";
-        os << layerMetadata.storePath << "\n";
         os << layerMetadata.channels.size() << "\n";
         for (auto channelMetadata : layerMetadata.channels)
         {
@@ -53,11 +58,16 @@ namespace Split
 
     struct PsdLayersMetadata
     {
+        size_t layerMaskSectionSize;
+        size_t layerMaskSectionSizeOffset;
+
         std::set<LayerMetadata> layers;
     };
 
     inline void operator << (std::ostream& os, const PsdLayersMetadata& layerMetadata)
     {
+        os << layerMetadata.layerMaskSectionSizeOffset << "\n";
+        os << layerMetadata.layerMaskSectionSize << "\n";
         os << layerMetadata.layers.size() << "\n";
         for (const auto& value : layerMetadata.layers)
         {

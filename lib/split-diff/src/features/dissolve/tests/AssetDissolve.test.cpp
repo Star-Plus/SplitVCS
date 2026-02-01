@@ -11,10 +11,9 @@ TEST(AssetDissolveTest, BasicFile)
 {
     std::string rootPath = "test_dissolve/";
 
-    Split::OffsetBound offsetBound(20, 20);
+    Split::OffsetBound offsetBound(10, 20);
 
     Split::AssetDissolver dissolver;
-    dissolver.slice(rootPath + "file", offsetBound, rootPath + "unit1");
 
     std::set offsets = {offsetBound};
     dissolver.dissolve(rootPath + "file", rootPath + "base",  offsets);
@@ -23,7 +22,7 @@ TEST(AssetDissolveTest, BasicFile)
 
     std::ifstream inFile(rootPath + "unit1");
 
-    Split::BlockUnit block(std::make_shared<std::ifstream>(rootPath + "unit1"), offsetBound);
+    Split::BlockUnit block(std::make_shared<std::ifstream>(rootPath + "unit1"), Split::OffsetBound(10, 4));
     std::set blocks = {block};
 
     combiner.combine(rootPath+"base", blocks, rootPath + "decoded");
