@@ -6,36 +6,27 @@
 #include <google/vcencoder.h>
 #include <sstream>
 #include <fstream>
+#include <vector>
 
 #include "ByteDecoder.h"
 
 namespace Split {
 
-    void ByteEncoder::encode(const std::istream &v1, const std::istream &v2, std::ostream &out) {
-        const auto v1Data = v1.rdbuf();
-        const auto v2Data = v2.rdbuf();
+    std::string ByteEncoder::encode(const std::string& base, const std::string& out)
+    {
+        std::fstream outFile(out, std::ios::out | std::ios::binary);
+        std::fstream baseFile(base, std::ios::binary | std::ios::in);
 
-        std::ostringstream v1SS, v2SS;
-        v1SS << v1Data;
-        v2SS << v2Data;
+        outFile << baseFile.rdbuf();
 
-        open_vcdiff::VCDiffEncoder encoder(
-            (v1SS.str().c_str()), v1SS.str().size()
-        );
+        outFile.close();
+        baseFile.close();
 
-        encoder.SetFormatFlags(open_vcdiff::VCD_FORMAT_INTERLEAVED);
-
-        std::string outDelta;
-
-        if (!encoder.Encode(v2SS.str().c_str(), v2SS.str().size(), &outDelta)) {
-            throw std::runtime_error("Failed to encode delta");
-        }
-
-        out << outDelta;
+        return out;
     }
 
     std::string ByteEncoder::encode(const std::string& base, std::stack<std::string>& deltas, const std::string& v2,
-        std::string& out)
+                                    std::string& out)
     {
         auto decoded = ByteDecoder::decode(base, deltas);
 

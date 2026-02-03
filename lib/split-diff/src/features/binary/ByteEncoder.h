@@ -6,6 +6,10 @@
 #define SPLITVCS_BYTEENCODER_H
 #include "interfaces/IEncoder.h"
 
+#include <set>
+
+#include "utils/stream/OffsetBound.h"
+
 namespace Split {
 
     class ByteEncoder final : public Encoder {
@@ -13,8 +17,9 @@ namespace Split {
         ByteEncoder() = default;
         ~ByteEncoder() override = default;
 
-        void encode(const std::istream& v1, const std::istream& v2, std::ostream& out) override;
+        std::string encode(const std::string& base, const std::string& out) override;
         std::string encode(const std::string& base, std::stack<std::string>& deltas, const std::string& v2, std::string& out) override;
+
     };
 
 }

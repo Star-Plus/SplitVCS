@@ -15,3 +15,16 @@ TEST(PsdDecoderTest, DecodeBase)
     std::string out = rootPath + "/decoded.psd";
     decoder.decode(rootPath + "/encoded", st, out);
 }
+
+TEST(PsdDecoderTest, DecodeDeltas)
+{
+    const std::string rootPath = "psd_enc/";
+
+    Split::PsdDecoder decoder;
+    std::stack<std::string> st;
+    st.push(rootPath+"encoded2");
+
+    std::string out = rootPath + "decoded.psd";
+
+    decoder.decode(rootPath+"encoded", st, out);
+}

@@ -5,7 +5,13 @@
 #include "PsdEncoder.h"
 
 #include <filesystem>
+#include <fstream>
+#include <queue>
+#include <set>
 
+#include "PsdDecoder.h"
+#include "features/binary/ByteEncoder.h"
+#include "features/dissolve/AssetDissolver.h"
 #include "PsdSdk/PsdDocument.h"
 #include "PsdSdk/PsdLayerMaskSection.h"
 #include "PsdSdk/PsdMallocAllocator.h"
@@ -13,16 +19,50 @@
 #include "PsdSdk/PsdParseDocument.h"
 #include "PsdSdk/PsdParseLayerMaskSection.h"
 #include "PsdSdk/PsdLayer.h"
-#include "PsdSdk/PsdChannelType.h"
 #include "PsdSdk/PsdExport.h"
-#include "PsdSdk/PsdLayerMask.h"
 #include "utils/psd/ChannelUtils.h"
+#include "utils/PsdLayersMetadata.h"
+#include "utils/compress/Bit7Archive.h"
+#include "utils/hashing/RandomHash.h"
+#include "utils/stream/OffsetBound.h"
 
 
 namespace Split
 {
+    template <typename T>
+    std::stack<T> copyStackEditedWithSuffix(std::stack<T> s1, const T& suffix)
+    {
+        std::queue<T> tempQueue;
+
+        while (!s1.empty())
+        {
+            tempQueue.push(s1.top()+suffix);
+            s1.pop();
+        }
+
+        std::stack<T> stack;
+        while (!tempQueue.empty())
+        {
+            stack.push(tempQueue.front());
+            tempQueue.pop();
+        }
+
+        return stack;
+    }
+
+    void PsdEncoder::extractDeltaArchives(std::stack<std::string> deltas) const
+    {
+        while (!deltas.empty())
+        {
+            auto delta = deltas.top();
+            psdArchive.ExtractArchive(delta + ".7z", delta + "/");
+        }
+    }
+
     std::string PsdEncoder::encode(const std::string& base, const std::string& out)
     {
+        std::filesystem::create_directories(out);
+
         psd::MallocAllocator allocator;
         psd::NativeFile file(&allocator);
         std::filesystem::path filepath(base);
@@ -33,88 +73,150 @@ namespace Split
         psd::Document* document = psd::CreateDocument(&file, &allocator);
         psd::LayerMaskSection* layerMask = psd::ParseLayerMaskSection(document, &file, &allocator);
 
-        // 1. Create the Export Document (Matching original dimensions and bit depth)
-        psd::ExportDocument* exportDoc = psd::CreateExportDocument(&allocator,
-            document->width, document->height, document->bitsPerChannel, psd::exportColorMode::RGB);
+        PsdLayersMetadata psdLayerMetadata;
+        std::set<OffsetBound> fileExcludeSet;
 
         for (unsigned int i = 0; i < layerMask->layerCount; i++)
         {
             psd::Layer* layer = &layerMask->layers[i];
 
-            auto exportedLayers = psdAdapter.pixelsToMat(document, file, allocator, layer);
-            const std::string savePrefix = out + "-" + layer->name.c_str();
-            cv::imwrite(savePrefix + ".webp", exportedLayers.rgba, {cv::IMWRITE_WEBP_QUALITY, 101});
-            cv::imwrite(savePrefix + "-mask.webp", exportedLayers.mask, {cv::IMWRITE_WEBP_QUALITY, 101});
+            LayerMetadata layerMetadata;
+            layerMetadata.name = layer->name.c_str();
+            layerMetadata.storePath = out + "/" + layer->name.c_str() + ".layer";
 
-
-            const unsigned int layerIndex = psd::AddLayer(exportDoc, &allocator, layer->name.c_str());
-            const int layerW = layer->right - layer->left;
-            const int layerH = layer->bottom - layer->top;
-            const size_t bufferSize = layerW * layerH * (document->bitsPerChannel / 8);
-
-            // Create a zeroed buffer
-            void* zeroBuffer = allocator.Allocate(bufferSize, 16u);
-            memset(zeroBuffer, 0, bufferSize);
-
-            // Update standard channels
-            psd::UpdateLayer(exportDoc, &allocator, layerIndex, psd::exportChannel::RED,
-                             layer->left, layer->top, layer->right, layer->bottom, static_cast<const uint8_t*>(zeroBuffer), psd::compressionType::RLE);
-            psd::UpdateLayer(exportDoc, &allocator, layerIndex, psd::exportChannel::GREEN,
-                             layer->left, layer->top, layer->right, layer->bottom, static_cast<const uint8_t*>(zeroBuffer), psd::compressionType::RLE);
-            psd::UpdateLayer(exportDoc, &allocator, layerIndex, psd::exportChannel::BLUE,
-                             layer->left, layer->top, layer->right, layer->bottom, static_cast<const uint8_t*>(zeroBuffer), psd::compressionType::RLE);
-
-            if (ChannelUtils::FindChannel(layer, psd::channelType::TRANSPARENCY_MASK) != ChannelUtils::CHANNEL_NOT_FOUND)
+            std::ofstream layerFile(layerMetadata.storePath, std::ios::binary | std::ios::trunc);
+            layerFile.close();
+            
+            for (unsigned int j = 0; j < layer->channelCount; j++)
             {
-                psd::UpdateLayer(exportDoc, &allocator, layerIndex, psd::exportChannel::ALPHA,
-                                 layer->left, layer->top, layer->right, layer->bottom, static_cast<const uint8_t*>(zeroBuffer), psd::compressionType::RLE);
+                const auto channel = layer->channels[j];
+                const OffsetBound exclude(channel.fileOffset, channel.size);
+
+                // Save the raw buffer
+                extractor.slice(base, exclude, layerMetadata.storePath, std::ios::app);
+
+                fileExcludeSet.insert(exclude);
+
+                ChannelMetadata channelMetadata = {exclude};
+                layerMetadata.channels.insert(channelMetadata);
             }
 
-            // Zero out the Layer Mask if it exists
-            if (layer->layerMask)
-            {
-                const int maskW = layer->layerMask->right - layer->layerMask->left;
-                const int maskH = layer->layerMask->bottom - layer->layerMask->top;
-                const size_t maskSize = maskW * maskH * (document->bitsPerChannel / 8);
-
-                void* zeroMaskBuffer = allocator.Allocate(maskSize, 16u);
-                memset(zeroMaskBuffer, 0, maskSize);
-
-                psd::UpdateLayer(exportDoc, &allocator, layerIndex, psd::exportChannel::ALPHA,
-                                 layer->layerMask->left, layer->layerMask->top,
-                                 layer->layerMask->right, layer->layerMask->bottom,
-                                 static_cast<const uint8_t*>(zeroMaskBuffer), psd::compressionType::RLE);
-
-                allocator.Free(zeroMaskBuffer);
-            }
-
-            allocator.Free(zeroBuffer);
+            psdLayerMetadata.layers.insert(layerMetadata);
         }
 
-        // 2. Write the Zeroed PSD
-        const std::filesystem::path outPath(out + ".psd");
-        psd::NativeFile outFile(&allocator);
-        if (outFile.OpenWrite(outPath.wstring().c_str()))
-        {
-            psd::WriteDocument(exportDoc, &allocator, &outFile);
-            outFile.Close();
-        }
+        AssetDissolver dissolver;
+        dissolver.dissolve(base, out + "/skeleton", fileExcludeSet);
 
         // Cleanup
-        psd::DestroyExportDocument(exportDoc, &allocator);
         psd::DestroyLayerMaskSection(layerMask, &allocator);
         psd::DestroyDocument(document, &allocator);
         file.Close();
+
+        std::ofstream metadataOut(out + "/metadata",std::ios::binary);
+        metadataOut << psdLayerMetadata;
+        metadataOut.close();
 
         return out;
     }
 
     std::string PsdEncoder::encode(const std::string& base, std::stack<std::string>& deltas, const std::string& v2, std::string& out)
     {
-        return "";
+        std::filesystem::create_directories(out);
+
+        ByteEncoder byteEncoder;
+
+        psd::MallocAllocator allocator;
+        psd::NativeFile file(&allocator);
+        std::filesystem::path filepath(v2);
+
+        if (!file.OpenRead(filepath.wstring().c_str()))
+            throw std::runtime_error("File not found");
+
+        psd::Document* document = psd::CreateDocument(&file, &allocator);
+        psd::LayerMaskSection* layerMask = psd::ParseLayerMaskSection(document, &file, &allocator);
+
+        PsdLayersMetadata psdLayerMetadata;
+        std::set<OffsetBound> fileExcludeSet;
+
+        const auto assetHash = RandomHash::generateHash(16);
+
+        // Extract archives
+        extractDeltaArchives(deltas);
+
+        for (unsigned int i = 0; i < layerMask->layerCount; i++)
+        {
+            psd::Layer* layer = &layerMask->layers[i];
+
+            LayerMetadata layerMetadata;
+            layerMetadata.name = layer->name.c_str();
+            const std::string suffix = "/" + layerMetadata.name + ".layer";
+            const std::string tmpSlicePath = out + suffix + ".tmp";
+
+            std::string outDeltaPath = out + suffix;
+            layerMetadata.storePath = outDeltaPath;
+
+
+            // Copy delta stack but adding layer storePath as suffix
+            std::stack<std::string> layerDeltas = copyStackEditedWithSuffix(deltas, suffix);
+
+
+            std::ofstream layerFile(layerMetadata.storePath, std::ios::binary | std::ios::trunc);
+            layerFile.close();
+
+            for (unsigned int j = 0; j < layer->channelCount; j++)
+            {
+                const auto channel = layer->channels[j];
+                const OffsetBound exclude(channel.fileOffset, channel.size);
+
+                // Save the raw buffer
+                extractor.slice(v2, exclude,tmpSlicePath , std::ios::app);
+
+                // Encode layer deltas
+                auto _ = byteEncoder.encode(base, layerDeltas, tmpSlicePath, outDeltaPath);
+
+                // Remove tmp slice file
+
+                fileExcludeSet.insert(exclude);
+
+                ChannelMetadata channelMetadata = {exclude};
+                layerMetadata.channels.insert(channelMetadata);
+            }
+
+            std::filesystem::remove(tmpSlicePath);
+
+            psdLayerMetadata.layers.insert(layerMetadata);
+        }
+
+
+        // Dissolve main psd
+        AssetDissolver dissolver;
+        const std::string tmpSkeletonPath = out + "/skeleton.tmp";
+        dissolver.dissolve(v2, tmpSkeletonPath, fileExcludeSet);
+        // Copy deltas stack for skeleton suffix
+        const std::string suffix = "/skeleton";
+        auto skeletonDeltaStack = copyStackEditedWithSuffix(deltas, suffix);
+        // Encode skeleton
+        std::string outDeltaPath = out + suffix;
+        byteEncoder.encode(base+"/skeleton", skeletonDeltaStack, tmpSkeletonPath, outDeltaPath);
+        // Remove tmp file
+        std::filesystem::remove(tmpSkeletonPath);
+
+        // Cleanup
+        psd::DestroyLayerMaskSection(layerMask, &allocator);
+        psd::DestroyDocument(document, &allocator);
+        file.Close();
+
+        std::ofstream metadataOut(out + "/metadata",std::ios::binary);
+        metadataOut << psdLayerMetadata;
+        metadataOut.close();
+
+        // Archive the output
+        const std::string zipOutPath = out + ".7z";
+        psdArchive.SaveDirToArchive(out + "/", zipOutPath);
+
+        std::filesystem::remove_all(out);
+
+        return out;
     }
 
-    void PsdEncoder::encode(const std::istream& v1, const std::istream& v2, std::ostream& out)
-    {
-    }
 } // Split

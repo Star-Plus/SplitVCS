@@ -137,14 +137,8 @@ namespace Split {
         Asset outAsset(deltaPath);
         const auto producedPath = compressor.encode(packLine.first, packLine.second, Asset(v2Path , encodeType), outAsset);
 
-        // Save the delta to the deltas object store
-        const auto deltaHash = Hashing::computeFileHash(producedPath);
-        logger.debug("Start Parsing path");
         auto producedPathParts = StringUtils::split(producedPath, "/\\");
-        producedPathParts.erase(producedPathParts.begin()+producedPathParts.size()-1, producedPathParts.end());
-        const auto newPath = StringUtils::concat(producedPathParts, "/") + deltaHash;
-        std::filesystem::rename(producedPath, newPath);
-        logger.debug("End Parsing path");
+        const auto deltaHash = producedPathParts.back();
 
         const auto baseIt = std::ranges::find_if(packs, [&baseHash](const auto& p) {
             return isPackUnitByHash(*p, baseHash);

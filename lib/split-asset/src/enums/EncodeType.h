@@ -6,6 +6,7 @@ namespace Split {
     enum class EncodeType {
         IMAGE,
         BINARY,
+        PSD,
         EXACT
     };
 

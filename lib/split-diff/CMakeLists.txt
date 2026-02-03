@@ -43,6 +43,12 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(opencv)
 
+FetchContent_Declare(
+        bit7z
+        GIT_REPOSITORY https://github.com/rikyoz/bit7z
+)
+FetchContent_MakeAvailable(bit7z)
+
 #FetchContent_Declare(
 #        zstd
 #        GIT_REPOSITORY https://github.com/facebook/zstd
@@ -82,6 +88,26 @@ add_library(SplitDiff STATIC
         src/features/photoshop/PsdDecoder.h
         src/features/photoshop/PsdDecoder.cpp
         src/features/photoshop/PsdDecoder.h
+        src/utils/stream/OffsetBound.h
+        src/utils/stream/OffsetBound.cpp
+        src/features/dissolve/AssetDissolver.cpp
+        src/features/dissolve/AssetDissolver.h
+        src/features/dissolve/AssetDissolver.cpp
+        src/features/dissolve/AssetDissolver.h
+        src/features/dissolve/AssetBlockBuilder.cpp
+        src/features/dissolve/AssetBlockBuilder.h
+        src/features/dissolve/BlockUnit.h
+        src/utils/adapters/OpenCvAdapter.h
+        src/features/photoshop/utils/PsdLayersMetadata.h
+        src/features/photoshop/utils/PsdLayerMetadataParser.h
+        src/utils/psd/PsdChannelSizeUpdater.h
+        src/utils/psd/PsdChannelSizeUpdater.cpp
+        src/utils/hashing/RandomHash.cpp
+        src/utils/hashing/RandomHash.h
+        src/utils/hashing/RandomHash.cpp
+        src/utils/hashing/RandomHash.h
+        src/utils/compress/Bit7Archive.cpp
+        src/utils/compress/Bit7Archive.h
 )
 
 
@@ -114,7 +140,14 @@ else()
     message(FATAL_ERROR "Unsupported platform. Please add support for your platform.")
 endif()
 
-target_link_libraries(SplitDiff PUBLIC SplitLog SplitAsset opencv_core opencv_imgproc opencv_imgcodecs ${OPENVCDIFF_LIBS} Psd)
+target_link_libraries(SplitDiff PUBLIC
+        SplitLog SplitAsset
+        opencv_core opencv_imgproc opencv_imgcodecs
+        ${OPENVCDIFF_LIBS}
+        Psd
+        bit7z
+)
+
 target_include_directories(SplitDiff PUBLIC
         src
         ${SplitLog_SOURCE_DIR}/src
@@ -125,6 +158,9 @@ target_include_directories(SplitDiff PUBLIC
         ${opencv_SOURCE_DIR}/modules/imgproc/include
         ${opencv_SOURCE_DIR}/modules/imgcodecs/include
         ${OPENVCDIFF_INCLUDE}
+
+        ${bit7z_SOURCE_DIR}/include
+
         ${CMAKE_BINARY_DIR}
 )
 
@@ -147,9 +183,16 @@ add_executable(SplitDiffTests
         tests/PsdIntegration.test.cpp
         src/features/photoshop/tests/PsdEncoder.test.cpp
         src/features/photoshop/tests/PsdDecoder.test.cpp
+        src/utils/compress/tests/Bit7ZArchive.test.cpp
 )
 target_link_libraries(SplitDiffTests PRIVATE SplitDiff gtest_main)
 
 # --- Discover tests automatically ---
 include(GoogleTest)
 gtest_discover_tests(SplitDiffTests)
+
+add_custom_command(TARGET SplitDiffTests POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        "${CMAKE_SOURCE_DIR}/external/dll/7z.dll"
+        $<TARGET_FILE_DIR:SplitDiffTests>
+)

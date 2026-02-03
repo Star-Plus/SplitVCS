@@ -4,109 +4,149 @@
 
 #include <filesystem>
 #include "PsdDecoder.h"
+#include <fstream>
+#include <iostream>
+#include <queue>
 
-#include "opencv2/imgcodecs.hpp"
-#include "opencv2/imgproc.hpp"
-#include "opencv2/core/mat.hpp"
-#include "PsdSdk/PsdDocument.h"
-#include "PsdSdk/PsdExport.h"
-#include "PsdSdk/PsdLayerMaskSection.h"
-#include "PsdSdk/PsdMallocAllocator.h"
-#include "PsdSdk/PsdNativeFile.h"
-#include "PsdSdk/PsdParseDocument.h"
-#include "PsdSdk/PsdParseLayerMaskSection.h"
-#include "PsdSdk/PsdLayer.h"
-#include "PsdSdk/PsdLayerMask.h"
+#include "features/binary/ByteDecoder.h"
+#include "features/dissolve/AssetBlockBuilder.h"
+#include "utils/PsdLayersMetadata.h"
+#include "utils/PsdLayerMetadataParser.h"
+#include "utils/compress/Bit7Archive.h"
+#include "utils/path/PathUtils.h"
 
 namespace psd
 {
     struct ExportDocument;
-    struct LayerMaskSection;
+    struct LayerMaskSection;;
     struct Document;
 }
 
 namespace Split
 {
-    void PsdDecoder::decode(const std::string& base, std::stack<std::string>& deltas, std::string& out)
+    template <typename T>
+    std::stack<T> copyStackEditedWithSuffix(std::stack<T> s1, const T& suffix)
     {
-        psd::MallocAllocator allocator;
-        psd::NativeFile file(&allocator);
+        std::queue<T> tempQueue;
 
-        std::filesystem::path basePath(base + ".psd");
-        if (!file.OpenRead(basePath.wstring().c_str())) throw std::runtime_error("Could not open base file");
-
-        psd::Document* document = psd::CreateDocument(&file, &allocator);
-        psd::LayerMaskSection* layerMask = psd::ParseLayerMaskSection(document, &file, &allocator);
-
-        psd::ExportDocument* exportDoc = psd::CreateExportDocument(&allocator,
-        document->width, document->height, document->bitsPerChannel, psd::exportColorMode::RGB);
-
-        for (unsigned int i = 0; i < layerMask->layerCount; i++)
+        while (!s1.empty())
         {
-            psd::Layer* layer = &layerMask->layers[i];
-            const std::string layerName = layer->name.c_str();
-            const std::string layerPath = base + "-" + layerName + ".webp";
-            const std::string maskPath = base + "-" + layerName + "-mask.webp";
-
-            cv::Mat image = cv::imread(layerPath, cv::IMREAD_COLOR);
-            if (image.empty()) throw std::runtime_error("Could not open image");
-
-            if (image.channels() == 3) cv::cvtColor(image, image, cv::COLOR_BGR2BGRA);
-
-            const int w = image.cols;
-            const int h = image.rows;
-            const size_t planeSize = static_cast<size_t>(w * h);
-
-            uint8_t* r = static_cast<uint8_t*>(allocator.Allocate(planeSize, 16u));
-            uint8_t* g = static_cast<uint8_t*>(allocator.Allocate(planeSize, 16u));
-            uint8_t* b = static_cast<uint8_t*>(allocator.Allocate(planeSize, 16u));
-            uint8_t* a = static_cast<uint8_t*>(allocator.Allocate(planeSize, 16u));
-
-            for (int y = 0; y < h; y++)
-            {
-                for (int x = 0; x < w; x++)
-                {
-                    auto pixel = image.at<cv::Vec4b>(y, x);
-                    size_t offset = static_cast<size_t>(y) * w + x;
-                    b[offset] = pixel[0];
-                    g[offset] = pixel[1];
-                    r[offset] = pixel[2];
-                    a[offset] = pixel[3];
-                }
-            }
-
-            const unsigned int layerIndex = psd::AddLayer(exportDoc, &allocator, layerName.c_str());
-
-            psd::UpdateLayer(exportDoc, &allocator, layerIndex, psd::exportChannel::RED, layer->left, layer->top, layer->right, layer->bottom, r, psd::compressionType::RLE);
-            psd::UpdateLayer(exportDoc, &allocator, layerIndex, psd::exportChannel::GREEN, layer->left, layer->top, layer->right, layer->bottom, g, psd::compressionType::RLE);
-            psd::UpdateLayer(exportDoc, &allocator, layerIndex, psd::exportChannel::BLUE, layer->left, layer->top, layer->right, layer->bottom, b, psd::compressionType::RLE);
-            psd::UpdateLayer(exportDoc, &allocator, layerIndex, psd::exportChannel::ALPHA, layer->left, layer->top, layer->right, layer->bottom, a, psd::compressionType::RLE);
-
-            if (layer->layerMask)
-            {
-                cv::Mat mask = cv::imread(maskPath, cv::IMREAD_GRAYSCALE);
-                if (!mask.empty())
-                {
-                    psd::UpdateLayer(exportDoc, &allocator, layerIndex, psd::exportChannel::ALPHA,
-                        layer->layerMask->left, layer->layerMask->top,
-                        layer->layerMask->right, layer->layerMask->bottom,
-                        mask.data, psd::compressionType::RLE);
-                }
-            }
-
-            allocator.Free(r); allocator.Free(g); allocator.Free(b); allocator.Free(a);
-
+            tempQueue.push(s1.top()+suffix);
+            s1.pop();
         }
 
-        psd::NativeFile outFile(&allocator);
-        std::filesystem::path outPath(out);
-        if (!outFile.OpenWrite(outPath.wstring().c_str())) throw std::runtime_error("Could not open output file");
+        std::stack<T> stack;
+        while (!tempQueue.empty())
+        {
+            stack.push(tempQueue.front());
+            tempQueue.pop();
+        }
 
-        psd::WriteDocument(exportDoc, &allocator, &outFile);
-        outFile.Close();
+        return stack;
+    }
 
-        psd::DestroyExportDocument(exportDoc, &allocator);
-        psd::DestroyLayerMaskSection(layerMask, &allocator);
-        psd::DestroyDocument(document, &allocator);
+    void PsdDecoder::extractDeltaArchives(std::stack<std::string> deltas) const
+    {
+        while (!deltas.empty())
+        {
+            auto delta = deltas.top();
+            deltas.pop();
+            psdArchive.ExtractArchive(delta + ".7z", delta + "/");
+        }
+    }
+
+    void copyToVector(std::stack<std::string> stk, std::vector<std::string>& vec)
+    {
+        while (!stk.empty())
+        {
+            vec.push_back(stk.top());
+            stk.pop();
+        }
+    }
+
+    void PsdDecoder::decode(const std::string& base, std::stack<std::string>& deltas, std::string& out)
+    {
+        // Modify out if it ends with .psd
+        PathUtils::removeSuffix(out, ".psd");
+        std::filesystem::create_directories(out);
+
+        std::vector foldersToCleanUp = {out};
+        copyToVector(deltas, foldersToCleanUp);
+
+        {
+            // Extract all delta archives if deltas are not empty
+            if (!deltas.empty())
+            {
+                extractDeltaArchives(deltas);
+            }
+
+            // Read metadata
+            std::string metadataParentPath = deltas.empty() ? base : deltas.top();
+            std::fstream metadataFile(metadataParentPath + "/metadata", std::ios::in);
+            if (!metadataFile.is_open()) throw std::ios_base::failure("Cannot open metadata file");
+
+            PsdLayerMetadataParser metadataParser;
+            auto metadata = metadataParser.parse(metadataFile);
+            metadataFile.close();
+
+            ByteDecoder byteDecoder;
+            AssetBlockBuilder assetBuilder;
+            std::set<BlockUnit> blocks;
+
+            // Process each layer and decode with deltas (or base only if deltas are empty)
+            for (auto& layer : metadata.layers)
+            {
+                if (layer.channels.empty()) continue;
+
+                const auto startChannel = layer.channels.begin();
+                const auto endChannel = layer.channels.rbegin();
+
+                const auto startOffset = startChannel->offset.offset;
+                const auto blockSize = endChannel->offset.offset - startOffset + endChannel->offset.length;
+
+                const std::string suffix = "/" + layer.name + ".layer";
+                const std::string basePath = base + "/" + suffix;
+
+                // Decode layer: if deltas are empty, base is returned as-is
+                std::stack<std::string> layerDeltas;
+                if (!deltas.empty())
+                {
+                    // Copy delta stack with layer suffix
+                    layerDeltas = copyStackEditedWithSuffix(deltas, suffix);
+                }
+
+                std::string tmpDecodedPath = out + "/" + suffix + ".tmp";
+                byteDecoder.decode(basePath, layerDeltas, tmpDecodedPath);
+
+                // Open decoded layer stream
+                auto stream = std::make_shared<std::ifstream>(tmpDecodedPath, std::ios::binary);
+                if (!stream->is_open()) throw std::runtime_error("Cannot open decoded layer file: " + tmpDecodedPath);
+
+                BlockUnit block = {stream, OffsetBound(startOffset, blockSize)};
+                blocks.insert(block);
+            }
+
+            // Decode skeleton with its deltas (or base only if deltas are empty)
+            const std::string suffix = "/skeleton";
+            const std::string baseSkeletonPath = base + suffix;
+            std::string tmpSkeletonPath = out + "/skeleton.tmp";
+
+            std::stack<std::string> skeletonDeltaStack;
+            if (!deltas.empty())
+            {
+                skeletonDeltaStack = copyStackEditedWithSuffix(deltas, suffix);
+            }
+
+            byteDecoder.decode(baseSkeletonPath, skeletonDeltaStack, tmpSkeletonPath);
+
+            // Combine decoded skeleton with decoded layer blocks
+            assetBuilder.combine(tmpSkeletonPath, blocks, out + ".psd");
+        }
+
+        // Cleanup temporary files
+        for (auto& fd : foldersToCleanUp)
+        {
+            std::filesystem::remove_all(fd);
+        }
     }
 } // Split
