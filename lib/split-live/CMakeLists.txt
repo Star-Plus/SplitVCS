@@ -51,9 +51,14 @@ add_library(SplitLive STATIC
         src/interfaces/ICompressor.h
         src/features/TextCompressor.cpp
         src/features/TextCompressor.h
+        src/features/photoshop/PsdUltraviolet.cpp
+        src/features/photoshop/PsdUltraviolet.h
 )
 
-target_link_libraries(SplitLive PRIVATE SplitAsset opencv_core opencv_imgproc opencv_imgcodecs)
+target_link_libraries(SplitLive PRIVATE SplitAsset
+        opencv_core opencv_imgproc opencv_imgcodecs
+        Psd
+)
 
 target_include_directories(SplitLive PUBLIC
         src
@@ -62,7 +67,29 @@ target_include_directories(SplitLive PUBLIC
         ${opencv_SOURCE_DIR}/modules/core/include
         ${opencv_SOURCE_DIR}/modules/imgproc/include
         ${opencv_SOURCE_DIR}/modules/imgcodecs/include
+        ${PSDSDK_DIR}
         ${CMAKE_BINARY_DIR}
 )
 
 add_subdirectory(playground)
+
+# --- Enable testing ---
+enable_testing()
+include(FetchContent)
+
+# Fetch GoogleTest
+FetchContent_Declare(
+        googletest
+        URL https://github.com/google/googletest/archive/refs/heads/main.zip
+)
+FetchContent_MakeAvailable(googletest)
+
+# --- Test executable ---
+add_executable(SplitLiveTests
+        src/features/photoshop/tests/PsdUltraviolet.test.cpp
+)
+target_link_libraries(SplitLiveTests PRIVATE SplitLive gtest_main)
+
+# --- Discover tests automatically ---
+include(GoogleTest)
+gtest_discover_tests(SplitLiveTests)
