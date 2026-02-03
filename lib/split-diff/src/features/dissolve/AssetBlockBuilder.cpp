@@ -94,5 +94,8 @@ namespace Split
                 remaining -= chunk;
             }
         }
+
+        inFile.close();
+        outFile.close();
     }
 } // Split

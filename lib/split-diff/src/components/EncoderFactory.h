@@ -3,14 +3,17 @@
 #include "features/images/ImageEncoder.h"
 #include "enums/EncodeType.h"
 #include "features/binary/ByteEncoder.h"
+#include "features/photoshop/PsdEncoder.h"
 
 namespace Split {
+    class PsdEncoder;
 
     class EncoderFactory {
     public:
         EncoderFactory() :
         imageEncoder(new ImageEncoder()),
-        byteEncoder(new ByteEncoder())
+        byteEncoder(new ByteEncoder()),
+        psdEncoder(new PsdEncoder())
         {}
 
         Encoder* getEncoder(const EncodeType type) const {
@@ -21,6 +24,9 @@ namespace Split {
 
                 case EncodeType::BINARY:
                     return this->byteEncoder;
+
+                case EncodeType::PSD:
+                    return this->psdEncoder;
             
                 default:
                     throw std::invalid_argument("Unknown encoder type");
@@ -30,6 +36,7 @@ namespace Split {
     private:
         ImageEncoder* imageEncoder;
         ByteEncoder* byteEncoder;
+        PsdEncoder* psdEncoder;
     };
 
 }

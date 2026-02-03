@@ -36,7 +36,7 @@ namespace Split {
 
     void ByteDecoder::decode(const std::string& base, std::stack<std::string>& deltas, std::string& out)
     {
-        std::fstream outFile(out, std::ios::out);
+        std::fstream outFile(out, std::ios::out | std::ios::binary);
         if (!outFile)
         {
             throw std::runtime_error("Failed to open output file");
@@ -56,10 +56,12 @@ namespace Split {
     std::stringstream ByteDecoder::decode(const std::string& base, std::stack<std::string>& deltas)
     {
 
-        std::fstream baseFile(base, std::ios::in);
+        std::fstream baseFile(base, std::ios::in | std::ios::binary);
 
         std::stringstream middle;
         middle << baseFile.rdbuf();
+
+        baseFile.close();
 
         while (!deltas.empty())
         {
@@ -85,8 +87,10 @@ namespace Split {
             }
 
             // Replace contents of middle to contents of output
+            middle.str("");
             middle.clear();
             middle << output;
+            middle.seekg(0);
         }
 
         return middle;

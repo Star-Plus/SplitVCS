@@ -20,3 +20,13 @@ TEST(PsdEncoderTest, EncodeBase)
     auto result = encoder.encode(rootPath+"/Sample.psd", rootPath+"/encoded");
 
 }
+
+TEST(PsdEncoderTest, EncodeDelta)
+{
+    const std::string rootPath = "psd_enc/";
+
+    Split::PsdEncoder encoder;
+    std::string outPath = rootPath + "encoded2";
+    std::stack<std::string> deltas = {};
+    encoder.encode(rootPath + "encoded", deltas, rootPath+"Sample.psd", outPath);
+}

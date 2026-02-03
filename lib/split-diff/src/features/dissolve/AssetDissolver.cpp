@@ -91,5 +91,8 @@ namespace Split
 
             remaining -= static_cast<size_t>(readBytes);
         }
+
+        in.close();
+        outFile.close();
     }
 } // Split

@@ -24,6 +24,8 @@ namespace Split
                 return EncodeType::IMAGE;
             }
 
+            if (extension == "psd") return EncodeType::PSD;
+
             return EncodeType::BINARY;
         }
 
@@ -35,6 +37,8 @@ namespace Split
                 return "image";
             case EncodeType::BINARY:
                 return "binary";
+            case EncodeType::PSD:
+                return "psd";
             case EncodeType::EXACT:
                 return "exact";
                 default:
@@ -47,6 +51,7 @@ namespace Split
             if (encodeType == "image") return EncodeType::IMAGE;
             if (encodeType == "binary") return EncodeType::BINARY;
             if (encodeType == "exact") return EncodeType::EXACT;
+            if (encodeType == "psd") return EncodeType::PSD;
             throw std::logic_error("not implemented");
         }
     }
