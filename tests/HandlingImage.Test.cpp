@@ -36,6 +36,8 @@ TEST(HandlingImage, IncreaseBrightness)
     repository.add("test_image.png");
     logger.debug("Added first version");
 
+    repository.commit("First version", "Ahmed");
+
     // Remove testImage content and put editedImage
     std::fstream edited1(testImagePath, std::ios::out | std::ios::trunc | std::ios::binary);
     edited1 << brightEditedImage.rdbuf();
@@ -46,6 +48,8 @@ TEST(HandlingImage, IncreaseBrightness)
     repository.add("test_image.png");
     logger.debug("Added second version");
 
+    repository.commit("2nd version", "Ahmed");
+
     std::fstream edited2(testImagePath, std::ios::out | std::ios::trunc | std::ios::binary);
     edited2 << tintEditedImage.rdbuf();
     tintEditedImage.close();
@@ -54,4 +58,6 @@ TEST(HandlingImage, IncreaseBrightness)
 
     repository.add("test_image.png");
     logger.debug("Added third version");
+
+    repository.commit("3rd version", "Ahmed");
 }

@@ -82,7 +82,7 @@ namespace Split {
             pack.encodeDelta(originalFilePath, entries[filepath].blobHash, blobHash, encodeType);
         }
         else {
-            blobHash = pack.encodeBase(originalFs, encodeType);
+            blobHash = pack.encodeBase(filepath, encodeType);
             entry.baseVersionHash = blobHash;
         }
 

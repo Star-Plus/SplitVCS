@@ -9,7 +9,7 @@ namespace Split {
     std::string DeltaCompressor::encode(const Asset& base, const Asset& out) const
     {
         const auto encoder = encoderFactory.getEncoder(base.type);
-        encoder->encode(base.path, out.path);
+        return encoder->encode(base.path, out.path);
     }
 
     void DeltaCompressor::encode(const Blob& v1, const Blob& v2, const Blob& out) const {

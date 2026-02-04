@@ -62,7 +62,7 @@ namespace Split {
 
     Mat ImageDecoder::decode(const std::string& base, std::stack<std::string>& deltas)
     {
-        const Mat BaseMat = imread(base, IMREAD_COLOR);
+        const Mat BaseMat = imread(base + ".webp", IMREAD_COLOR);
 
         if (BaseMat.empty())
         {
@@ -80,7 +80,7 @@ namespace Split {
 
         while (!deltas.empty())
         {
-            const Mat DeltaMat = imread(deltas.top(), IMREAD_COLOR);
+            const Mat DeltaMat = imread(deltas.top() + ".webp", IMREAD_COLOR);
             deltas.pop();
 
             PixelCalculator::clockAdder(MiddleOutMat, DeltaMat, OutMat);

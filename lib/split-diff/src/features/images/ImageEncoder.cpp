@@ -17,6 +17,17 @@ namespace Split {
 
     ImageEncoder::ImageEncoder() : logger(true, "Image Encoder") {}
 
+    std::string ImageEncoder::encode(const std::string& base, const std::string& out)
+    {
+        const auto baseMat = imread(base, IMREAD_COLOR);
+
+        if (baseMat.empty())
+            throw std::runtime_error("Could not open images!");
+
+        imwrite(out+".webp", baseMat, {IMWRITE_WEBP_QUALITY, 101});
+        return out;
+    }
+
     std::string ImageEncoder::encode(const std::string& base, std::stack<std::string>& deltas, const std::string& v2, std::string& out)
     {
         logger.setCheckPoint();
@@ -36,7 +47,7 @@ namespace Split {
 
         logger.debug("Encoded");
 
-        return out + ".webp";
+        return out;
     }
 
     void ImageEncoder::encode(const std::istream& v1, const std::istream& v2, std::ostream& output) {

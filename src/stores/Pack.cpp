@@ -112,9 +112,11 @@ namespace Split {
     {
         const ObjectStore blobObjectStore(rootPath, "/blobs");
 
-        auto hash = Hashing::computeFileHash(file);
+        const std::string fileFullPath = rootPath + "/" + file;
 
-        compressor.encode(Asset{file, encodeType}, Asset{blobObjectStore.getPath() + "/" + hash});
+        auto hash = Hashing::computeFileHash(fileFullPath);
+
+        compressor.encode(Asset{fileFullPath}, Asset{blobObjectStore.getPath() + "/" + hash});
 
         const auto pack = std::make_shared<PackUnit>(hash, hash, "", nullptr, encodeType);
 
@@ -133,7 +135,7 @@ namespace Split {
         const auto producedPath = compressor.encode(packLine.first, packLine.second, Asset(v2Path , encodeType), outAsset);
 
         auto producedPathParts = StringUtils::split(producedPath, "/\\");
-        const auto deltaHash = producedPathParts.back();
+        const std::string deltaHash = producedPathParts.back();
 
         const auto baseIt = std::ranges::find_if(packs, [&baseHash](const auto& p) {
             return isPackUnitByHash(*p, baseHash);
@@ -217,9 +219,6 @@ namespace Split {
             tailRef = tempRef;
 
             const auto objectHash = tempRef->deltaHash;
-            if (!deltasObjectStore.hasObject(objectHash)) {
-                throw std::runtime_error("Object not found in deltas: " + objectHash);
-            }
 
             auto asset = Asset(rootPath + "/.split/objects/deltas/" + objectHash, tempRef->encodeType);
             deltaStack.push_back(asset);
@@ -228,11 +227,6 @@ namespace Split {
         }
 
         baseHash = tailRef->baseHash;
-
-
-        if (!blobsObjectStore.hasObject(baseHash)) {
-            throw std::runtime_error("Base object not found: " + hash);
-        }
 
         Asset baseAsset(rootPath+"/.split/objects/blobs/" + baseHash, tailRef->encodeType);
 
