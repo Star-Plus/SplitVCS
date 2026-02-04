@@ -116,7 +116,7 @@ namespace Split {
 
         auto hash = Hashing::computeFileHash(fileFullPath);
 
-        compressor.encode(Asset{fileFullPath}, Asset{blobObjectStore.getPath() + "/" + hash});
+        compressor.encode(Asset{fileFullPath, encodeType}, Asset{blobObjectStore.getPath() + "/" + hash});
 
         const auto pack = std::make_shared<PackUnit>(hash, hash, "", nullptr, encodeType);
 
