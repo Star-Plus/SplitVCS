@@ -54,8 +54,9 @@ namespace Split
     {
         while (!deltas.empty())
         {
-            auto delta = deltas.top();
+            const auto& delta = deltas.top();
             psdArchive.ExtractArchive(delta + ".7z", delta + "/");
+            deltas.pop();
         }
     }
 
@@ -146,6 +147,7 @@ namespace Split
         const auto assetHash = RandomHash::generateHash(16);
 
         // Extract archives
+        psdArchive.ExtractArchive(base + ".7z", base + "/");
         extractDeltaArchives(deltas);
 
         for (unsigned int i = 0; i < layerMask->layerCount; i++)
@@ -176,18 +178,13 @@ namespace Split
                 // Save the raw buffer
                 extractor.slice(v2, exclude,tmpSlicePath , std::ios::app);
 
-                // Encode layer deltas
-                auto _ = byteEncoder.encode(base, layerDeltas, tmpSlicePath, outDeltaPath);
-
-                // Remove tmp slice file
-
                 fileExcludeSet.insert(exclude);
 
                 ChannelMetadata channelMetadata = {exclude};
                 layerMetadata.channels.insert(channelMetadata);
             }
 
-            std::filesystem::remove(tmpSlicePath);
+            auto _ = byteEncoder.encode(base, layerDeltas, tmpSlicePath, outDeltaPath);
 
             psdLayerMetadata.layers.insert(layerMetadata);
         }
@@ -203,13 +200,19 @@ namespace Split
         // Encode skeleton
         std::string outDeltaPath = out + suffix;
         byteEncoder.encode(base+"/skeleton", skeletonDeltaStack, tmpSkeletonPath, outDeltaPath);
-        // Remove tmp file
-        std::filesystem::remove(tmpSkeletonPath);
 
         // Cleanup
         psd::DestroyLayerMaskSection(layerMask, &allocator);
         psd::DestroyDocument(document, &allocator);
         file.Close();
+
+        std::filesystem::remove_all(base);
+
+        while (!deltas.empty())
+        {
+            std::filesystem::remove_all(deltas.top());
+            deltas.pop();
+        }
 
         std::ofstream metadataOut(out + "/metadata",std::ios::binary);
         metadataOut << psdLayerMetadata;

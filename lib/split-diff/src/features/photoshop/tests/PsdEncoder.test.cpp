@@ -30,3 +30,16 @@ TEST(PsdEncoderTest, EncodeDelta)
     std::stack<std::string> deltas = {};
     encoder.encode(rootPath + "encoded", deltas, rootPath+"Sample.psd", outPath);
 }
+
+TEST(PsdEncoderTest, EncodeTwice)
+{
+    const std::string rootPath = "psd_enc/";
+
+    Split::PsdEncoder encoder;
+
+    std::string outPath = rootPath + "encoded3";
+    std::stack<std::string> deltas = {};
+    deltas.push(rootPath + "encoded2");
+
+    encoder.encode(rootPath + "encoded", deltas, rootPath+"Sample.psd", outPath);
+}
