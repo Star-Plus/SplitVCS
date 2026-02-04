@@ -14,6 +14,7 @@ namespace Split {
 
         DeltaCompressor();
 
+        std::string encode(const Asset& base, const Asset& out) const;
         std::string encode(const Asset& base, const std::vector<Asset>& deltas, const Asset& v2, Asset& out) const;
 
         void decode(const Asset& base, const std::vector<Asset>& deltas, Asset& out) const;

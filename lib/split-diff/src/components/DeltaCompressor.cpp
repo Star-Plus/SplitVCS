@@ -6,6 +6,12 @@ namespace Split {
 
     DeltaCompressor::DeltaCompressor() : logger(true) {}
 
+    std::string DeltaCompressor::encode(const Asset& base, const Asset& out) const
+    {
+        const auto encoder = encoderFactory.getEncoder(base.type);
+        encoder->encode(base.path, out.path);
+    }
+
     void DeltaCompressor::encode(const Blob& v1, const Blob& v2, const Blob& out) const {
         const auto encoder = encoderFactory.getEncoder(v2.type);
         encoder->encode(*v1.getInputStream(), *v2.getInputStream(), *out.getOutputStream());
