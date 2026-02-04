@@ -74,6 +74,8 @@ namespace Split
         copyToVector(deltas, foldersToCleanUp);
 
         {
+            // Extract base archive
+            this->psdArchive.ExtractArchive(base + ".7z", base + "/");
             // Extract all delta archives if deltas are not empty
             if (!deltas.empty())
             {

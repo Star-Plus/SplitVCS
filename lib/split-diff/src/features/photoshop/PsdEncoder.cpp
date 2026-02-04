@@ -116,6 +116,11 @@ namespace Split
         metadataOut << psdLayerMetadata;
         metadataOut.close();
 
+        // add to archive
+        const std::string zipOutPath = out + ".7z";
+        this->psdArchive.SaveDirToArchive(out + "/", zipOutPath);
+        std::filesystem::remove_all(out);
+
         return out;
     }
 
