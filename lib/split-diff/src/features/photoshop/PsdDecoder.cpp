@@ -5,11 +5,9 @@
 #include <filesystem>
 #include "PsdDecoder.h"
 #include <fstream>
-#include <iostream>
-#include <queue>
-
 #include "features/binary/ByteDecoder.h"
 #include "features/dissolve/AssetBlockBuilder.h"
+#include "utils/DecodeUtils.h"
 #include "utils/PsdLayersMetadata.h"
 #include "utils/PsdLayerMetadataParser.h"
 #include "utils/compress/Bit7Archive.h"
@@ -24,27 +22,6 @@ namespace psd
 
 namespace Split
 {
-    template <typename T>
-    std::stack<T> copyStackEditedWithSuffix(std::stack<T> s1, const T& suffix)
-    {
-        std::queue<T> tempQueue;
-
-        while (!s1.empty())
-        {
-            tempQueue.push(s1.top()+suffix);
-            s1.pop();
-        }
-
-        std::stack<T> stack;
-        while (!tempQueue.empty())
-        {
-            stack.push(tempQueue.front());
-            tempQueue.pop();
-        }
-
-        return stack;
-    }
-
     void PsdDecoder::extractDeltaArchives(std::stack<std::string> deltas) const
     {
         while (!deltas.empty())
@@ -114,7 +91,7 @@ namespace Split
                 if (!deltas.empty())
                 {
                     // Copy delta stack with layer suffix
-                    layerDeltas = copyStackEditedWithSuffix(deltas, suffix);
+                    layerDeltas = DecodeUtils::copyStackEditedWithSuffix(deltas, suffix);
                 }
 
                 std::string tmpDecodedPath = out + "/" + suffix + ".tmp";
@@ -136,7 +113,7 @@ namespace Split
             std::stack<std::string> skeletonDeltaStack;
             if (!deltas.empty())
             {
-                skeletonDeltaStack = copyStackEditedWithSuffix(deltas, suffix);
+                skeletonDeltaStack = DecodeUtils::copyStackEditedWithSuffix(deltas, suffix);
             }
 
             byteDecoder.decode(baseSkeletonPath, skeletonDeltaStack, tmpSkeletonPath);

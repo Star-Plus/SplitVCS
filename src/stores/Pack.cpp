@@ -116,19 +116,20 @@ namespace Split {
 
         auto hash = Hashing::computeFileHash(fileFullPath);
 
-        compressor.encode(Asset{fileFullPath, encodeType}, Asset{blobObjectStore.getPath() + "/" + hash});
+        auto registeredHash = compressor.encode(Asset{fileFullPath, encodeType}, Asset{blobObjectStore.getPath() + "/" + hash});
+        registeredHash = StringUtils::split(registeredHash, "/\\").back();
 
-        const auto pack = std::make_shared<PackUnit>(hash, hash, "", nullptr, encodeType);
+        const auto pack = std::make_shared<PackUnit>(hash, registeredHash, "", nullptr, encodeType);
 
         packs.push_back(pack);
         savePack(*pack);
-        return hash;
+        return registeredHash;
     }
 
-    str Pack::encodeDelta(const std::string& v2Path, const str& baseHash, const str& v2Hash, EncodeType encodeType) {
+    str Pack::encodeDelta(const std::string& v2Path, const str& v1Hash, const str& v2Hash, EncodeType encodeType) {
         const ObjectStore deltasObjectStore(rootPath, "/deltas");
 
-        const auto packLine = this->fetchPacksToAsset(baseHash);
+        const auto packLine = this->fetchPacksToAsset(v1Hash);
 
         const auto deltaPath = deltasObjectStore.getPath() + "/" + v2Hash;
         Asset outAsset(deltaPath);
@@ -137,8 +138,8 @@ namespace Split {
         auto producedPathParts = StringUtils::split(producedPath, "/\\");
         const std::string deltaHash = producedPathParts.back();
 
-        const auto baseIt = std::ranges::find_if(packs, [&baseHash](const auto& p) {
-            return isPackUnitByHash(*p, baseHash);
+        const auto baseIt = std::ranges::find_if(packs, [&v1Hash](const auto& p) {
+            return isPackUnitByHash(*p, v1Hash);
         });
 
         const auto newPackUnit = std::make_shared<PackUnit>();
@@ -149,7 +150,7 @@ namespace Split {
             newPackUnit->baseRef = nullptr;
         }
 
-        newPackUnit->baseHash = baseHash;
+        newPackUnit->baseHash = v1Hash;
         newPackUnit->hash = v2Hash;
         newPackUnit->deltaHash = deltaHash;
         newPackUnit->encodeType = encodeType;
@@ -212,11 +213,9 @@ namespace Split {
         std::vector<Asset> deltaStack;
 
         auto tempRef = *it;
-        auto tailRef = *it;
 
         while (tempRef->baseRef != nullptr)
         {
-            tailRef = tempRef;
 
             const auto objectHash = tempRef->deltaHash;
 
@@ -226,9 +225,9 @@ namespace Split {
             tempRef = tempRef->baseRef;
         }
 
-        baseHash = tailRef->baseHash;
+        baseHash = tempRef->baseHash;
 
-        Asset baseAsset(rootPath+"/.split/objects/blobs/" + baseHash, tailRef->encodeType);
+        Asset baseAsset(rootPath+"/.split/objects/blobs/" + baseHash, tempRef->encodeType);
 
         return {baseAsset, deltaStack};
     }

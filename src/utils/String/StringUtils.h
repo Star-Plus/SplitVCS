@@ -18,16 +18,23 @@ namespace StringUtils
 
         for (auto i = 0; i != input.length(); ++i)
         {
+            bool tokenFound = false;
+
             for (auto j = 0; j != delimiter.length(); ++j)
             {
                 if (input[i] == delimiter[j])
                 {
                     tokens.push_back(token);
                     token.clear();
+                    tokenFound = true;
+                    break;
                 }
             }
 
-            token += input[i];
+            if (!tokenFound)
+            {
+                token += input[i];
+            }
         }
 
         if (!token.empty())

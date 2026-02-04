@@ -108,6 +108,7 @@ add_library(SplitDiff STATIC
         src/utils/hashing/RandomHash.h
         src/utils/compress/Bit7Archive.cpp
         src/utils/compress/Bit7Archive.h
+        src/features/photoshop/utils/DecodeUtils.h
 )
 
 

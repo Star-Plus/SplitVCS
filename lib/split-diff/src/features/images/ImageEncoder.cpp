@@ -21,11 +21,13 @@ namespace Split {
     {
         const auto baseMat = imread(base, IMREAD_COLOR);
 
+        auto savePath = out + saveSuffix();
+
         if (baseMat.empty())
             throw std::runtime_error("Could not open images!");
 
-        imwrite(out+".webp", baseMat, {IMWRITE_WEBP_QUALITY, 101});
-        return out;
+        imwrite(savePath, baseMat, {IMWRITE_WEBP_QUALITY, 101});
+        return savePath;
     }
 
     std::string ImageEncoder::encode(const std::string& base, std::stack<std::string>& deltas, const std::string& v2, std::string& out)
@@ -43,11 +45,14 @@ namespace Split {
         Mat outMat(v1Mat.size(), v1Mat.type());
 
         PixelCalculator::clockDifference(v1Mat, v2Mat, outMat);
-        imwrite(out+".webp", outMat, {IMWRITE_WEBP_QUALITY, 101});
+
+        const auto savePath = out + saveSuffix();
+
+        imwrite(savePath, outMat, {IMWRITE_WEBP_QUALITY, 101});
 
         logger.debug("Encoded");
 
-        return out;
+        return savePath;
     }
 
     void ImageEncoder::encode(const std::istream& v1, const std::istream& v2, std::ostream& output) {
@@ -77,7 +82,7 @@ namespace Split {
         logger.debug("Number of distinct values: " + to_string(distinctValuesCount));
 
         std::vector<uchar> compressed;
-        imencode(".webp", packedDiff, compressed, {IMWRITE_WEBP_QUALITY, 101});
+        imencode(saveSuffix(), packedDiff, compressed, {IMWRITE_WEBP_QUALITY, 101});
 
         if (compressed.empty()) {
             logger.error("Could not encode difference image!");

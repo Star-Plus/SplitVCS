@@ -22,6 +22,8 @@ namespace Split {
     public:
         ImageEncoder();
 
+        std::string saveSuffix() override { return ".webp"; }
+
         std::string encode(const std::string& base, const std::string& out) override;
         std::string encode(const std::string& base, std::stack<std::string>& deltas, const std::string& v2, std::string& out) override;
         void encode(const std::istream& v1, const std::istream& v2, std::ostream& output) override;

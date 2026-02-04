@@ -14,6 +14,8 @@ namespace Split
     class PsdEncoder : public Encoder
     {
     public:
+        std::string saveSuffix() override { return ".7z"; }
+
         std::string encode(const std::string& base, const std::string& out) override;
         std::string encode(const std::string& base, std::stack<std::string>& deltas, const std::string& v2, std::string& out) override;
     private:

@@ -20,6 +20,7 @@
 #include "PsdSdk/PsdParseLayerMaskSection.h"
 #include "PsdSdk/PsdLayer.h"
 #include "PsdSdk/PsdExport.h"
+#include "utils/DecodeUtils.h"
 #include "utils/psd/ChannelUtils.h"
 #include "utils/PsdLayersMetadata.h"
 #include "utils/compress/Bit7Archive.h"
@@ -29,33 +30,12 @@
 
 namespace Split
 {
-    template <typename T>
-    std::stack<T> copyStackEditedWithSuffix(std::stack<T> s1, const T& suffix)
-    {
-        std::queue<T> tempQueue;
-
-        while (!s1.empty())
-        {
-            tempQueue.push(s1.top()+suffix);
-            s1.pop();
-        }
-
-        std::stack<T> stack;
-        while (!tempQueue.empty())
-        {
-            stack.push(tempQueue.front());
-            tempQueue.pop();
-        }
-
-        return stack;
-    }
-
     void PsdEncoder::extractDeltaArchives(std::stack<std::string> deltas) const
     {
         while (!deltas.empty())
         {
             const auto& delta = deltas.top();
-            psdArchive.ExtractArchive(delta + ".7z", delta + "/");
+            psdArchive.ExtractArchive(delta, delta + "/");
             deltas.pop();
         }
     }
@@ -118,7 +98,7 @@ namespace Split
         metadataOut.close();
 
         // add to archive
-        const std::string zipOutPath = out + ".7z";
+        const std::string zipOutPath = out + saveSuffix();
         this->psdArchive.SaveDirToArchive(out + "/", zipOutPath);
         std::filesystem::remove_all(out);
 
@@ -147,7 +127,7 @@ namespace Split
         const auto assetHash = RandomHash::generateHash(16);
 
         // Extract archives
-        psdArchive.ExtractArchive(base + ".7z", base + "/");
+        psdArchive.ExtractArchive(base, base + "/");
         extractDeltaArchives(deltas);
 
         for (unsigned int i = 0; i < layerMask->layerCount; i++)
@@ -164,7 +144,7 @@ namespace Split
 
 
             // Copy delta stack but adding layer storePath as suffix
-            std::stack<std::string> layerDeltas = copyStackEditedWithSuffix(deltas, suffix);
+            std::stack<std::string> layerDeltas = DecodeUtils::copyStackEditedWithSuffix(deltas, suffix);
 
 
             std::ofstream layerFile(layerMetadata.storePath, std::ios::binary | std::ios::trunc);
@@ -196,7 +176,7 @@ namespace Split
         dissolver.dissolve(v2, tmpSkeletonPath, fileExcludeSet);
         // Copy deltas stack for skeleton suffix
         const std::string suffix = "/skeleton";
-        auto skeletonDeltaStack = copyStackEditedWithSuffix(deltas, suffix);
+        auto skeletonDeltaStack = DecodeUtils::copyStackEditedWithSuffix(deltas, suffix);
         // Encode skeleton
         std::string outDeltaPath = out + suffix;
         byteEncoder.encode(base+"/skeleton", skeletonDeltaStack, tmpSkeletonPath, outDeltaPath);
@@ -218,9 +198,10 @@ namespace Split
         metadataOut << psdLayerMetadata;
         metadataOut.close();
 
+        const auto savePath = out + saveSuffix();
+
         // Archive the output
-        const std::string zipOutPath = out + ".7z";
-        psdArchive.SaveDirToArchive(out + "/", zipOutPath);
+        psdArchive.SaveDirToArchive(out + "/", savePath);
 
         std::filesystem::remove_all(out);
 

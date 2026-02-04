@@ -8,6 +8,8 @@ namespace Split {
     public:
         virtual ~Encoder() = default;
 
+        virtual std::string saveSuffix() = 0;
+
         virtual void encode(const std::istream& v1, const std::istream& v2, std::ostream& out) {}
 
         virtual std::string encode(const std::string& base, const std::string& out) { return ""; }
