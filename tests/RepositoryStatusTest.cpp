@@ -12,7 +12,10 @@
 
 TEST(RespositoryStatusTest, UntrackedFiles) {
     const str repoPath = "test_repo";
+
+    std::filesystem::remove_all(repoPath);
     std::filesystem::create_directory(repoPath);
+
     std::ofstream(repoPath + "/file1.txt") << "This is an untracked file.";
     std::ofstream(repoPath + "/file2.txt") << "This is another untracked file.";
 

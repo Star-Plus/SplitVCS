@@ -10,6 +10,7 @@
 #include <memory>
 
 #include "atoms/Asset.h"
+#include "components/DeltaCompressor.h"
 #include "core/Alias.h"
 #include "enums/EncodeType.h"
 #include "main/Logger.h"
@@ -30,8 +31,8 @@ namespace Split {
 
         explicit Pack(const str& rootPath);
         void savePack(const PackUnit&) const;
-        void decode(const str&, const std::string&);
-        str encodeBase(std::fstream&, EncodeType=EncodeType::BINARY);
+        void decode(const str&, const std::string&) const;
+        str encodeBase(const std::string&, EncodeType=EncodeType::BINARY);
         str encodeDelta(const std::string& v2Path, const str& baseHash, const str& v2Hash, EncodeType encodeType=EncodeType::BINARY);
 
         PackUnit getPackUnitByHash(const str& hash) const;
@@ -44,6 +45,7 @@ namespace Split {
         std::vector<std::shared_ptr<PackUnit>> packs;
 
         Logger logger;
+        DeltaCompressor compressor;
 
         size_t const DECODE_MAX_SIZE = 1024 * 1024 * 50;
 

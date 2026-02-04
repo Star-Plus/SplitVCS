@@ -7,8 +7,6 @@
 #include <filesystem>
 #include <fstream>
 #include "ObjectStore.h"
-#include "utils/Fs/DualStream.h"
-#include "components/DeltaCompressor.h"
 #include "enums/EncodeType.h"
 #include "utils/Hashing.h"
 #include "utils/String/StringUtils.h"
@@ -103,21 +101,20 @@ namespace Split {
         file.close();
     }
 
-    void Pack::decode(const str& hash, const std::string& out) {
-
+    void Pack::decode(const str& hash, const std::string& out) const
+    {
         const auto packLine = this->fetchPacksToAsset(hash);
-
-        const DeltaCompressor compressor;
-
         Asset outAsset(out);
         compressor.decode(packLine.first, packLine.second, outAsset);
     }
 
-    str Pack::encodeBase(std::fstream& file, EncodeType encodeType)
+    str Pack::encodeBase(const std::string& file, EncodeType encodeType)
     {
         const ObjectStore blobObjectStore(rootPath, "/blobs");
 
-        auto hash = blobObjectStore.storeFileObject(file);
+        auto hash = Hashing::computeFileHash(file);
+
+        compressor.encode(Asset{file, encodeType}, Asset{blobObjectStore.getPath() + "/" + hash});
 
         const auto pack = std::make_shared<PackUnit>(hash, hash, "", nullptr, encodeType);
 
@@ -128,8 +125,6 @@ namespace Split {
 
     str Pack::encodeDelta(const std::string& v2Path, const str& baseHash, const str& v2Hash, EncodeType encodeType) {
         const ObjectStore deltasObjectStore(rootPath, "/deltas");
-
-        const DeltaCompressor compressor;
 
         const auto packLine = this->fetchPacksToAsset(baseHash);
 
