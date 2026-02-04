@@ -114,6 +114,7 @@ add_executable(runTests
         tests/HandlingImage.Test.cpp
         src/features/IgnoreList/tests/IgnoreList.test.cpp
         src/features/FastLiveAsset/tests/TinyAsset.test.cpp
+        src/utils/tests/Hashing.test.cpp
 )
 target_link_libraries(runTests PRIVATE scm_lib gtest_main)
 

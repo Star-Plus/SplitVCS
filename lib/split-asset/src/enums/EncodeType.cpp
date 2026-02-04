@@ -24,7 +24,7 @@ namespace Split
                 return EncodeType::IMAGE;
             }
 
-            if (extension == "psd") return EncodeType::PSD;
+            if (extension == ".psd") return EncodeType::PSD;
 
             return EncodeType::BINARY;
         }
