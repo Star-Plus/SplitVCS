@@ -30,15 +30,7 @@
 
 namespace Split
 {
-    void PsdEncoder::extractDeltaArchives(std::stack<std::string> deltas) const
-    {
-        while (!deltas.empty())
-        {
-            const auto& delta = deltas.top();
-            psdArchive.ExtractArchive(delta + ".7z", delta + "/");
-            deltas.pop();
-        }
-    }
+
 
     std::string PsdEncoder::encode(const std::string& base, const std::string& out)
     {
@@ -102,7 +94,7 @@ namespace Split
         this->psdArchive.SaveDirToArchive(out + "/", zipOutPath);
         std::filesystem::remove_all(out);
 
-        return out;
+        return zipOutPath;
     }
 
     std::string PsdEncoder::encode(const std::string& base, std::stack<std::string>& deltas, const std::string& v2, std::string& out)
@@ -128,7 +120,7 @@ namespace Split
 
         // Extract archives
         psdArchive.ExtractArchive(base, base + "/");
-        extractDeltaArchives(deltas);
+        DecodeUtils::extractDeltaArchives(deltas, psdArchive);
 
         for (unsigned int i = 0; i < layerMask->layerCount; i++)
         {
@@ -144,7 +136,7 @@ namespace Split
 
 
             // Copy delta stack but adding layer storePath as suffix
-            std::stack<std::string> layerDeltas = DecodeUtils::copyStackEditedWithSuffix(deltas, suffix);
+            std::stack<std::string> layerDeltas = DecodeUtils::copyStackSuffixEdited(deltas, suffix);
 
 
             std::ofstream layerFile(layerMetadata.storePath, std::ios::binary | std::ios::trunc);
@@ -176,7 +168,7 @@ namespace Split
         dissolver.dissolve(v2, tmpSkeletonPath, fileExcludeSet);
         // Copy deltas stack for skeleton suffix
         const std::string suffix = "/skeleton";
-        auto skeletonDeltaStack = DecodeUtils::copyStackEditedWithSuffix(deltas, suffix);
+        auto skeletonDeltaStack = DecodeUtils::copyStackSuffixEdited(deltas, suffix);
         // Encode skeleton
         std::string outDeltaPath = out + suffix;
         byteEncoder.encode(base+"/skeleton", skeletonDeltaStack, tmpSkeletonPath, outDeltaPath);
@@ -205,7 +197,7 @@ namespace Split
 
         std::filesystem::remove_all(out);
 
-        return out;
+        return savePath;
     }
 
 } // Split

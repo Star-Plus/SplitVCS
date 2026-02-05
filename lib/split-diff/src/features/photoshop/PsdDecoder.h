@@ -4,7 +4,6 @@
 
 #ifndef SPLITVCS_PSDDECODER_H
 #define SPLITVCS_PSDDECODER_H
-#include "features/dissolve/AssetDissolver.h"
 #include "interfaces/IDecoder.h"
 #include "utils/compress/Bit7Archive.h"
 
@@ -25,8 +24,6 @@ namespace Split
         
     private:
         Bit7Archive psdArchive;
-
-        void extractDeltaArchives(std::stack<std::string> deltas) const;
     };
 } // Split
 

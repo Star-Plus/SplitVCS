@@ -22,17 +22,6 @@ namespace psd
 
 namespace Split
 {
-    void PsdDecoder::extractDeltaArchives(std::stack<std::string> deltas) const
-    {
-        while (!deltas.empty())
-        {
-            auto delta = deltas.top();
-            deltas.pop();
-
-            psdArchive.ExtractArchive(delta + ".7z", delta + "/");
-        }
-    }
-
     void copyToVector(std::stack<std::string> stk, std::vector<std::string>& vec)
     {
         while (!stk.empty())
@@ -44,6 +33,9 @@ namespace Split
 
     void PsdDecoder::decode(const std::string& base, std::stack<std::string>& deltas, std::string& out)
     {
+        auto baseWithoutExtension = base;
+        PathUtils::removeSuffix(baseWithoutExtension, ".7z");
+
         // Modify out if it ends with .psd
         PathUtils::removeSuffix(out, ".psd");
         std::filesystem::create_directories(out);
@@ -54,16 +46,17 @@ namespace Split
         {
             {
                 // Extract base archive
-                this->psdArchive.ExtractArchive(base + ".7z", base + "/");
+                this->psdArchive.ExtractArchive(base, baseWithoutExtension + "/");
                 // Extract all delta archives if deltas are not empty
                 if (!deltas.empty())
                 {
-                    extractDeltaArchives(deltas);
+                    DecodeUtils::extractDeltaArchives(deltas, psdArchive);
                 }
             }
 
             // Read metadata
             std::string metadataParentPath = deltas.empty() ? base : deltas.top();
+            PathUtils::removeSuffix(metadataParentPath, ".7z");
             std::fstream metadataFile(metadataParentPath + "/metadata", std::ios::in);
             if (!metadataFile.is_open()) throw std::ios_base::failure("Cannot open metadata file");
 
@@ -87,14 +80,14 @@ namespace Split
                 const auto blockSize = endChannel->offset.offset - startOffset + endChannel->offset.length;
 
                 const std::string suffix = "/" + layer.name + ".layer";
-                const std::string basePath = base + "/" + suffix;
+                const std::string basePath = baseWithoutExtension + "/" + suffix;
 
                 // Decode layer: if deltas are empty, base is returned as-is
                 std::stack<std::string> layerDeltas;
                 if (!deltas.empty())
                 {
                     // Copy delta stack with layer suffix
-                    layerDeltas = DecodeUtils::copyStackEditedWithSuffix(deltas, suffix);
+                    layerDeltas = DecodeUtils::copyStackSuffixEdited(deltas, suffix, ".7z");
                 }
 
                 std::string tmpDecodedPath = out + "/" + suffix + ".tmp";
@@ -110,13 +103,13 @@ namespace Split
 
             // Decode skeleton with its deltas (or base only if deltas are empty)
             const std::string suffix = "/skeleton";
-            const std::string baseSkeletonPath = base + suffix;
+            const std::string baseSkeletonPath = baseWithoutExtension + suffix;
             std::string tmpSkeletonPath = out + "/skeleton.tmp";
 
             std::stack<std::string> skeletonDeltaStack;
             if (!deltas.empty())
             {
-                skeletonDeltaStack = DecodeUtils::copyStackEditedWithSuffix(deltas, suffix);
+                skeletonDeltaStack = DecodeUtils::copyStackSuffixEdited(deltas, suffix);
             }
 
             byteDecoder.decode(baseSkeletonPath, skeletonDeltaStack, tmpSkeletonPath);

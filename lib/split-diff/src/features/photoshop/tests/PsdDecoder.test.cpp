@@ -13,7 +13,7 @@ TEST(PsdDecoderTest, DecodeBase)
 
     std::stack<std::string> st;
     std::string out = rootPath + "/decoded.psd";
-    decoder.decode(rootPath + "/encoded", st, out);
+    decoder.decode(rootPath + "/encoded.7z", st, out);
 }
 
 TEST(PsdDecoderTest, DecodeDeltas)

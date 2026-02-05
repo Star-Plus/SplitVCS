@@ -22,8 +22,6 @@ namespace Split
         PsdMatAdapter psdAdapter;
         Bit7Archive psdArchive;
         AssetDissolver extractor;
-
-        void extractDeltaArchives(std::stack<std::string> deltas) const;
     };
 } // Split
 
