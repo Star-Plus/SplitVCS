@@ -28,6 +28,7 @@ namespace Split
         {
             auto delta = deltas.top();
             deltas.pop();
+
             psdArchive.ExtractArchive(delta + ".7z", delta + "/");
         }
     }
@@ -47,16 +48,18 @@ namespace Split
         PathUtils::removeSuffix(out, ".psd");
         std::filesystem::create_directories(out);
 
-        std::vector foldersToCleanUp = {out};
+        std::vector foldersToCleanUp = {out, base};
         copyToVector(deltas, foldersToCleanUp);
 
         {
-            // Extract base archive
-            this->psdArchive.ExtractArchive(base + ".7z", base + "/");
-            // Extract all delta archives if deltas are not empty
-            if (!deltas.empty())
             {
-                extractDeltaArchives(deltas);
+                // Extract base archive
+                this->psdArchive.ExtractArchive(base + ".7z", base + "/");
+                // Extract all delta archives if deltas are not empty
+                if (!deltas.empty())
+                {
+                    extractDeltaArchives(deltas);
+                }
             }
 
             // Read metadata

@@ -8,6 +8,7 @@
 #include "enums/EncodeType.h"
 #include "features/ImageCompressor.h"
 #include "features/TextCompressor.h"
+#include "features/photoshop/PsdUltraviolet.h"
 
 namespace Split {
 
@@ -17,7 +18,8 @@ namespace Split {
 
         CompressorFactory():
             imageCompressor(new ImageCompressor()),
-            textCompressor(new TextCompressor())
+            textCompressor(new TextCompressor()),
+            psdUltraviolet(new PsdUltraviolet())
         {}
 
         ICompressor* getCompressor(const EncodeType type) const {
@@ -26,6 +28,8 @@ namespace Split {
                 return this->imageCompressor;
             case EncodeType::BINARY:
                 return this->textCompressor;
+            case EncodeType::PSD:
+                return this->psdUltraviolet;
 
             default:
                 return nullptr;
@@ -35,6 +39,7 @@ namespace Split {
     private:
         ImageCompressor* imageCompressor;
         TextCompressor* textCompressor;
+        PsdUltraviolet* psdUltraviolet;
     };
 }
 #endif //SPLITVCS_COMPRESSORFACTORY_H

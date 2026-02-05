@@ -8,7 +8,7 @@
 
 namespace Split
 {
-    class PsdUltraviolet : ICompressor
+    class PsdUltraviolet final : public ICompressor
     {
     public:
         std::string encode(const std::string& src, const std::string& save, EncodeOptions options = {}) override;

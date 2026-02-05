@@ -35,7 +35,7 @@ namespace Split
         while (!deltas.empty())
         {
             const auto& delta = deltas.top();
-            psdArchive.ExtractArchive(delta, delta + "/");
+            psdArchive.ExtractArchive(delta + ".7z", delta + "/");
             deltas.pop();
         }
     }
