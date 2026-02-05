@@ -40,7 +40,7 @@ namespace Split
         PathUtils::removeSuffix(out, ".psd");
         std::filesystem::create_directories(out);
 
-        std::vector foldersToCleanUp = {out, base};
+        std::vector foldersToCleanUp = {out, baseWithoutExtension};
         copyToVector(deltas, foldersToCleanUp);
 
         {
