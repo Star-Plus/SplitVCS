@@ -108,6 +108,8 @@ set(psd_source_util
   PsdKey.h
   PsdMemoryUtil.h
   PsdMemoryUtil.inl
+  PsdStringUtil.h
+  PsdStringUtil.cpp
   PsdSyncFileReader.h
   PsdSyncFileReader.cpp
   PsdSyncFileUtil.h
@@ -146,6 +148,8 @@ set(psd_source
   ${psd_source_zip}
   ${psd_source_}
 )
+
+set_source_files_properties(${psd_source_zip} PROPERTIES LANGUAGE CXX)
 
 add_library(Psd STATIC ${psd_source})
 

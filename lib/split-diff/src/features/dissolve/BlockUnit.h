@@ -6,6 +6,7 @@
 #define SPLITVCS_BLOCKUNIT_H
 
 #include <istream>
+#include <memory>
 
 #include "utils/stream/OffsetBound.h"
 
